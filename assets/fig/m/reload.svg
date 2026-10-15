@@ -1,0 +1,6 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="ArrowClockwise">
+<rect id="Fill" opacity="0" x="0.254618" y="0.11322" width="20" height="20" fill="#333333"/>
+<path id="Outline" d="M17.5156 4.03906V7.78906H13.7656M17.5156 7.78906L14.8594 5.14063C13.8981 4.17858 12.6731 3.52324 11.3393 3.25751C10.0056 2.99178 8.62295 3.1276 7.36638 3.64779C6.10981 4.16798 5.03575 5.04916 4.28007 6.17987C3.52439 7.31058 3.12103 8.64001 3.12103 10C3.12103 11.36 3.52439 12.6894 4.28007 13.8201C5.03575 14.9508 6.10981 15.832 7.36638 16.3522C8.62295 16.8724 10.0056 17.0082 11.3393 16.7425C12.6731 16.4768 13.8981 15.8214 14.8594 14.8594" stroke="#333333" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</svg>

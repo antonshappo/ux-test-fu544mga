@@ -1,0 +1,2787 @@
+/* ═══ Дизайн-система Лемана ПРО — общие стили ═══
+   Подключать вместе с fonts.css.
+   Токены извлечены из Storybook, компоненты сверены с Figma. */
+
+:root {
+
+  /* ─── Шрифты ─── */
+  --font-base: LMMain, Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-title: LMTitle, Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --f-base: var(--font-base);
+  --f-title: var(--font-title);
+  --f-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --font-family: var(--font-base);
+
+  /* ─── Радиусы (Tokens / Roundings) ─── */
+  --rounding-s: 2px;         /* маленькое */
+  --rounding-m: 4px;         /* базовое, большинство компонентов */
+  --rounding-l: 8px;         /* крупные компоненты, Snackbar */
+  --rounding-xl: 16px;       /* модалки, виджеты */
+  --rounding-circular: 100vmin;  /* круглые элементы */
+
+
+  /* ─── Типографика ───────────────────────────────────────────────
+     Источник: Figma «🖥️📱App Web style» EeBsHNhBQvNYM3akPUMICR,
+     страница Typography WEB (нода 1294:6483). Сверено 2026-09-21 — 40 стилей.
+
+     ДВА СЕМЕЙСТВА ЗАГОЛОВКОВ, их легко перепутать:
+       heading       — LM Main (обычные заголовки)
+       heading extra — LM Title (акцентные, крупный letter-spacing)
+
+     letter-spacing ОБЯЗАТЕЛЕН: без него текст не совпадёт с макетом.
+       body/caption 0.2 · heading 0.25 · overline 0.6 · extra 0.6–1.2
+     ─────────────────────────────────────────────────────────────── */
+
+  /* Заголовки LM Main. Display и h1 — Bold 700, h2 и h3 — DemiBold 600 */
+  --fs-display: 49px;  --lh-display: 56px;   /* mobile: 35 / 40 */
+  --fs-h1: 35px;       --lh-h1: 40px;        /* mobile: 29 / 34 */
+  --fs-h2: 27px;       --lh-h2: 32px;        /* mobile: 23 / 28 */
+  --fs-h3: 21px;       --lh-h3: 26px;        /* mobile: 19 / 24 */
+  --ls-heading: 0.25px;
+  --fw-heading: 700;          /* display, h1 */
+  --fw-heading-sub: 600;      /* h2, h3 */
+
+  /* Заголовки extra — LM Title Bold 700, увеличенный трекинг */
+  --fs-display-extra: 49px;  --lh-display-extra: 56px;  --ls-display-extra: 1.2px;
+  --fs-h1-extra: 35px;       --lh-h1-extra: 40px;       --ls-h1-extra: 1px;
+  --fs-h2-extra: 27px;       --lh-h2-extra: 32px;       --ls-h2-extra: 0.6px;
+  --fs-h3-extra: 21px;       --lh-h3-extra: 26px;       --ls-h3-extra: 0.6px;
+  /* mobile extra: display 35/40 LS 1 · h1 29/34 · h2 23/28 · h3 19/24, все LS 0.6 */
+
+  /* Текст LM Main — размеры s / m / l.
+     long — для многострочного текста, short — для однострочного (интерлиньяж плотнее) */
+  --fs-body-s: 15px;   --lh-body-long-s: 20px;   --lh-body-short-s: 18px;
+  --fs-body-m: 17px;   --lh-body-long-m: 24px;   --lh-body-short-m: 22px;
+  --fs-body-l: 21px;   --lh-body-long-l: 28px;   --lh-body-short-l: 26px;
+  --fw-body: 400;
+  --fw-body-accent: 600;   /* accent и subtitle */
+  --ls-body: 0.2px;
+
+  /* subtitle — DemiBold 600 с интерлиньяжем short */
+  --lh-subtitle-s: 18px;  --lh-subtitle-m: 22px;  --lh-subtitle-l: 26px;
+
+  /* Minor 13px и Mini 11px */
+  --fs-minor: 13px;   --lh-minor: 16px;    /* caption: 400, caption accent: 600 */
+  --fs-mini: 11px;    --lh-mini: 14px;     /* regular: 400, accent: 600 */
+
+  /* Overline — LM Title Bold 700, трекинг 0.6. Пять размеров.
+     ВАЖНО: mini/overline выбивается — DemiBold 600 и трекинг 0.3 */
+  --fw-overline: 700;
+  --ls-overline: 0.6px;
+  --fs-overline-l: 21px;     --lh-overline-l: 28px;
+  --fs-overline-m: 17px;     --lh-overline-m: 24px;
+  --fs-overline-s: 15px;     --lh-overline-s: 20px;
+  --fs-overline-minor: 13px; --lh-overline-minor: 16px;
+  --fs-overline-mini: 11px;  --lh-overline-mini: 14px;
+  --fw-overline-mini: 600;   --ls-overline-mini: 0.3px;
+
+  /* Контролы (кнопки s / m / l). Совпадает с body: LM Main DemiBold 600, трекинг 0.2 */
+  --fs-control-s: 15px;  --lh-control-s: 20px;
+  --fs-control-m: 15px;  --lh-control-m: 20px;
+  --fs-control-l: 17px;  --lh-control-l: 24px;
+  --fw-control: 600;
+
+  /* ─── Бренд ─── */
+  --brand-primary: #FDC300;
+  --brand-dark: #BD7229;
+  --brand-light: #FBE2A2;
+  --brand-minor: #21282B;
+  --brand-secondary: #21282B;
+  --brand-invert: #FFFFFF;
+
+  /* ─── Контролы ─── */
+  --control-primary: #21282B;
+  --control-secondary: #CCC6B8;
+  --control-accent: #FDC300;
+  --control-minor: #E3E1D8;
+  --control-invert: #FFFFFF;
+  --control-primary-invert: #FFFFFF;
+  --control-hover-primary: #000000;
+  --control-hover-secondary: #B2A994;
+  --control-hover-accent: #E79F26;
+  --control-hover-minor: #CCC6B8;
+  --control_hover-primary: #000000;
+  --control_hover-secondary: #B2A994;
+  --control_hover-accent: #E79F26;
+  --control_hover-minor: #CCC6B8;
+
+  /* ─── Контролы: invert (для тёмного фона) ───
+     Источник: Figma «🖥️ Button Web» 7wfKu1grD3estuXYzrN9Zr, разделы Виды (3141:4123)
+     и Состояния (3141:4368), сверено 2026-09-21 через figma-work.
+     В исходной выгрузке fronton-токены.css отсутствовали — invert-кнопки падали
+     на невалидный var() и теряли фон. Значения совпали со Storybook-рендером. */
+  --control-minor-invert: #FFFFFF40;
+  --control-secondary-invert: #FFFFFF80;
+  --control-hover-primary-invert: #FFFFFFBF;
+  --control-hover-minor-invert: #FFFFFF80;
+  --control-hover-secondary-invert: #FFFFFF99;
+  --control_hover-primary-invert: #FFFFFFBF;
+  --control_hover-minor-invert: #FFFFFF80;
+  --control_hover-secondary-invert: #FFFFFF99;
+
+  /* ─── Фоны ─── */
+  --background-primary: #FFFFFF;
+  --background-secondary: #F5F4F1;
+  --background-accent: #21282B;
+
+  /* ─── Текст ─── */
+  --text-primary: #21282B;
+  --text-secondary: #5A5E60;
+  --text-minor: #919395;
+  --text-invert: #FFFFFF;
+  --text-primary-invert: #FFFFFF;
+  --text-secondary-invert: #FFFFFFBF;
+  --text-minor-invert: #FFFFFF80;
+
+  /* ─── Success ─── */
+  --success-primary: #009F57;
+  --success-dark: #006836;
+  --success-light: #BEF4DC;
+
+  /* ─── Attention (ошибка) ─── */
+  --attention-primary: #C33848;
+  --attention-dark: #9C312A;
+  --attention-light: #FFE1E4;
+
+  /* ─── Service (инфо) ─── */
+  --service-primary: #60A3BD;
+  --service-dark: #0D5263;
+  --service-light: #C2E5F4;
+
+  /* ─── Accent ─── */
+  --accent-primary: #FFE55A;
+  --accent-dark: #B09D37;
+  --accent-light: #F9EFBD;
+
+  /* ─── B2B ─── */
+  --b2b-primary: #AE6849;
+  --b2b-dark: #913300;
+  --b2b-light: #E5CDC3;
+  --b2b-accent: #21282B;
+
+  /* ─── Вторичная палитра ─── */
+  --secondary-green-primary: #A0B9B1;
+  --secondary-green_primary: #A0B9B1;
+  --secondary-green-dark: #5C8477;
+  --secondary-green_dark: #5C8477;
+  --secondary-green-light: #D5ECE3;
+  --secondary-green_light: #D5ECE3;
+  --secondary-grey: #21282B;
+  --secondary-blue-primary: #1563C5;
+  --secondary-blue_primary: #1563C5;
+  --secondary-blue-dark: #294877;
+  --secondary-blue_dark: #294877;
+  --secondary-blue-light: #D5E8FF;
+  --secondary-blue_light: #D5E8FF;
+  --secondary-orange-primary: #D95E00;
+  --secondary-orange_primary: #D95E00;
+  --secondary-orange-dark: #AD4B00;
+  --secondary-orange_dark: #AD4B00;
+  --secondary-orange-light: #F7DECC;
+  --secondary-orange_light: #F7DECC;
+  --secondary-purple-primary: #992D7A;
+  --secondary-purple_primary: #992D7A;
+  --secondary-purple-dark: #740354;
+  --secondary-purple_dark: #740354;
+  --secondary-purple-light: #EDDEEA;
+  --secondary-purple_light: #EDDEEA;
+  --secondary-yellow-primary: #FFE55A;
+  --secondary-yellow_primary: #FFE55A;
+  --secondary-yellow-dark: #B09D37;
+  --secondary-yellow_dark: #B09D37;
+  --secondary-yellow-light: #F9EFBD;
+  --secondary-yellow_light: #F9EFBD;
+  --secondary-red-primary: #CE0019;
+  --secondary-red_primary: #CE0019;
+  --secondary-red-dark: #8C030C;
+  --secondary-red_dark: #8C030C;
+  --secondary-red-light: #FFD7D4;
+  --secondary-red_light: #FFD7D4;
+  --secondary-black: #000000;
+  --secondary-white: #FFFFFF;
+
+
+  /* ─── Система отступов (Spacing system PDF) ───
+     Микромодуль 4px — всему кратно. Отступы разбиты на типы,
+     чтобы меньше ошибаться: этажи / паддинги контейнеров / инлайн-гэпы.
+     Совет ДС: использовать контрастные значения, немного разных на экране. */
+
+  /* Между «этажами» — крупными смысловыми блоками экрана */
+  --level-s: 40px;
+  --level-m: 64px;
+  --level-l: 80px;
+
+  /* Внутренние отступы контейнеров (карточки, компоненты, секции) */
+  --padding-s: 12px;
+  --padding-m: 16px;
+  --padding-l: 24px;
+  --padding-xl: 32px;
+
+  /* Инлайн-гэпы между элементами внутри контейнера */
+  --gap-xs: 4px;
+  --gap-s: 8px;
+  --gap-m: 12px;
+  --gap-l: 16px;
+  --gap-xl: 24px;
+  --gap-xxl: 32px;
+
+  /* ─── Спейсинг (шкала Fronton) ─── */
+  --space-10: 1px;
+  --space-25: 2px;
+  --space-35: 3px;
+  --space-50: 4px;
+  --space-60: 5px;
+  --space-75: 6px;
+  --space-85: 7px;
+  --space-100: 8px;
+  --space-125: 10px;
+  --space-150: 12px;
+  --space-175: 14px;
+  --space-200: 16px;
+  --space-225: 18px;
+  --space-250: 20px;
+  --space-275: 22px;
+  --space-300: 24px;
+  --space-325: 26px;
+  --space-350: 28px;
+  --space-375: 30px;
+  --space-400: 32px;
+  --space-425: 34px;
+  --space-450: 36px;
+  --space-475: 38px;
+  --space-500: 40px;
+  --space-525: 42px;
+  --space-550: 44px;
+  --space-575: 46px;
+  --space-600: 48px;
+  --space-625: 50px;
+  --space-650: 52px;
+  --space-675: 54px;
+  --space-700: 56px;
+  --space-725: 58px;
+  --space-750: 60px;
+  --space-775: 62px;
+  --space-800: 64px;
+  --space-825: 66px;
+  --space-850: 68px;
+  --space-875: 70px;
+  --space-900: 72px;
+  --space-925: 74px;
+  --space-950: 76px;
+  --space-975: 78px;
+  --space-1000: 80px;
+
+  /* ─── Тени ─── */
+  --box-shadow-m: 0 1.17px 2px rgba(0, 0, 0, 0.0196802), 0 1.4px 5px rgba(0, 0, 0, 0.03), 0 2px 10px rgba(0, 0, 0, 0.03), 0 2px 18px rgba(0, 0, 0, 0.04), 0 9px 33px rgba(0, 0, 0, 0.03);
+  --box-shadow-m-up: 0 -1.17px 2px rgba(0, 0, 0, 0.0196802), 0 -1.4px 5px rgba(0, 0, 0, 0.03), 0 -2px 10px rgba(0, 0, 0, 0.03), 0 -2px 18px rgba(0, 0, 0, 0.04), 0 -9px 33px rgba(0, 0, 0, 0.03);
+  --box-shadow-s: 0 1px 4px rgba(0, 0, 0, 0.16), 0 2px 9px rgba(0, 0, 0, 0.02);
+  --box-shadow-s-up: 0 -1px 4px rgba(0, 0, 0, 0.16), 0 -2px 9px rgba(0, 0, 0, 0.02);
+  --box-shadow-l: 0 0.166035px 2.21381px rgba(0, 0, 0, 0.0196802), 0 0.399006px 5.32008px rgba(0, 0, 0, 0.0282725), 0 0.751293px 10.0172px rgba(0, 0, 0, 0.035), 0 12px 40px rgba(0, 0, 0, 0.08);
+  --box-shadow-l-up: 0 -0.166035px 2.21381px rgba(0, 0, 0, 0.0196802), 0 -0.399006px 5.32008px rgba(0, 0, 0, 0.0282725), 0 -0.751293px 10.0172px rgba(0, 0, 0, 0.035), 0 -12px 40px rgba(0, 0, 0, 0.08);
+
+}
+
+:root {
+  --f-title: LMTitle, Roboto, system-ui, sans-serif;
+  --f-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+
+:root {
+  /* invert-токены: отсутствуют в fronton-токены.css, значения из Storybook */
+  --control-minor-invert: #FFFFFF40;
+  --control-secondary-invert: #FFFFFF80;
+  --control_hover-primary-invert: #FFFFFFBF;
+  --control_hover-minor-invert: #FFFFFF80;
+  --control_hover-secondary-invert: #FFFFFF99;
+}
+
+
+/* ═══════════════════════════════════════════════
+   ОБВЯЗКА СТРАНИЦ — единая для индекса и компонентов
+   ═══════════════════════════════════════════════ */
+:root {
+  --f-base: var(--font-base);
+  --f-title: var(--font-title);
+  --f-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  /* invert-токены кнопок: нет в fronton-токены.css, значения из Storybook */
+  --control-minor-invert: #FFFFFF40;
+  --control-secondary-invert: #FFFFFF80;
+  --control_hover-primary-invert: #FFFFFFBF;
+  --control_hover-minor-invert: #FFFFFF80;
+  --control_hover-secondary-invert: #FFFFFF99;
+  /* служебные цвета страницы.
+     --bg намеренно НЕ равен токену --background-secondary (#F5F4F1):
+     это фон самого справочника, а не значение из ДС. */
+  --bg: #F5F5F5;
+  --surface: var(--background-primary);
+  --border: var(--control-minor);
+  --muted: var(--text-minor);
+  --ink: var(--text-primary);
+  --code-bg: var(--background-secondary);
+  --warn-bg: #FFF8E1; --warn-border: #F0C000;
+  --ok-bg: var(--success-light); --ok-border: var(--success-primary);
+  --err-bg: var(--attention-light); --err-border: var(--attention-primary);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #14181A; --surface: #1C2124; --border: #2E3438;
+    --muted: #9AA4A8; --ink: #E8EBEC; --code-bg: #22282B;
+    --warn-bg: #2A2413; --warn-border: #8A7000;
+    --ok-bg: #16241A; --ok-border: #2F6B34;
+    --err-bg: #2C1618; --err-border: #8C3038;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #14181A; --surface: #1C2124; --border: #2E3438;
+  --muted: #9AA4A8; --ink: #E8EBEC; --code-bg: #22282B;
+  --warn-bg: #2A2413; --warn-border: #8A7000;
+  --ok-bg: #16241A; --ok-border: #2F6B34;
+  --err-bg: #2C1618; --err-border: #8C3038;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; padding: 0 16px 80px; background: var(--bg); color: var(--ink);
+  font-family: var(--f-base); font-size: 15px; line-height: 20px; -webkit-font-smoothing: antialiased; }
+.wrap { max-width: 1040px; margin: 0 auto; }
+a { color: inherit; }
+
+/* шапка страницы компонента */
+.chead { padding: 28px 0 24px; border-bottom: 1px solid var(--border); margin-bottom: 36px; }
+.crumbs { font-size: 13px; color: var(--muted); margin: 0 0 14px; }
+.crumbs a { text-decoration: none; opacity: .85; }
+.crumbs a:hover { opacity: 1; text-decoration: underline; }
+h1 { font-family: var(--f-title); font-size: 34px; line-height: 40px; margin: 0 0 8px; letter-spacing: .4px; }
+.sub { color: var(--muted); font-size: 15px; line-height: 22px; margin: 0; max-width: 64ch; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; align-items: center; }
+.pill { font-size: 12px; padding: 4px 10px; border: 1px solid var(--border); border-radius: 999px; color: var(--muted); }
+.pill--ok { border-color: var(--ok-border); color: var(--ok-border); }
+.pill--err { border-color: var(--err-border); color: var(--err-border); }
+.copyhint { font-size: 12px; color: var(--muted); margin: 14px 0 0; }
+
+h2 { font-family: var(--f-title); font-size: 22px; line-height: 28px; margin: 44px 0 6px; letter-spacing: .3px; }
+h3 { font-size: 15px; margin: 26px 0 10px; font-weight: 600; }
+.hint, .lead { color: var(--muted); font-size: 14px; line-height: 20px; margin: 0 0 18px; max-width: 72ch; }
+
+/* доски демонстрации */
+.board { border: 1px solid var(--border); border-radius: var(--rounding-l); overflow: hidden; background: var(--surface); }
+.board + .board { margin-top: 18px; }
+.board__head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  padding: 12px 20px; background: var(--bg); border-bottom: 1px solid var(--border);
+  font-size: 13px; font-weight: 600; color: var(--muted); }
+.board__body { padding: 4px 20px 18px; }
+.board--invert .board__body { background: #0A0A0A; }
+.board--invert .row { border-bottom-color: #2A2A2A; }
+.board--invert .row__label, .board--invert .cell__cap { color: #8A9296; }
+.board--invert code.cp { background: #1A1A1A; border-color: #333; color: #D8DCDD; }
+
+.row { display: grid; grid-template-columns: minmax(180px, 210px) 1fr 1fr; gap: 20px; align-items: start;
+  padding: 16px 0; border-bottom: 1px dashed var(--border); }
+.row--wide { grid-template-columns: minmax(180px, 210px) 1fr; }
+/* .row жёстко рассчитан на 2 колонки примеров. Доски с тремя колонками
+   (Badge: primary/secondary/pseudo) переносили третью на новую строку. */
+.row--3 { grid-template-columns: minmax(180px, 210px) 1fr 1fr 1fr; }
+.row:last-child { border-bottom: 0; }
+.row__label { font-size: 11px; font-weight: 600; color: var(--muted); letter-spacing: .4px; }
+.row__label small { display: block; font-weight: 400; margin: 3px 0 7px; letter-spacing: 0; opacity: .8; }
+.cell__cap { display: block; font-size: 10px; color: var(--muted); margin-bottom: 8px; letter-spacing: .3px; }
+.cell--empty { font-size: 12px; color: var(--muted); font-style: italic; opacity: .7; }
+.demo { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+@media (max-width: 720px) { .row, .row--wide { grid-template-columns: 1fr; gap: 12px; } }
+
+/* теги классов */
+code.cp { font-family: var(--f-mono); font-size: 12px; background: var(--code-bg);
+  border: 1px solid var(--border); border-radius: var(--rounding-s); padding: 2px 7px;
+  cursor: pointer; color: var(--ink); display: inline-block; max-width: 100%; overflow-wrap: anywhere;
+  transition: background .12s, border-color .12s; }
+code.cp:hover { border-color: var(--muted); }
+code.cp.copied { background: var(--ok-bg); border-color: var(--ok-border); color: var(--ok-border); }
+code.cp.copied::after { content: " ✓"; }
+code.cp.is-missing { border-style: dashed; }
+.tagrow { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
+.badge-missing, .miss { font-size: 10px; letter-spacing: .3px; padding: 2px 7px; border-radius: var(--rounding-s);
+  background: var(--err-bg); border: 1px solid var(--err-border); color: var(--err-border); white-space: nowrap; }
+
+/* таблицы */
+.tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+th { font-size: 11px; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); font-weight: 600; }
+td code:not(.cp) { font-family: var(--f-mono); font-size: 12px; background: var(--code-bg); padding: 1px 5px; border-radius: var(--rounding-s); }
+.sw { display: inline-block; width: 12px; height: 12px; border-radius: 3px; border: 1px solid var(--border); vertical-align: -2px; margin-right: 5px; }
+
+/* блоки-заметки */
+.note { border-radius: var(--rounding-l); padding: 16px 20px; margin-bottom: 14px; border: 1px solid; }
+.note--warn { background: var(--warn-bg); border-color: var(--warn-border); }
+.note--err { background: var(--err-bg); border-color: var(--err-border); }
+.note--ok { background: var(--ok-bg); border-color: var(--ok-border); }
+.note__t { font-weight: 600; font-size: 14px; margin: 0 0 6px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.note__b { font-size: 13px; line-height: 20px; margin: 0; color: var(--muted); }
+.sev { font-size: 10px; text-transform: uppercase; letter-spacing: .5px; padding: 2px 7px; border-radius: var(--rounding-s); font-weight: 700; }
+.sev--high { background: var(--err-border); color: #fff; }
+.sev--med { background: var(--warn-border); color: #21282B; }
+.sev--low { background: var(--border); color: var(--muted); }
+.sev--ok { background: var(--ok-border); color: #fff; }
+
+pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: var(--rounding-l);
+  padding: 16px; overflow-x: auto; font-size: 12.5px; line-height: 1.6; font-family: var(--f-mono); }
+footer { margin-top: 52px; padding-top: 20px; border-top: 1px solid var(--border); font-size: 12px; color: var(--muted); line-height: 20px; }
+
+
+/* ═══ КОМПОНЕНТЫ ═══ */
+.fr-accordion--stroke { border-radius: var(--rounding-l); }
+.fr-accordion--stroke > .fr-accordion__item {
+  position: relative;
+  display: grid;
+  grid-template-areas: "header-icon header-content" ". preview" ". body-content" "divider divider";
+  grid-template-rows: auto auto auto 1px;
+  grid-template-columns: auto 1fr;
+}
+/* Размер S: в прежней выгрузке правила отсутствовали — аккордеон --s рисовался
+   с паддингами по умолчанию. Значения из fronton-компоненты.css, сверены с Figma (16px). */
+.fr-accordion--s .fr-accordion__item { padding-inline: var(--space-200); }
+.fr-accordion--s .fr-accordion__header,
+.fr-accordion--s .fr-accordion__header-icon { padding-block: var(--space-200); }
+.fr-accordion--stroke > .fr-accordion__item:first-of-type { box-shadow: 1px 0 0 0 var(--control-minor) inset, 0 1px 0 0 var(--control-minor) inset, -1px 0 0 0 var(--control-minor) inset; border-radius: var(--rounding-l) var(--rounding-l) 0 0; }
+.fr-accordion--stroke > .fr-accordion__item:last-of-type  { box-shadow: 1px 0 0 0 var(--control-minor) inset, -1px 0 0 0 var(--control-minor) inset, 0 -1px 0 0 var(--control-minor) inset; border-radius: 0 0 var(--rounding-l) var(--rounding-l); }
+.fr-accordion__item {
+  position: relative;
+  display: grid;
+  grid-template-areas: "header-icon header-content" ". preview" ". body-content" "divider divider";
+  grid-template-rows: auto auto auto 1px;
+  grid-template-columns: auto 1fr;
+}
+.fr-accordion__item:hover { box-shadow: 0 1px 0 0 var(--control-hover-minor) inset; }
+.fr-accordion--m .fr-accordion__item { padding-inline: var(--space-300); }
+.fr-accordion__header {
+  grid-area: header-content;
+  display: flex;
+  gap: var(--space-100);
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition: padding-bottom .3s linear;
+  /* Сброс нативных стилей кнопки: без него браузер рисует серую подложку и рамку */
+  margin: 0; padding: 0; border: 0;
+  background: none; color: inherit; font: inherit;
+}
+.fr-accordion__header.is-non-interactive { cursor: default; }
+.fr-accordion--m .fr-accordion__header, .fr-accordion--m .fr-accordion__header-icon { padding-block: var(--space-400); }
+.fr-accordion__header-icon { grid-area: header-icon; display: flex; align-items: center; align-self: start; margin-right: 8px; transition: padding-bottom .3s linear; }
+/* Шеврон: в Figma ChevronDown/ChevronUp 20px в обёртке с padding 2px (бокс 24), stroke 1.25.
+   Раскрытый = ChevronUp → поворот исходного ChevronDown на 180°. */
+.fr-accordion__chevron { display: flex; flex: none; width: 24px; height: 24px; padding: 2px; box-sizing: border-box; color: var(--text-primary); transition: transform .3s; }
+.fr-accordion__chevron svg { width: 20px; height: 20px; }
+.fr-accordion__header.is-open .fr-accordion__chevron { transform: rotate(180deg); }
+/* Раскрытый пункт: в Figma вертикальный отступ 32/16 обрамляет заголовок + текст вместе,
+   поэтому у раскрытого заголовка нижнего отступа нет (текст идёт с pt 8). */
+.fr-accordion .fr-accordion__header.is-open,
+.fr-accordion .fr-accordion__item:has(> .fr-accordion__header.is-open) > .fr-accordion__header-icon { padding-bottom: 0; }
+/* Заголовок пункта: Body medium/accent — LM Main DemiBold 17/24, tracking .2 (оба размера) */
+.fr-accordion__title { flex: 1 1 auto; min-width: 0; font-size: 17px; line-height: 24px; font-weight: 600; letter-spacing: .2px; color: var(--text-primary); }
+/* Правый слот (Badge и т.п.): в Figma контейнер высотой 24, по центру */
+.fr-accordion__right { display: flex; flex: none; align-items: center; height: 24px; }
+.fr-accordion__header-icon svg { display: block; width: 24px; height: 24px; color: var(--text-primary); }
+.fr-accordion__content { grid-area: body-content; font-size: 15px; line-height: 20px; font-weight: 400; letter-spacing: .2px; color: var(--text-primary); }
+.fr-accordion--s .fr-accordion__content { padding: 8px 0 var(--space-200) 0; }
+.fr-accordion--m .fr-accordion__content { padding: 8px 0 var(--space-400) 0; }
+.fr-accordion__divider {
+  grid-area: divider;
+  border-top: 1px solid var(--control-minor);
+  /* В Figma разделитель идёт от края до края пункта, а padding-inline его обрезал.
+     Растягиваем обратно на величину горизонтального паддинга. */
+  margin-inline: calc(-1 * var(--space-300));
+}
+.fr-accordion--s .fr-accordion__divider { margin-inline: calc(-1 * var(--space-200)); }
+.fr-accordion__item:hover .fr-accordion__divider { border-top-color: var(--control-hover-minor); }
+/* Корневое правило было в fronton-компоненты.css, но не попало в ds.css. */
+.fr-breadcrumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  overflow: hidden;
+  /* Зазор между крошками — 4px (из группы 201:405) */
+  gap: 4px;
+}
+/* Модификаторов платформы в CSS Fronton нет вовсе: там один кегль 15/20,
+   то есть мобильный. Десктопный по Figma — 13/16. Восстановлено по 201:82. */
+.fr-breadcrumbs--desktop .fr-breadcrumbs__item { font-size: 13px; line-height: 16px; }
+.fr-breadcrumbs--mobile  .fr-breadcrumbs__item { font-size: 15px; line-height: 20px; }
+/* Крошка и её шеврон — одна группа, зазор внутри 2px на десктопе, 4px на мобиле */
+.fr-breadcrumbs--desktop .fr-breadcrumbs__item { display: inline-flex; align-items: center; gap: 2px; }
+.fr-breadcrumbs--mobile  .fr-breadcrumbs__item { display: inline-flex; align-items: center; gap: 4px; }
+/* В Figma крошки БЕЗ подчёркивания — браузерный дефолт на <a> надо гасить.
+   В базовом правиле .fr-breadcrumbs__item из Fronton text-decoration не задан. */
+.fr-breadcrumbs__item { text-decoration: none; }
+/* Текущая страница — последняя крошка, не ссылка */
+.fr-breadcrumbs__item.is-current { cursor: default; }
+.fr-breadcrumbs__item.is-current:hover { color: var(--text-secondary); }
+/* Инверсия — для тёмного фона (component set 201:470) */
+.fr-breadcrumbs.is-invert .fr-breadcrumbs__item { color: var(--text-secondary-invert, rgba(255,255,255,.75)); }
+.fr-breadcrumbs.is-invert .fr-breadcrumbs__item:hover { color: var(--text-primary-invert); }
+.fr-breadcrumbs.is-invert .fr-breadcrumbs__separator { color: inherit; }
+
+.fr-breadcrumbs__item {
+  letter-spacing: .2px;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 20px;
+  color: var(--text-secondary);
+  border: none;
+  background: none;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.fr-breadcrumbs__item:hover, .fr-breadcrumbs__item:active { color: var(--control-hover-primary); }
+/* Разделитель. В CSS Fronton было: 12px, margin-inline 4px, --text-minor.
+   В Figma: 16px, отступ задаётся gap'ом крошки (2px), цвет = цвету текста. */
+.fr-breadcrumbs__separator {
+  --icon-size: 16px;
+  display: inline-flex;
+  align-items: center;
+  color: inherit;
+  font-size: 16px;
+  line-height: 1;
+}
+/* Корневая сетка аватара: в прежней выгрузке ds.css её не было — колонки
+   не раскладывались. Восстановлено из fronton-компоненты.css.
+   Ширина средней (пустой) колонки — это и есть зазор между эмблемой и текстом;
+   в Figma он 12px для L/M и 8px для S/XS, в исходном CSS не задан вовсе. */
+.fr-avatar {
+  position: relative;
+  display: grid;
+  grid-template-areas: "picture . name" "picture . description";
+  grid-template-columns: auto 12px 1fr;
+  width: fit-content;
+  align-items: start;
+  font-family: var(--font-base);
+}
+.fr-avatar--s, .fr-avatar--xs { grid-template-columns: auto 8px 1fr; }
+/* Текстовая часть: правил не было ни в ds.css, ни в fronton-компоненты.css.
+   Значения из Figma (component set 203:1299). */
+.fr-avatar__name { grid-area: name; letter-spacing: .2px; color: var(--text-primary); font-weight: 600; }
+/* В Figma имя лежит в контейнере Title с верхним отступом (L 4 / M 2 / XS 4),
+   а между именем и подписью — gap 4 (L) и 2 (M). Половина визуальной щели
+   между строками уже дают line-height, поэтому отступ задаём точно. */
+.fr-avatar--l .fr-avatar__name { padding-top: 4px; }
+.fr-avatar--m .fr-avatar__name { padding-top: 2px; }
+/* S и XS: подписи нет, имя центрируется по эмблеме (Figma: Name master justify-center) */
+.fr-avatar--s, .fr-avatar--xs { align-items: center; }
+.fr-avatar--s { min-height: 32px; grid-template-rows: 18px; }
+.fr-avatar--xs { min-height: 24px; grid-template-rows: 16px; }
+/* Межстрочный зазор имя↔подпись: Figma L 4 / M 2 (gap контейнера Name master) */
+.fr-avatar--l { row-gap: 4px; min-height: 48px; grid-template-rows: 26px 16px; }
+.fr-avatar--m { row-gap: 2px; min-height: 40px; grid-template-rows: 20px 16px; }
+/* Имя — одна строка с многоточием (в Figma overflow=ellipsis по умолчанию) */
+.fr-avatar__name, .fr-avatar__description { display: block; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fr-avatar__description { grid-area: description; letter-spacing: .2px; color: var(--text-secondary); font-size: 13px; line-height: 16px; }
+.fr-avatar--l  .fr-avatar__name { font-size: 17px; line-height: 22px; }
+.fr-avatar--m  .fr-avatar__name { font-size: 15px; line-height: 18px; }
+.fr-avatar--s  .fr-avatar__name { font-size: 15px; line-height: 18px; }
+.fr-avatar--xs .fr-avatar__name { font-size: 13px; line-height: 16px; }
+/* Подпись есть только у L и M — у S и XS её нет по спецификации */
+.fr-avatar--s .fr-avatar__description,
+.fr-avatar--xs .fr-avatar__description { display: none; }
+/* Фокус — жёлтое кольцо (--accent-primary), из страницы «Состояния» */
+.fr-avatar.is-clickable { cursor: pointer; }
+.fr-avatar.is-clickable:focus-visible { outline: none; }
+.fr-avatar.is-clickable:focus-visible .fr-avatar__picture {
+  box-shadow: 0 0 0 2px var(--accent-primary);
+}
+
+.fr-avatar__picture {
+  grid-area: picture;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: start;
+  overflow: hidden;
+  border-radius: var(--rounding-circular);
+  font-weight: 600;
+  transition: opacity .2s ease-out;
+  /* Заливки по умолчанию в выгрузке не было — Fill-эмблема выходила прозрачной.
+     Значение из Figma: --control-minor. */
+  background: var(--control-minor);
+  color: var(--text-primary);
+  letter-spacing: .2px;
+}
+.fr-avatar__picture img { width: 100%; height: 100%; object-fit: cover; }
+.fr-avatar--xs .fr-avatar__picture { width: 24px; height: 24px; font-size: 13px; line-height: 16px; }
+.fr-avatar--s  .fr-avatar__picture { width: 32px; height: 32px; font-size: 15px; line-height: 20px; }
+.fr-avatar--m  .fr-avatar__picture { width: 40px; height: 40px; font-size: 15px; line-height: 20px; }
+.fr-avatar--l  .fr-avatar__picture { width: 48px; height: 48px; font-size: 17px; line-height: 24px; }
+.fr-avatar.is-clickable:hover .fr-avatar__picture { opacity: .8; }
+/* ═══ Input ═══
+   Figma 8fr51MkZiM8cLcfJMoa8Y5 (L 230:11396, M 234:19494, S 234:18232,
+   mobile 234:18902/230:14842/234:20086, invert 234:20880…). Устройство —
+   как в fronton-react input/styles/base.module.css: рамка = <fieldset>,
+   вырез под label = <legend> (настоящий разрыв рамки, фон не нужен).
+   Над полем всегда 12px под «взлетевший» label: L 60 = 12+48, M 52 = 12+40,
+   S 44 = 12+32. Состояния: класс (.is-focused/.has-value/.is-hover —
+   для статичных примеров) или живое взаимодействие (:focus-within и т.п.). */
+.fr-input {
+  --in-px: 12px; --in-py: 10px; --in-fs: 15px; --in-lh: 20px;
+  --in-label-fs: 15px; --in-label-lh: 18px; --in-label-top: -11px; --in-clear: 20px;
+  --in-border: var(--control-secondary);
+  --in-border-hover: var(--control-hover-secondary);
+  --in-border-focus: var(--control-primary);
+  --in-text: var(--text-primary);
+  --in-minor: var(--text-minor);
+  --in-disabled-bg: var(--control-minor);
+  display: flex; flex-direction: column; gap: 4px; width: 100%; padding-top: 12px; box-sizing: border-box;
+}
+.fr-input--l { --in-px: 16px; --in-py: 12px; --in-fs: 17px; --in-lh: 24px; }
+.fr-input--m { --in-px: 12px; --in-py: 10px; }
+.fr-input--s { --in-px: 12px; --in-py: 6px; --in-label-fs: 13px; --in-label-lh: 16px; --in-label-top: -8px; --in-clear: 16px; }
+
+.fr-input__control { position: relative; display: flex; align-items: center; gap: 4px; padding: 0 var(--in-px); }
+
+.fr-input__border {
+  position: absolute; inset: 0; z-index: 0; margin: 0; min-width: 0;
+  padding: 0 calc(var(--in-px) - 5px);
+  border: 1px solid var(--in-border); border-radius: var(--rounding-m, 4px);
+  background: transparent; pointer-events: none;
+  transition: border-color .2s ease-out;
+}
+.fr-input__border:has(.fr-input__legend) { top: -9px; }
+.fr-input__legend {
+  display: block; height: 18px; max-width: .01px; padding: 0;
+  font-size: var(--in-label-fs); line-height: 18px; letter-spacing: .2px; white-space: nowrap;
+  visibility: hidden;
+}
+.fr-input__legend > span { padding: 0 4px; }
+
+.fr-input__label {
+  position: absolute; z-index: 1; left: var(--in-px); top: var(--in-py);
+  max-width: calc(100% - 2 * var(--in-px));
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font-size: var(--in-fs); line-height: var(--in-lh); letter-spacing: .2px;
+  color: var(--in-minor); pointer-events: none;
+  transition: top .2s ease-in-out, font-size .2s ease-in-out, line-height .2s ease-in-out, color .2s;
+}
+
+.fr-input__field {
+  position: relative; z-index: 1; flex: 1 0 0; min-width: 0; margin: 0;
+  padding: var(--in-py) 0; border: 0; outline: none; appearance: none; background: transparent;
+  font-family: inherit; font-size: var(--in-fs); line-height: var(--in-lh); font-weight: 400; letter-spacing: .2px;
+  color: var(--in-text);
+}
+.fr-input__field::placeholder { color: var(--in-minor); opacity: 1; }
+/* С label плейсхолдер скрыт, пока поле не в фокусе: в покое на его месте лежит сам label */
+.fr-input:has(.fr-input__label) .fr-input__field::placeholder { opacity: 0; transition: opacity .1s; }
+
+.fr-input__clear {
+  position: relative; z-index: 1; flex-shrink: 0; display: none; align-items: center; justify-content: center;
+  width: var(--in-clear); height: var(--in-clear); padding: 0; margin: 0;
+  border: 0; background: none; cursor: pointer; color: var(--in-minor); border-radius: var(--rounding-m, 4px);
+}
+.fr-input__clear svg { display: block; width: 100%; height: 100%; }
+
+.fr-input__caption { padding: 0 var(--in-px); }
+
+/* — Активный label: фокус или есть значение — */
+.fr-input:is(.is-focused, :focus-within, .has-value, :has(.fr-input__field:not(:placeholder-shown))) .fr-input__legend { max-width: 1000px; }
+.fr-input:is(.is-focused, :focus-within, .has-value, :has(.fr-input__field:not(:placeholder-shown))) .fr-input__label {
+  top: var(--in-label-top); font-size: var(--in-label-fs); line-height: var(--in-label-lh);
+}
+.fr-input:is(.is-focused, :focus-within) .fr-input__label { color: var(--in-text); }
+.fr-input:is(.is-focused, :focus-within) .fr-input__field::placeholder { opacity: 1; }
+.fr-input:is(.has-value, :has(.fr-input__field:not(:placeholder-shown))):not(.is-disabled) .fr-input__clear { display: inline-flex; }
+
+/* — Рамка по состояниям (порядок важен: фокус перекрывает error) — */
+.fr-input:not(.is-disabled):is(:hover, .is-hover) .fr-input__border { border-color: var(--in-border-hover); }
+.fr-input.is-error .fr-input__border { border-color: var(--attention-primary); }
+.fr-input.is-error:not(.is-disabled):is(:hover, .is-hover) .fr-input__border { border-color: var(--attention-dark); }
+.fr-input:is(.is-focused, :focus-within) .fr-input__border {
+  border-color: var(--in-border-focus); border-width: 2px; padding: 0 calc(var(--in-px) - 6px);
+}
+
+/* — Disabled: весь блок 40%, заливка поля control/minor — */
+.fr-input.is-disabled { opacity: .4; }
+.fr-input.is-disabled .fr-input__border { background: var(--in-disabled-bg); border-color: var(--in-border); }
+.fr-input.is-disabled .fr-input__field { cursor: not-allowed; }
+
+/* — Mobile: только нижняя линия, без бокового отступа и выреза — */
+.fr-input--mobile { --in-px: 0px; }
+.fr-input--mobile .fr-input__border { top: 0; border-width: 0 0 1px; border-radius: 0; padding: 0; }
+.fr-input--mobile .fr-input__border:has(.fr-input__legend) { top: 0; }
+.fr-input--mobile .fr-input__legend { display: none; }
+.fr-input--mobile:is(.is-focused, :focus-within) .fr-input__border { border-width: 0 0 2px; padding: 0; }
+
+/* — Invert (тёмный фон) — */
+.fr-input.is-invert {
+  --in-border: var(--control-secondary-invert);
+  --in-border-hover: var(--control-hover-secondary-invert);
+  --in-border-focus: var(--control-primary-invert);
+  --in-text: var(--text-primary-invert);
+  --in-minor: var(--text-minor-invert);
+  --in-disabled-bg: var(--control-minor-invert);
+}
+/* ═══ Checkbox ═══
+   Базовое правило .fr-checkbox (--checkbox-size по умолчанию и цвета)
+   отсутствовало в ds.css — было только .fr-checkbox--l и производные,
+   ссылавшиеся на переменные, никогда не объявленные для размера M.
+   Восстановлено из fronton-компоненты.css (строки 379-393) + border-radius
+   исправлен на var(--rounding-m) (было --rounding-s — не совпадало с Figma,
+   где угол бокса везде rounded-[4px]). */
+.fr-checkbox {
+  --checkbox-size: 20px;
+  --checkbox-primary-color: var(--control-primary);
+  --checkbox-hover-color: var(--control-hover-primary);
+  --checkbox-border-color: var(--control-secondary);
+  --checkbox-border-hover-color: var(--control-hover-secondary);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  letter-spacing: .2px;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 18px;
+  cursor: pointer;
+}
+.fr-checkbox--l { font-size: 17px; line-height: 22px; --checkbox-size: 24px; }
+.fr-checkbox.is-disabled { pointer-events: none; opacity: .4; }
+.fr-checkbox__input { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+.fr-checkbox__box {
+  position: relative;
+  flex: none;
+  width: var(--checkbox-size);
+  height: var(--checkbox-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--background-primary);
+  border: 2px solid var(--checkbox-border-color);
+  border-radius: var(--rounding-m);
+  transition: background-color .2s ease-out, border-color .2s ease-out;
+}
+.fr-checkbox__box svg { position: absolute; color: var(--background-primary); stroke: currentColor; stroke-width: 1.25; stroke-linecap: round; stroke-linejoin: round; transform: scale(0); transition: transform .15s ease-out; }
+.fr-checkbox.is-checked .fr-checkbox__box,
+.fr-checkbox.is-indeterminate .fr-checkbox__box { background: var(--checkbox-primary-color); border-color: var(--checkbox-primary-color); }
+.fr-checkbox.is-checked .fr-checkbox__box svg,
+.fr-checkbox.is-indeterminate .fr-checkbox__box svg { transform: scale(1); }
+.fr-checkbox:hover:not(.is-disabled) .fr-checkbox__box { border-color: var(--checkbox-border-hover-color); }
+.fr-checkbox:hover:not(.is-disabled).is-checked .fr-checkbox__box,
+.fr-checkbox:hover:not(.is-disabled).is-indeterminate .fr-checkbox__box { background: var(--checkbox-hover-color); border-color: var(--checkbox-hover-color); }
+.fr-checkbox__label { display: block; flex-grow: 1; margin-top: 1px; margin-left: 8px; color: var(--text-primary); user-select: none; }
+
+/* Alert — только для невыбранного положения, как и у Radio */
+.fr-checkbox.is-alert .fr-checkbox__box { border-color: var(--attention-primary); }
+.fr-checkbox.is-alert:hover:not(.is-disabled) .fr-checkbox__box { border-color: var(--attention-dark); }
+
+/* Focused — по табуляции; отсутствовало в исходной CSS, добавлено по спеке (203:1753 и др.) */
+.fr-checkbox__input:focus-visible ~ .fr-checkbox__box { box-shadow: 0 0 0 2px var(--secondary-yellow-primary); }
+
+/* ─ Invert: для тёмного фона. Полярность ОБРАТНАЯ относительно unchecked
+   в светлой теме — невыбранный бокс тёмный (не белый/прозрачный),
+   выбранный/промежуточный — белый с тёмной иконкой. Не тот же трюк,
+   что у Radio (см. checkbox.json discrepancy checkboxNoInvertInCss). ─ */
+.fr-checkbox.is-invert { color: var(--text-primary-invert); }
+.fr-checkbox.is-invert .fr-checkbox__box { background: var(--control-primary); border-color: rgba(255,255,255,.5); }
+.fr-checkbox.is-invert:hover:not(.is-disabled) .fr-checkbox__box { border-color: rgba(255,255,255,.6); }
+.fr-checkbox.is-invert.is-checked .fr-checkbox__box,
+.fr-checkbox.is-invert.is-indeterminate .fr-checkbox__box { background: var(--control-primary-invert); border-color: var(--control-primary-invert); }
+.fr-checkbox.is-invert.is-checked .fr-checkbox__box svg,
+.fr-checkbox.is-invert.is-indeterminate .fr-checkbox__box svg { color: var(--control-primary); }
+.fr-checkbox.is-invert:hover:not(.is-disabled).is-checked .fr-checkbox__box,
+.fr-checkbox.is-invert:hover:not(.is-disabled).is-indeterminate .fr-checkbox__box { background: rgba(255,255,255,.75); border-color: rgba(255,255,255,.75); }
+.fr-checkbox.is-invert.is-alert .fr-checkbox__box { background: var(--control-primary); border-color: var(--attention-primary); }
+.fr-checkbox.is-invert.is-alert:hover:not(.is-disabled) .fr-checkbox__box { border-color: var(--attention-dark); }
+.fr-checkbox.is-invert .fr-checkbox__label { color: var(--text-primary-invert); }
+/* ═══ Counter ═══
+   1:1 по Figma (201:1422 L / 232:1476 M / 232:1614 S + invert-пары).
+   Бокс: L 136×48, M 112×40, S 96×32. Колонки кнопок = padding+иконка 20+padding
+   (14/10/6px) → 48/40/32. Обводка в Figma — inside и не меняет размер бокса,
+   поэтому рисуется inset box-shadow, а не border.
+   Код fronton-react устроен иначе (кнопки вне рамки, без единицы) — см. counter.json. */
+.fr-counter {
+  --cnt-stroke: var(--control-secondary); --cnt-stroke-w: 1px;
+  --cnt-btn: 48px; --cnt-pad: 14px;
+  display: inline-grid; grid-template-columns: var(--cnt-btn) 1fr var(--cnt-btn); align-items: center;
+  box-sizing: border-box; height: var(--cnt-btn);
+  background: var(--control-primary-invert); color: var(--text-primary);
+  border-radius: var(--rounding-m);
+  box-shadow: inset 0 0 0 var(--cnt-stroke-w) var(--cnt-stroke);
+  font-family: var(--font-base); font-weight: 400; letter-spacing: .2px;
+}
+.fr-counter--l { width: 136px; --cnt-btn: 48px; --cnt-pad: 14px; font-size: 17px; line-height: 24px; }
+.fr-counter--m { width: 112px; --cnt-btn: 40px; --cnt-pad: 10px; font-size: 15px; line-height: 20px; }
+.fr-counter--s { width: 96px;  --cnt-btn: 32px; --cnt-pad: 6px;  font-size: 15px; line-height: 20px; }
+.fr-counter--wide { width: 100%; }
+.fr-counter__btn {
+  display: flex; align-items: center; justify-content: center;
+  width: var(--cnt-btn); height: var(--cnt-btn); padding: var(--cnt-pad);
+  margin: 0; border: 0; background: none; color: inherit; cursor: pointer; box-sizing: border-box;
+}
+.fr-counter__btn svg { width: 20px; height: 20px; flex: none; }
+.fr-counter__value { display: flex; gap: 4px; justify-content: center; align-items: flex-start; min-width: 0; white-space: nowrap; }
+.fr-counter__cursor { width: 2px; align-self: stretch; margin-left: -4px; background: var(--brand-dark); }
+
+.fr-counter:hover, .fr-counter.is-hover { --cnt-stroke: var(--control-hover-secondary); }
+.fr-counter.is-error { --cnt-stroke: var(--attention-primary); }
+.fr-counter.is-error:hover, .fr-counter.is-error.is-hover { --cnt-stroke: var(--attention-dark); }
+.fr-counter.is-typing { --cnt-stroke: var(--control-primary); --cnt-stroke-w: 2px; }
+.fr-counter.is-disabled { opacity: .4; pointer-events: none; }
+.fr-counter:focus-within:has(:focus-visible) { outline: 2px solid var(--secondary-yellow-primary); outline-offset: -1px; }
+
+/* ─ Invert ─ */
+.fr-counter.is-invert { background: var(--control-primary); color: var(--text-primary-invert); --cnt-stroke: var(--control-secondary-invert); }
+.fr-counter.is-invert:hover, .fr-counter.is-invert.is-hover { --cnt-stroke: var(--control-hover-secondary-invert); }
+.fr-counter.is-invert.is-error { --cnt-stroke: var(--attention-primary); }
+.fr-counter.is-invert.is-error:hover, .fr-counter.is-invert.is-error.is-hover { --cnt-stroke: var(--attention-dark); }
+.fr-counter.is-invert.is-typing { --cnt-stroke: var(--control-primary-invert); }
+
+/* ═══ Chip ═══
+   Базовое правило .fr-chip (форма, отступы, шрифт) отсутствовало
+   в ds.css — были только 4 цветовых модификатора без контейнера.
+   Restored из fronton-компоненты.css с исправлением padding
+   (4px 10px давал высоту 28px вместо нужных 32px по Figma). */
+.fr-chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 280px;
+  letter-spacing: .2px;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 20px;
+  padding: 6px 8px;
+  border-radius: var(--rounding-circular);
+  cursor: pointer;
+  transition: background-color .15s, border-color .15s;
+}
+.fr-chip__icon { flex-shrink: 0; width: 16px; height: 16px; display: block; }
+.fr-chip__label { opacity: .8; }
+.fr-chip__text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.fr-chip--primary   { color: var(--text-invert);  background: var(--control-primary); }
+.fr-chip--secondary { color: var(--text-primary); background: var(--control-minor); }
+.fr-chip--outline   { color: var(--text-primary); border: 2px solid var(--control-secondary); height: 32px; }
+.fr-chip--pseudo    { color: var(--text-primary); }
+
+/* Hover — отсутствовал в исходной CSS полностью */
+.fr-chip--primary:hover   { background: var(--control-hover-primary); }
+.fr-chip--secondary:hover { background: var(--control-hover-minor); }
+.fr-chip--outline:hover   { border-color: var(--control-hover-secondary); }
+.fr-chip--pseudo:hover    { background: var(--control-minor); }
+
+/* Focused — по табуляции; отсутствовал в исходной CSS.
+   У Outline кольцо смещено наружу, чтобы не слиться с рамкой чипа. */
+.fr-chip:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--secondary-yellow-primary); }
+.fr-chip--outline:focus-visible { box-shadow: 0 0 0 2px var(--background-primary), 0 0 0 4px var(--secondary-yellow-primary); }
+
+.fr-chip__delete { display: inline-flex; flex-shrink: 0; width: 16px; height: 16px; opacity: .6; transition: opacity .15s; color: inherit; background: none; border: none; padding: 0; cursor: pointer; }
+.fr-chip__delete svg { width: 16px; height: 16px; }
+.fr-chip:hover .fr-chip__delete, .fr-chip:active .fr-chip__delete { opacity: 1; }
+/* ═══ Infobar ═══
+   Информационная плашка. 7 цветовых тем, 3 структуры:
+   Close=Yes (крестик + кнопки снизу) / Close=No (кнопки снизу) /
+   Vertical (компакт: кнопки справа в строке с текстом).
+   Контейнер 344px (в бою — fluid), padding 12px, gap 12px, radius 8px.
+   Figma: nmRM77A8RYDAWs0692GJUr / 2701:2802 */
+.fr-infobar {
+  display: flex; flex-direction: column; align-items: flex-end; gap: 12px;
+  padding: 12px; border-radius: var(--rounding-l, 8px); width: 344px; max-width: 100%;
+  box-sizing: border-box; color: var(--text-primary);
+  background: var(--background-secondary);
+}
+.fr-infobar__content { display: flex; align-items: flex-start; gap: 8px; width: 100%; }
+.fr-infobar__text { display: flex; flex-direction: column; gap: 2px; flex: 1 0 0; min-width: 0; padding: 4px; }
+.fr-infobar__title { margin: 0; font-family: var(--f-base); font-weight: 600; font-size: 17px; line-height: 24px; letter-spacing: .2px; word-break: break-word; }
+.fr-infobar__paragraph { margin: 2px 0 0; font-family: var(--f-base); font-weight: 400; font-size: 15px; line-height: 20px; letter-spacing: .2px; word-break: break-word; }
+
+.fr-infobar__close {
+  flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px; padding: 6px; border: none; background: none;
+  cursor: pointer; border-radius: 100px; color: inherit;
+}
+.fr-infobar__close svg { width: 20px; height: 20px; display: block; }
+.fr-infobar__close:hover { background: rgba(0,0,0,0.06); }
+
+.fr-infobar__actions { display: flex; gap: 8px; align-items: flex-start; justify-content: flex-end; }
+.fr-infobar__btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 6px 12px; border-radius: var(--rounding-m, 4px);
+  font-family: var(--f-base); font-weight: 600; font-size: 15px; line-height: 20px;
+  letter-spacing: .2px; cursor: pointer; border: none; background: none; color: inherit;
+  white-space: nowrap;
+}
+.fr-infobar__btn:hover { background: rgba(0,0,0,0.06); }
+
+/* Vertical (компакт): кнопки встают справа в строку с текстом, gap контейнера убирается */
+.fr-infobar--vertical { gap: 0; }
+.fr-infobar--vertical .fr-infobar__content { align-items: center; }
+.fr-infobar--vertical .fr-infobar__actions { flex-shrink: 0; }
+
+/* Темы (Figma: 7 тем). Все текст #21282b, кроме primary (тёмный фон, белый текст). */
+.fr-infobar--primary    { background: var(--background-accent); color: var(--text-primary-invert); }
+.fr-infobar--secondary  { background: var(--background-secondary); }
+.fr-infobar--neutral    { background: var(--background-primary); border: 1px solid var(--control-secondary); }
+.fr-infobar--success    { background: var(--success-light); }
+.fr-infobar--alert      { background: var(--accent-light); }
+.fr-infobar--error      { background: var(--attention-light); }
+.fr-infobar--additional { background: var(--secondary-blue-light); }
+
+/* На тёмной primary-теме hover кнопок/крестика — светлый */
+.fr-infobar--primary .fr-infobar__close:hover,
+.fr-infobar--primary .fr-infobar__btn:hover { background: rgba(255,255,255,0.1); }
+/* ═══ Divider ═══
+   Figma: div 1px с background-color, растягивается по контейнеру.
+   Исходные CSS-переменные --horizontal-length/--vertical-length/--thickness
+   нигде не были определены — divider был невидим. */
+.fr-divider--h { display: block; width: 100%; height: 1px; border: none; background: var(--control-minor); }
+.fr-divider--v { display: block; width: 1px; height: 100%; background: var(--control-minor); }
+.fr-divider.is-invert { background: var(--control-minor-invert); }
+/* Dashed — не подтверждён Figma, сохранён как расширение разработчиков */
+.fr-divider--dashed.fr-divider--h { background: none; border-top: 1px dashed var(--control-minor); height: 0; }
+.fr-divider--dashed.fr-divider--v { background: none; border-left: 1px dashed var(--control-minor); width: 0; }
+.fr-divider--dashed.is-invert { border-color: var(--control-minor-invert); }
+/* ═══ Dropdown ═══
+   Исходные CSS-переменные --dropdown-border-width/color/hover-border-color/
+   legend-color/text-bg нигде не были определены → компонент нефункционален.
+   Переписано по Figma: прямые токены, размеры L/S, состояния, floating label. */
+.fr-dropdown { position: relative; display: flex; flex-direction: column; gap: 4px; }
+
+/* Field — обёртка с border */
+.fr-dropdown__field { position: relative; display: flex; flex-direction: column; border: 1px solid var(--control-secondary); border-radius: var(--rounding-s, 4px); background: var(--background-primary, #fff); }
+.fr-dropdown:hover .fr-dropdown__field,
+.fr-dropdown.is-hover .fr-dropdown__field { border-color: var(--control-hover-secondary); }
+.fr-dropdown.is-open .fr-dropdown__field { border: 2px solid var(--control-primary); }
+.fr-dropdown.is-disabled .fr-dropdown__field { background: var(--control-minor); border-color: var(--control-secondary); opacity: .4; }
+.fr-dropdown.is-error .fr-dropdown__field { border-color: var(--attention-primary); }
+.fr-dropdown.is-error:hover .fr-dropdown__field,
+.fr-dropdown.is-error.is-hover .fr-dropdown__field { border-color: var(--attention-dark); }
+.fr-dropdown__field:focus-within { outline: none; box-shadow: 0 0 0 2px var(--secondary-yellow-primary); }
+
+/* Button */
+.fr-dropdown__button { display: flex; align-items: center; gap: 4px; width: 100%; margin: 0; border: none; background: none; font: inherit; cursor: pointer; color: inherit; text-align: start; }
+.fr-dropdown.is-disabled .fr-dropdown__button { cursor: default; pointer-events: none; }
+
+/* Text / Placeholder */
+.fr-dropdown__text { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: .2px; color: var(--text-primary); }
+.fr-dropdown__text--placeholder { color: var(--text-minor); }
+.fr-dropdown.is-checked .fr-dropdown__text { color: var(--text-primary); }
+
+/* Chevron */
+.fr-dropdown__chevron { flex-shrink: 0; color: var(--text-minor); }
+
+/* Floating label */
+.fr-dropdown__legend { position: absolute; top: 0; left: 12px; transform: translateY(-50%); background: var(--background-primary, #fff); padding: 0 4px; letter-spacing: .2px; color: var(--text-minor); pointer-events: none; white-space: nowrap; }
+.fr-dropdown.is-disabled .fr-dropdown__legend { background: var(--control-minor); }
+.fr-dropdown__legend--active,
+.fr-dropdown.is-open .fr-dropdown__legend { color: var(--text-primary); }
+
+/* Size L (default) */
+.fr-dropdown--l .fr-dropdown__button { padding: 6px 16px 12px; padding-top: 18px; }
+.fr-dropdown--l.is-checked .fr-dropdown__button { padding-top: 18px; }
+.fr-dropdown--l .fr-dropdown__text { font-size: 17px; line-height: 24px; }
+.fr-dropdown--l .fr-dropdown__chevron { width: 20px; height: 20px; }
+.fr-dropdown--l .fr-dropdown__legend { font-size: 15px; line-height: 18px; left: 14px; }
+
+/* Size S */
+.fr-dropdown--s .fr-dropdown__button { padding: 4px 12px 6px; padding-top: 14px; }
+.fr-dropdown--s.is-checked .fr-dropdown__button { padding-top: 14px; }
+.fr-dropdown--s .fr-dropdown__text { font-size: 15px; line-height: 20px; }
+.fr-dropdown--s .fr-dropdown__chevron { width: 16px; height: 16px; }
+.fr-dropdown--s .fr-dropdown__legend { font-size: 13px; line-height: 16px; left: 10px; }
+.fr-popover--absolute { position: absolute; }
+.fr-popover--fixed { position: fixed; }
+.fr-popover--invert { background: var(--background-accent); filter: none; border: 1px solid var(--control-minor); }
+/* ═══ Drawer — Figma «🖥️ Drawer Web» qNE3k1pQrjU5O0CfI41ntY (3802:43434) + fronton-react 2.16.0
+   drawer/styles.module.css, 02.10.2026. Затемнение background/accent 80%, панель справа или слева,
+   ширины XS 360 · S 480 · M 680 · L 1024; mobile — на всю ширину минус 48.
+   .is-static — для витрины: drawer живёт внутри блока, а не поверх страницы. ═══ */
+.fr-drawer { --drawer-width: 360px; --drawer-px: 32px; position: fixed; inset: 0; z-index: 9999; display: flex; justify-content: flex-end; font-family: var(--f-base); color: var(--text-primary); }
+.fr-drawer.is-static { position: relative; inset: auto; z-index: 0; overflow: hidden; }
+.fr-drawer::before { position: absolute; inset: 0; content: ""; background: var(--background-accent); opacity: .8; transition: opacity .25s ease-out; }
+.fr-drawer--left { justify-content: flex-start; }
+.fr-drawer--xs { --drawer-width: 360px; }
+.fr-drawer--s  { --drawer-width: 480px; }
+.fr-drawer--m  { --drawer-width: 680px; }
+.fr-drawer--l  { --drawer-width: 1024px; }
+.fr-drawer__panel { position: relative; z-index: 1; display: flex; flex-direction: column; width: var(--drawer-width); max-width: 100%; margin: 0; background: var(--background-primary); overflow-y: auto; }
+.fr-drawer--mobile { --drawer-px: 16px; }
+.fr-drawer--mobile .fr-drawer__panel { width: calc(100% - 48px); }
+.fr-drawer__header { position: sticky; top: 0; z-index: 2; display: flex; align-items: flex-start; gap: 4px; padding: 16px var(--drawer-px); background: var(--background-primary); }
+.fr-drawer__back { flex: none; margin: -3px 0 -3px -6px; }
+.fr-drawer__title { flex: 1 1 0; min-width: 0; margin: 0; font-family: var(--f-base); text-transform: none; font-size: 21px; line-height: 26px; font-weight: 600; letter-spacing: .25px; }
+.fr-drawer--mobile .fr-drawer__title { font-size: 19px; line-height: 24px; }
+.fr-drawer--mobile .fr-drawer__back, .fr-drawer--mobile .fr-drawer__adornment { margin-top: -4px; margin-bottom: -4px; }
+.fr-drawer__adornment { display: flex; flex: none; gap: 4px; margin: -3px -6px -3px 12px; }
+.fr-drawer__content { flex: 1 0 auto; padding: 0 var(--drawer-px); font-size: 17px; line-height: 24px; letter-spacing: .2px; }
+.fr-drawer__content > * { margin: 0; }
+.fr-drawer__content > * + * { margin-top: 8px; }
+.fr-drawer__footer { position: sticky; bottom: 0; z-index: 2; display: flex; flex-direction: column; gap: 16px; padding: 24px var(--drawer-px); background: var(--background-primary); }
+.fr-drawer--mobile .fr-drawer__footer { padding: 16px; }
+.fr-drawer__buttons { display: flex; gap: 16px; justify-content: space-between; }
+.fr-drawer__footer--wide .fr-drawer__buttons > * { flex: 1 1 0; }
+.fr-drawer__description { margin: 0; font-size: 13px; line-height: 16px; letter-spacing: .2px; }
+.fr-drawer__header.has-shadow { box-shadow: var(--box-shadow-m); }
+.fr-drawer__footer.has-shadow { box-shadow: var(--box-shadow-m-up); }
+/* ═══ Modal — Figma «🖥️ Modal Web» rSMN4rQ20O4BEQWtS1rkIA (246:1599) + fronton-react 2.16.0
+   modal/styles/*.module.css, 02.10.2026. Окно по центру: S 480 · M 680 · L 1024, radius 16, отступы 40;
+   fullscreen; mobile (≤440) — Simple (поля 16) или Curtain (шторка снизу). Затемнение:
+   .fr-modal--dark 80% (Shop, по умолчанию) · --medium 40% (Corporate) · --light белое (код).
+   .is-static — для витрины: окно внутри блока. ═══ */
+.fr-modal { --modal-w: 480px; --modal-p: 40px; position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center;
+  padding: 80px 16px; overflow: hidden auto; font-family: var(--f-base); color: var(--text-primary); }
+.fr-modal.is-static { position: relative; inset: auto; z-index: 0; overflow: hidden; }
+.fr-modal::before { position: absolute; inset: 0; content: ""; background: var(--background-accent); opacity: .8; }
+.fr-modal--medium::before { opacity: .4; }
+.fr-modal--light::before { background: var(--background-primary); opacity: 1; }
+.fr-modal--s { --modal-w: 480px; } .fr-modal--m { --modal-w: 680px; } .fr-modal--l { --modal-w: 1024px; }
+.fr-modal__window { position: relative; z-index: 1; display: flex; flex-direction: column; width: 100%; max-width: var(--modal-w); max-height: 100%;
+  background: var(--background-primary); border-radius: var(--rounding-xl); box-shadow: var(--box-shadow-l); overflow: hidden; }
+.fr-modal__window > .fr-modal__close { position: absolute; top: 16px; right: 16px; z-index: 3; }
+.fr-modal__window > .fr-modal__close .ico { width: 24px; height: 24px; }
+.fr-modal__header { position: relative; z-index: 2; padding: var(--modal-p) 80px 16px var(--modal-p); background: var(--background-primary); }
+.fr-modal__label { display: block; margin: 0 0 8px; font-size: 13px; line-height: 16px; letter-spacing: .25px; color: var(--text-minor); }
+.fr-modal__title { margin: 0; font-family: var(--f-base); text-transform: none; font-size: 27px; line-height: 32px; font-weight: 600; letter-spacing: .25px; }
+.fr-modal__content { flex: 1 1 auto; min-height: 0; overflow: hidden auto; padding: 0 var(--modal-p); font-size: 17px; line-height: 24px; letter-spacing: .2px; }
+.fr-modal__content > * { margin: 0; }
+.fr-modal__content > * + * { margin-top: 8px; }
+.fr-modal__footer { z-index: 1; display: flex; gap: 16px; justify-content: space-between; padding: 32px var(--modal-p) var(--modal-p); margin-top: auto; background: var(--background-primary); }
+.fr-modal__footer--wide > * { flex: 1 1 0; }
+.fr-modal__footer.is-column { flex-direction: column-reverse; row-gap: 16px; align-items: stretch; }
+.fr-modal__header.has-shadow { box-shadow: var(--box-shadow-m); }
+.fr-modal__footer.has-shadow { box-shadow: var(--box-shadow-m-up); }
+/* fullscreen */
+.fr-modal--fullscreen { padding: 0; }
+.fr-modal--fullscreen .fr-modal__window { max-width: none; height: 100%; border-radius: 0; }
+/* mobile (в бою — ≤440px; на витрине — класс) */
+.fr-modal--mobile { --modal-p: 16px; padding: 40px 16px; }
+.fr-modal--mobile .fr-modal__window { padding-top: 8px; }
+.fr-modal--mobile .fr-modal__window > .fr-modal__close { top: 8px; right: 16px; }
+.fr-modal--mobile .fr-modal__window > .fr-modal__close .ico { width: 20px; height: 20px; }
+.fr-modal--mobile .fr-modal__header { padding: 0 48px 8px; text-align: center; }
+.fr-modal--mobile .fr-modal__label { display: none; }
+.fr-modal--mobile .fr-modal__title { padding: 8px 0; font-size: 19px; line-height: 24px; }
+.fr-modal--mobile .fr-modal__footer { padding: 16px; }
+.fr-modal--curtain { align-items: flex-end; padding: 40px 0 0; }
+.fr-modal--curtain .fr-modal__window { border-radius: var(--rounding-xl) var(--rounding-xl) 0 0; }
+.pr i { font-style: normal; word-spacing: -0.1em; }
+.pr u { text-decoration: none; word-spacing: -0.3em; }
+.pr-xld.acc { font-family: var(--f-title); font-size: 27px; font-weight: 700; line-height: 32px; letter-spacing: .6px; text-transform: uppercase; }
+.pr-xlm.acc { font-family: var(--f-title); font-size: 23px; font-weight: 700; line-height: 28px; letter-spacing: .6px; text-transform: uppercase; }
+.pr-l.acc   { font-family: var(--f-title); font-size: 21px; font-weight: 700; line-height: 28px; letter-spacing: .6px; text-transform: uppercase; }
+.pr-m.acc   { font-family: var(--f-title); font-size: 17px; font-weight: 700; line-height: 24px; letter-spacing: .6px; text-transform: uppercase; }
+.pr-s.acc   { font-family: var(--f-title); font-size: 15px; font-weight: 700; line-height: 20px; letter-spacing: .6px; text-transform: uppercase; }
+.pr-xs.acc  { font-family: var(--f-title); font-size: 13px; font-weight: 700; line-height: 16px; letter-spacing: .6px; text-transform: uppercase; }
+.pr-xxs.acc { font-family: var(--f-base);  font-size: 11px; font-weight: 600; line-height: 14px; letter-spacing: .2px; }
+.pr-l.def   { font-family: var(--f-base); font-size: 21px; font-weight: 400; line-height: 28px; letter-spacing: .2px; }
+.pr-m.def   { font-family: var(--f-base); font-size: 17px; font-weight: 400; line-height: 24px; letter-spacing: .2px; }
+.pr-s.def   { font-family: var(--f-base); font-size: 15px; font-weight: 400; line-height: 20px; letter-spacing: .2px; }
+.pr-xs.def  { font-family: var(--f-base); font-size: 13px; font-weight: 400; line-height: 16px; letter-spacing: .2px; }
+.pr-xxs.def { font-family: var(--f-base); font-size: 11px; font-weight: 400; line-height: 14px; letter-spacing: .2px; }
+.prrow { display: grid; grid-template-columns: 160px 1fr 1fr; gap: 16px; align-items: baseline;
+  padding: 14px 0; border-bottom: 1px dashed var(--control-minor); }
+.prrow:last-child { border-bottom: 0; }
+.prlab { font-size: 11px; font-weight: 600; color: var(--text-minor); letter-spacing: .4px; }
+.prlab small { display: block; font-weight: 400; margin: 2px 0 6px; letter-spacing: 0; }
+.prcap { display: block; font-size: 10px; color: var(--text-minor); margin-bottom: 6px; letter-spacing: .3px; }
+.prempty { font-size: 12px; color: var(--text-minor); font-style: italic; opacity: .7; }
+.prbox { border: 1px solid var(--control-minor); border-radius: var(--rounding-l);
+  background: var(--background-primary); padding: 4px 20px 16px; }
+.prbox + .prbox { margin-top: 16px; }
+.prhead { display: flex; justify-content: space-between; gap: 12px; font-size: 13px; font-weight: 600;
+  color: var(--text-minor); padding: 12px 20px; margin: 0 -20px 0; border-bottom: 1px solid var(--control-minor);
+  background: var(--background-secondary); border-radius: var(--rounding-l) var(--rounding-l) 0 0; }
+.prbox--inv { background: #0A0A0A; border-color: #2A2A2A; }
+.prbox--inv .pr { color: #FFF; }
+.prbox--inv .prrow { border-bottom-color: #2A2A2A; }
+.prbox--inv .prlab, .prbox--inv .prcap { color: #8A9296; }
+.prbox--inv .prhead { background: #14181A; border-bottom-color: #2A2A2A; color: #8A9296; }
+.prbox--inv code.cp { background: #1A1A1A; border-color: #333; color: #D8DCDD; }
+.miss { font-size: 10px; letter-spacing: .3px; padding: 2px 6px; border-radius: var(--rounding-s);
+  background: var(--attention-light); border: 1px solid var(--attention-primary); color: var(--attention-dark);
+  white-space: nowrap; margin-left: 4px; }
+.units { display: flex; flex-wrap: wrap; gap: 10px 22px; }
+.bt:hover { color: var(--button-hover-color) !important; background-color: var(--button-hover-bg); border-color: var(--button-hover-border-color); }
+.bt:active { transform: translateY(1px); }
+.bt:focus { outline: none; }
+.bt:focus-visible { box-shadow: 0 0 0 2px var(--secondary-yellow-primary); }
+.bt[disabled] { pointer-events: none; opacity: .4; }
+.bt-s { font-size: 15px; font-weight: 600; line-height: 20px; padding: 4px 10px; }
+.bt-m { font-size: 15px; font-weight: 600; line-height: 20px; padding: 8px 18px; }
+.bt-l { font-size: 17px; font-weight: 600; line-height: 24px; padding: 10px 22px; }
+.bt-sq { padding: 0; line-height: 0; gap: 0; }
+.bt-sq.bt-s { width: 32px; height: 32px; }
+.bt-sq.bt-m { width: 40px; height: 40px; }
+.bt-sq.bt-l { width: 48px; height: 48px; }
+.bt-round { --button-border-radius: var(--rounding-circular); }
+.bt-primary   { --button-color: var(--text-invert);    --button-bg: var(--control-primary); --button-hover-bg: var(--control-hover-primary); }
+.bt-secondary { --button-color: var(--text-primary);   --button-bg: var(--control-minor);   --button-hover-bg: var(--control-hover-minor); }
+.bt-accent    { --button-color: var(--secondary-grey); --button-bg: var(--control-accent);  --button-hover-bg: var(--control-hover-accent); }
+.bt-outline   { --button-color: var(--text-primary);   --button-border-color: var(--control-secondary); --button-hover-border-color: var(--control-hover-secondary); }
+.bt-pseudo    { --button-color: var(--text-primary);   --button-hover-bg: var(--control-minor); }
+.bt-alert     { --button-color: var(--text-invert);    --button-bg: var(--attention-primary); --button-hover-bg: var(--attention-dark); }
+.bt-alertp    { --button-color: var(--attention-dark); --button-hover-bg: var(--attention-light); }
+.bt-primary.inv   { --button-color: var(--text-primary); --button-bg: var(--control-invert); --button-hover-bg: var(--control_hover-primary-invert); }
+.bt-secondary.inv { --button-color: var(--text-invert); --button-bg: var(--control-minor-invert); --button-hover-bg: var(--control_hover-minor-invert); }
+.bt-outline.inv   { --button-color: var(--text-invert); --button-border-color: var(--control-secondary-invert); --button-hover-border-color: var(--control_hover-secondary-invert); }
+.bt-pseudo.inv    { --button-color: var(--text-invert); --button-hover-bg: var(--control-minor-invert); }
+.bt-alertp.inv    { --button-color: var(--attention-light); --button-hover-bg: var(--attention-dark); }
+.bico { width: 1em; height: 1em; flex: none; }
+.bt-sq .bico { width: 20px; height: 20px; }
+.btdemo { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+
+/* ─── Button: темы и invert (сверено с Figma 17.09.2026) ─── */
+
+
+
+
+
+/* база Price */
+
+.ico, .bico { width: 1em; height: 1em; flex: none; }
+
+/* ─── Price: варианты (сверено с Figma 17.09.2026) ─── */
+
+
+/* ═══════════════════════════════════════════════
+   BUTTON — сверено с Figma 17.09.2026
+   Порядок: база → размеры → темы → invert
+   ═══════════════════════════════════════════════ */
+.fr-btn {
+  --button-color: inherit; --button-hover-color: var(--button-color);
+  --button-bg: transparent; --button-hover-bg: var(--button-bg);
+  --button-border-color: transparent; --button-hover-border-color: transparent;
+  --button-border-width: 2px; --button-border-radius: var(--rounding-m);
+  position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  font-family: var(--f-base); letter-spacing: .2px;
+  color: var(--button-color); background-color: var(--button-bg);
+  border: var(--button-border-width) solid var(--button-border-color);
+  border-radius: var(--button-border-radius);
+  cursor: pointer; touch-action: manipulation; user-select: none; -webkit-tap-highlight-color: transparent;
+  transition: color .2s ease-out, background-color .2s ease-out, opacity .2s ease-out, border-color .2s ease-out, box-shadow .2s ease-out;
+}
+.fr-btn:hover  { color: var(--button-hover-color) !important; background-color: var(--button-hover-bg); border-color: var(--button-hover-border-color); }
+.fr-btn:active { color: var(--button-hover-color) !important; background-color: var(--button-hover-bg); border-color: var(--button-hover-border-color); transform: translateY(1px); }
+.fr-btn:focus  { outline: none; }
+.fr-btn:focus-visible { box-shadow: 0 0 0 2px var(--secondary-yellow-primary); }
+.fr-btn[disabled], .fr-btn[aria-disabled="true"] { pointer-events: none; opacity: .4; }
+
+.fr-btn--s { font-size: 15px; font-weight: 600; line-height: 20px; padding: 4px 10px; }
+.fr-btn--m { font-size: 15px; font-weight: 600; line-height: 20px; padding: 8px 18px; }
+.fr-btn--l { font-size: 17px; font-weight: 600; line-height: 24px; padding: 10px 22px; }
+.fr-btn--square { padding: 0; line-height: 0; gap: 0; }
+.fr-btn--square.fr-btn--s { width: 32px; height: 32px; }
+.fr-btn--square.fr-btn--m { width: 40px; height: 40px; }
+.fr-btn--square.fr-btn--l { width: 48px; height: 48px; }
+.fr-btn--rounded { --button-border-radius: var(--rounding-circular); }
+
+.fr-btn--primary   { --button-color: var(--text-invert);    --button-bg: var(--control-primary); --button-hover-bg: var(--control-hover-primary); }
+.fr-btn--secondary { --button-color: var(--text-primary);   --button-bg: var(--control-minor);   --button-hover-bg: var(--control-hover-minor); }
+.fr-btn--accent    { --button-color: var(--secondary-grey); --button-bg: var(--control-accent);  --button-hover-bg: var(--control-hover-accent); }
+.fr-btn--outline   { --button-color: var(--text-primary);   --button-border-color: var(--control-secondary); --button-hover-border-color: var(--control-hover-secondary); }
+.fr-btn--pseudo    { --button-color: var(--text-primary);   --button-hover-bg: var(--control-minor); }
+.fr-btn--alert     { --button-color: var(--text-invert);    --button-bg: var(--attention-primary); --button-hover-bg: var(--attention-dark); }
+.fr-btn--alert-pseudo { --button-color: var(--attention-dark); --button-hover-bg: var(--attention-light); }
+
+.fr-btn--primary.is-invert      { --button-color: var(--text-primary); --button-bg: var(--control-invert); --button-hover-bg: var(--control_hover-primary-invert); }
+.fr-btn--secondary.is-invert    { --button-color: var(--text-invert); --button-bg: var(--control-minor-invert); --button-hover-bg: var(--control_hover-minor-invert); }
+.fr-btn--outline.is-invert      { --button-color: var(--text-invert); --button-border-color: var(--control-secondary-invert); --button-hover-border-color: var(--control_hover-secondary-invert); }
+.fr-btn--pseudo.is-invert       { --button-color: var(--text-invert); --button-hover-bg: var(--control-minor-invert); }
+.fr-btn--alert-pseudo.is-invert { --button-color: var(--attention-light); --button-hover-bg: var(--attention-dark); }
+
+
+.ico, .bico { width: 1em; height: 1em; flex: none; }
+.fr-btn--square .ico, .bt-sq .bico { width: 20px; height: 20px; }
+
+/* ═══════════════════════════════════════════════
+   PRICE — перепроверено по файлу ДС «🖥️ Price Web»
+   (i7ClLrIJc85b74grfrZPqG, нода 4221:137721), 21.09.2026.
+   Исправлено против версии 17.09:
+     • убран tabular-nums (в реальном Fronton его нет);
+     • снят uppercase у XL desktop / XL mobile / XS — в спеке его нет,
+       uppercase только у L / M / S;
+     • части цены набираются РАЗНЫМ кеглем: копейки, валюта и единица
+       мельче целого числа, всё выровнено по нижней границе;
+     • валюта и единица в accent — всегда LM Main DemiBold, не LM Title.
+   ═══════════════════════════════════════════════ */
+/* 02.10: части выравниваются по БАЗОВОЙ ЛИНИИ, как inline-block спаны в коде.
+   Это даёт ровно те подъёмы мелких частей, что в Figma заданы паддингами
+   (L 2px, M 3px, S 1px). Зазор 2px — только между числом и валютой. */
+.fr-price { display: inline-flex; align-items: baseline; white-space: nowrap; }
+.fr-price > span { display: inline-block; }
+.fr-price__prefix { margin-right: 2px; }
+.fr-price__integer { word-spacing: -0.1em; }
+.fr-price__fraction { word-spacing: -0.3em; }
+.fr-price__currency { margin-left: 2px; }
+.fr-price:not(.fr-price--xxs) .fr-price__currency { margin-right: -1px; }
+.fr-price__unit { margin-left: 2px; word-spacing: -0.1em; }
+.fr-price__currency + .fr-price__unit { margin-left: 0; }
+.fr-price.is-invert { color: var(--text-invert); }
+
+/* Кегль целого числа */
+.fr-price--xld { font-size: 27px; line-height: 32px; }
+.fr-price--xlm { font-size: 23px; line-height: 28px; }
+.fr-price--l   { font-size: 21px; line-height: 28px; }
+.fr-price--m   { font-size: 17px; line-height: 24px; }
+.fr-price--s   { font-size: 15px; line-height: 20px; }
+.fr-price--xs  { font-size: 13px; line-height: 16px; }
+.fr-price--xxs { font-size: 11px; line-height: 14px; }
+
+/* Кегль мелких частей */
+.fr-price--xld .fr-price__fraction, .fr-price--xld .fr-price__currency, .fr-price--xld .fr-price__unit,
+.fr-price--xlm .fr-price__fraction, .fr-price--xlm .fr-price__currency, .fr-price--xlm .fr-price__unit { font-size: 17px; line-height: 24px; }
+.fr-price--l .fr-price__fraction, .fr-price--l .fr-price__currency, .fr-price--l .fr-price__unit { font-size: 15px; line-height: 20px; }
+.fr-price--m .fr-price__fraction, .fr-price--m .fr-price__currency, .fr-price--m .fr-price__unit,
+.fr-price--s .fr-price__fraction, .fr-price--s .fr-price__currency, .fr-price--s .fr-price__unit { font-size: 13px; line-height: 16px; }
+
+/* Начертания */
+.fr-price.is-accent { font-family: var(--f-title); font-weight: 700; letter-spacing: .6px; }
+.fr-price--l.is-accent, .fr-price--m.is-accent, .fr-price--s.is-accent { text-transform: uppercase; }
+.fr-price.is-accent .fr-price__currency,
+.fr-price.is-accent .fr-price__unit { font-family: var(--f-base); font-weight: 600; letter-spacing: .2px; text-transform: none; }
+.fr-price--xs.is-accent, .fr-price--xxs.is-accent { font-family: var(--f-base); font-weight: 600; letter-spacing: .2px; text-transform: none; }
+.fr-price.is-default { font-family: var(--f-base); font-weight: 400; letter-spacing: .2px; text-transform: none; }
+
+.fr-price--best { display: inline-flex; align-items: center; padding: 0 8px;
+  background: var(--control-accent); color: #21282B; border-radius: 11px 2px;
+  clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px); }
+/* Старая цена: красная только линия (currentColor корня), текст — text/primary.
+   Так в коде: Typography внутри получает color, ::after берёт красный от обёртки. 02.10.2026 */
+.fr-price--old { position: relative; margin: 0 2px; color: var(--secondary-red-primary); }
+.fr-price--old > span { color: var(--text-primary); }
+.fr-price--old.is-invert > span { color: var(--text-invert); }
+.fr-price--old::after { position: absolute; top: calc(49% - 1px); left: -2px; display: block;
+  width: calc(100% + 4px); height: 2px; content: ""; background: currentColor; }
+
+/* ═══════════════════════════════════════════════
+   PRICE BLOCK — сверено с Figma «🖥️ Price Web» (страница 6053:7451)
+   и fronton-react 2.16.0 price-block/style.module.css, 02.10.2026.
+   Состав: [верх: маркер + старая цена] → основная цена → цена за единицу.
+   Основная цена — .fr-price без копеек, accent; размер задаёт блок.
+   ═══════════════════════════════════════════════ */
+.fr-priceblock { display: flex; flex-direction: column; gap: 2px; align-items: flex-start; width: fit-content; color: var(--text-primary); }
+.fr-priceblock--xl { gap: 4px; }
+.fr-priceblock--xlm { gap: 2px; }                      /* XL mobile: в коде — @media (max-width: 440px) */
+.fr-priceblock--right { align-items: flex-end; }
+.fr-priceblock__top { display: flex; gap: 6px; align-items: center; }
+.fr-priceblock__main { position: relative; }
+.fr-priceblock--xl .fr-priceblock__main  { height: 32px; }
+.fr-priceblock--xlm .fr-priceblock__main,
+.fr-priceblock--l .fr-priceblock__main   { height: 28px; }
+.fr-priceblock--m .fr-priceblock__main   { height: 24px; }
+.fr-priceblock--s .fr-priceblock__main   { height: 20px; }
+.fr-priceblock__unitprice { color: var(--text-secondary); }
+
+/* Маркер (из кода Marker angular; отдельного .fr-marker в справочнике пока нет) */
+.fr-priceblock__marker { position: relative; display: flex; align-items: center; width: fit-content;
+  font-family: var(--f-title); text-transform: uppercase; color: var(--text-invert); background: var(--secondary-red-primary); white-space: nowrap; }
+.fr-priceblock__marker--l { height: 24px; padding: 4px 8px; font-size: 13px; font-weight: 700; line-height: 17px; letter-spacing: .6px;
+  border-radius: 9px 2px; clip-path: polygon(7px 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%, 0 7px); }
+.fr-priceblock__marker--s { height: 16px; padding: 1px 5px; font-size: 11px; font-weight: 600; line-height: 15px; letter-spacing: .3px;
+  border-radius: 6px 1px; clip-path: polygon(5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%, 0 5px); }
+.fr-priceblock__marker--best { padding: 0; background: transparent; color: var(--text-primary); clip-path: none; border-radius: 0; }
+
+/* Типы */
+.fr-priceblock--discount .fr-priceblock__main { color: var(--secondary-red-primary); }
+.fr-priceblock--sold .fr-priceblock__main,
+.fr-priceblock--sold .fr-priceblock__unitprice { color: var(--text-minor); }
+.fr-priceblock--best .fr-priceblock__main { display: flex; align-items: center; padding: 0 8px; color: var(--secondary-grey);
+  background: var(--control-accent); border-radius: 11px 2px;
+  clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px); }
+
+/* Горизонтальная раскладка */
+.fr-priceblock--horizontal { flex-direction: row; align-items: center; }
+.fr-priceblock--horizontal.fr-priceblock--xl, .fr-priceblock--horizontal.fr-priceblock--xlm,
+.fr-priceblock--horizontal.fr-priceblock--l { gap: 8px; }
+.fr-priceblock--horizontal.fr-priceblock--m, .fr-priceblock--horizontal.fr-priceblock--s { gap: 6px; }
+.fr-priceblock--horizontal > .fr-priceblock__main,
+.fr-priceblock--horizontal > .fr-price--old,
+.fr-priceblock--horizontal > .fr-priceblock__caption { align-self: baseline; }
+/* «Нет в наличии» — есть только в Figma, в коде PriceBlock нет */
+.fr-priceblock__caption { white-space: nowrap; font-family: var(--f-base); font-size: 13px; font-weight: 600; line-height: 16px; letter-spacing: .2px; color: var(--attention-primary); }
+
+/* Скелетон */
+.fr-priceblock__skel { display: block; padding: 3px 0; width: 56px; }
+.fr-priceblock__skel::before { content: ""; display: block; height: 10px; border-radius: 4px; background: var(--control-secondary); opacity: .25; }
+.fr-priceblock__skel--main { width: 120px; padding: 4px 0; }
+.fr-priceblock__skel--main::before { height: 12px; }
+.fr-priceblock--m  .fr-priceblock__skel--main { padding: 5px 0; } .fr-priceblock--m  .fr-priceblock__skel--main::before { height: 14px; }
+.fr-priceblock--l  .fr-priceblock__skel--main,
+.fr-priceblock--xlm .fr-priceblock__skel--main { padding: 6px 0; }
+.fr-priceblock--l  .fr-priceblock__skel--main::before,
+.fr-priceblock--xlm .fr-priceblock__skel--main::before { height: 16px; }
+.fr-priceblock--xl .fr-priceblock__skel--main { width: 160px; padding: 6px 0; } .fr-priceblock--xl .fr-priceblock__skel--main::before { height: 20px; }
+
+/* Invert: скидка тоже белая — красной остаётся только плашка */
+.fr-priceblock.is-invert { color: var(--text-invert); }
+.fr-priceblock.is-invert .fr-priceblock__main { color: var(--text-invert); }
+.fr-priceblock.is-invert .fr-priceblock__unitprice { color: var(--text-secondary-invert); }
+.fr-priceblock.is-invert .fr-price--old > span { color: var(--text-invert); }
+.fr-priceblock.is-invert .fr-priceblock__marker--best { color: var(--text-invert); }
+.fr-priceblock--best.is-invert .fr-priceblock__main { color: var(--secondary-grey); }
+.fr-priceblock--sold.is-invert .fr-priceblock__main,
+.fr-priceblock--sold.is-invert .fr-priceblock__unitprice { color: var(--text-minor-invert); }
+.fr-priceblock.is-invert .fr-priceblock__skel::before { background: var(--control-secondary-invert); }
+
+/* ═══════════════════════════════════════════════
+   SELECTION (SelectionGroup) — Figma «🖥️ Selection Web» 5DcqzhaQe5FkN46vSZmI6z (1:30)
+   + fronton-react 2.16.0 selection-group/styles/*.module.css, 02.10.2026.
+   Темы Figma → код: primary → accent · outline · outline accent 🟪 (только Figma) · pseudo · composite.
+   Рамка 1px всегда; выбранный outline/pseudo/composite добавляет inset 1px → визуально 2px, размер не меняется.
+   ═══════════════════════════════════════════════ */
+.fr-selection-group { display: flex; flex-wrap: wrap; gap: 8px; }       /* в коде: margin -4px + 4px у элементов */
+.fr-selection {
+  --sel-color: var(--text-primary); --sel-bg: transparent; --sel-border: transparent; --sel-inset: 0px;
+  --sel-hover-bg: var(--sel-bg); --sel-hover-border: var(--sel-border);
+  position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 2px;
+  font-family: var(--f-base); font-weight: 400; letter-spacing: .2px; white-space: nowrap; cursor: pointer;
+  color: var(--sel-color); background: var(--sel-bg);
+  border: 1px solid var(--sel-border); border-radius: var(--rounding-m);
+  box-shadow: inset 0 0 0 var(--sel-inset) var(--sel-border);
+  user-select: none; -webkit-tap-highlight-color: transparent;
+  transition: color .2s ease-out, background-color .2s ease-out, border-color .2s ease-out, box-shadow .2s ease-out, opacity .2s ease-out;
+}
+.fr-selection:hover, .fr-selection.is-hover { background: var(--sel-hover-bg); border-color: var(--sel-hover-border); box-shadow: inset 0 0 0 var(--sel-inset) var(--sel-hover-border); }
+.fr-selection:focus { outline: none; }
+.fr-selection:focus-visible { box-shadow: 0 0 0 2px var(--secondary-yellow-primary); }
+.fr-selection[disabled], .fr-selection.is-disabled { pointer-events: none; opacity: .4; }
+/* размеры: padding = Figma − рамка 1px */
+.fr-selection--s { font-size: 15px; line-height: 20px; padding: 5px 12px; }
+.fr-selection--m { font-size: 15px; line-height: 20px; padding: 9px 20px; }
+.fr-selection--l { font-size: 17px; line-height: 24px; padding: 11px 24px; gap: 4px; }   /* зазор у иконки: Figma S/M 2px, L 4px */
+.fr-selection__icon { flex: none; width: 20px; height: 20px; }
+.fr-selection--l .fr-selection__icon { width: 24px; height: 24px; }
+.fr-selection--rounded { border-radius: var(--rounding-circular); }
+.fr-selection--square { padding: 0; }
+.fr-selection--square.fr-selection--s { width: 32px; height: 32px; }
+.fr-selection--square.fr-selection--m { width: 40px; height: 40px; }
+.fr-selection--square.fr-selection--l { width: 48px; height: 48px; }
+.fr-selection__pic { display: block; width: 24px; height: 24px; object-fit: cover; }
+.fr-selection--l .fr-selection__pic { width: 30px; height: 30px; }
+
+/* primary (в коде accent) */
+.fr-selection--primary { --sel-bg: var(--control-minor); --sel-hover-bg: var(--control-hover-minor); }
+.fr-selection--primary.is-active, .fr-selection--primary[aria-pressed="true"] { --sel-color: var(--text-invert); --sel-bg: var(--control-primary); --sel-hover-bg: var(--control-hover-primary); }
+/* outline / outline accent / composite */
+.fr-selection--outline, .fr-selection--outline-accent, .fr-selection--composite { --sel-border: var(--control-secondary); --sel-hover-border: var(--control-hover-secondary); }
+:is(.fr-selection--outline, .fr-selection--outline-accent, .fr-selection--composite):is(.is-active, [aria-pressed="true"]) { --sel-border: var(--control-primary); --sel-hover-border: var(--control-hover-primary); --sel-inset: 1px; }
+.fr-selection--outline-accent:is(.is-active, [aria-pressed="true"]) { --sel-border: var(--control-accent); --sel-hover-border: var(--control-hover-accent); }
+:is(.fr-selection--outline, .fr-selection--outline-accent, .fr-selection--composite):is([disabled], .is-disabled) { --sel-bg: var(--control-minor); }
+/* pseudo */
+.fr-selection--pseudo { --sel-hover-border: var(--control-secondary); }
+.fr-selection--pseudo:is(.is-active, [aria-pressed="true"]) { --sel-border: var(--control-primary); --sel-hover-border: var(--control-hover-primary); --sel-inset: 1px; }
+.fr-selection--pseudo:is(.is-active, [aria-pressed="true"]):is([disabled], .is-disabled) { --sel-bg: var(--control-minor); }
+
+/* composite — карточка: 224px в Figma, padding 16, radius 8, белый фон */
+.fr-selection--composite { --sel-bg: var(--control-primary-invert); display: flex; align-items: flex-start; justify-content: flex-start; gap: 8px;
+  width: 224px; padding: 15px; border-radius: var(--rounding-l); text-align: left; white-space: normal; }
+.fr-selection__body { display: flex; flex: 1; flex-direction: column; gap: 4px; min-width: 0; }
+.fr-selection__title { font-size: 17px; line-height: 24px; font-weight: 600; }
+.fr-selection--radio .fr-selection__title { font-weight: 400; }
+.fr-selection__caption { display: flex; gap: 4px; font-size: 15px; line-height: 20px; color: var(--text-minor); }
+.fr-selection__caption > span { flex: 1; }
+.fr-selection__caption svg { flex: none; width: 20px; height: 20px; color: var(--text-primary); }
+.fr-selection--composite .fr-radio-icon { pointer-events: none; }
+.fr-selection--composite:is(.is-active, [aria-pressed="true"]) .fr-radio-icon { --inner-width: var(--chacked-border-width); --outer-color: var(--control-primary); }
+
+/* invert — только Figma, в коде нет */
+.fr-selection.is-invert { --sel-color: var(--text-invert); }
+.fr-selection--primary.is-invert { --sel-bg: var(--control-minor-invert); --sel-hover-bg: var(--control-hover-minor-invert); }
+.fr-selection--primary.is-invert:is(.is-active, [aria-pressed="true"]) { --sel-color: var(--text-primary); --sel-bg: var(--control-primary-invert); --sel-hover-bg: var(--control-hover-primary-invert); }
+:is(.fr-selection--outline, .fr-selection--outline-accent, .fr-selection--composite).is-invert { --sel-border: var(--control-secondary-invert); --sel-hover-border: var(--control-hover-secondary-invert); }
+:is(.fr-selection--outline, .fr-selection--composite).is-invert:is(.is-active, [aria-pressed="true"]),
+.fr-selection--pseudo.is-invert:is(.is-active, [aria-pressed="true"]) { --sel-border: var(--control-primary-invert); --sel-hover-border: var(--control-hover-primary-invert); }
+.fr-selection--pseudo.is-invert { --sel-hover-border: var(--control-secondary-invert); }
+.fr-selection--composite.is-invert { --sel-bg: transparent; }
+.fr-selection.is-invert:not(.fr-selection--primary):is([disabled], .is-disabled):is(:not(.fr-selection--pseudo), [aria-pressed="true"], .is-active) { --sel-bg: var(--control-minor-invert); }
+.fr-selection--composite.is-invert .fr-selection__caption { color: var(--text-minor-invert); }
+.fr-selection--composite.is-invert .fr-selection__caption svg { color: var(--text-invert); }
+
+/* ═══════════════════════════════════════════════
+   SKELETON — Figma «🖥️ Skeleton Web» hnGsLb49vGl1DKuIOkBkmQ (601:1260 / invert 963:3323)
+   + fronton-react 2.16.0 skeleton/styles.module.css, 02.10.2026.
+   Высота блока = line-height текстового стиля, полоса = высота − padding сверху/снизу.
+   Мобильные заголовки (≤767px) — та же логика: высота меньше, padding тот же.
+   ═══════════════════════════════════════════════ */
+.fr-skeleton { display: block; box-sizing: border-box; width: 100%; }
+.fr-skeleton__inner {
+  display: flex; width: 100%; height: 100%;
+  background-color: var(--control-secondary);
+  background-image: linear-gradient(90deg, transparent, transparent, var(--background-primary), transparent, transparent);
+  background-repeat: no-repeat; background-position-x: -100%; background-size: 100% 100%;
+  border-radius: var(--rounding-m); opacity: .25;
+  animation: fr-skeleton-flow 3s cubic-bezier(.4, 0, .2, 1) infinite; will-change: background-position;
+}
+@keyframes fr-skeleton-flow { 0% { background-position-x: -612px; } 100% { background-position-x: 434px; } }
+.fr-skeleton.is-static .fr-skeleton__inner { animation: none; background-image: none; }
+.fr-skeleton.is-invert .fr-skeleton__inner { background-color: var(--control-secondary-invert); }
+/* заголовки */
+.fr-skeleton--display { height: 56px; padding: 8px 0; }
+.fr-skeleton--h1 { height: 40px; padding: 7px 0; }
+.fr-skeleton--h2 { height: 32px; padding: 6px 0; }
+.fr-skeleton--h3 { height: 26px; padding: 5px 0; }
+.fr-skeleton--display.is-mobile { height: 40px; }
+.fr-skeleton--h1.is-mobile { height: 34px; }
+.fr-skeleton--h2.is-mobile { height: 28px; }
+.fr-skeleton--h3.is-mobile { height: 24px; }
+@media (max-width: 767px) {
+  .fr-skeleton--display { height: 40px; } .fr-skeleton--h1 { height: 34px; }
+  .fr-skeleton--h2 { height: 28px; } .fr-skeleton--h3 { height: 24px; }
+}
+/* текст: long — line-height стиля, short — на 2px меньше */
+.fr-skeleton--l { height: 28px; padding: 6px 0; }
+.fr-skeleton--l.fr-skeleton--short { height: 26px; padding: 5px 0; }
+.fr-skeleton--m { height: 24px; padding: 5px 0; }
+.fr-skeleton--m.fr-skeleton--short { height: 22px; padding: 4px 0; }
+.fr-skeleton--s { height: 20px; padding: 4px 0; }
+.fr-skeleton--s.fr-skeleton--short { height: 18px; padding: 3px 0; }
+.fr-skeleton--minor { height: 16px; padding: 3px 0; }
+.fr-skeleton--mini { height: 14px; padding: 3px 0; }
+/* control — произвольный блок, размер задаётся width/height */
+.fr-skeleton--control.fr-skeleton--r-l .fr-skeleton__inner { border-radius: var(--rounding-l); }
+.fr-skeleton--control.fr-skeleton--r-xl .fr-skeleton__inner { border-radius: var(--rounding-xl); }
+.fr-skeleton--control.fr-skeleton--r-circle .fr-skeleton__inner { border-radius: var(--rounding-circular); }
+
+/* ═══════════════════════════════════════════════
+   SNACKBAR — Figma «🖥️ Snackbar Web» h2jsTn1LLxnjfBACiNrhEd (1:30, спека 703:127)
+   + fronton-react 2.16.0 snackbar/styles/{snack,snackbar}.module.css, 02.10.2026.
+   Кнопки — .fr-btn--pseudo.fr-btn--s (на тёмных темах .is-invert), закрытие — квадратная круглая S.
+   ═══════════════════════════════════════════════ */
+.fr-snackbar { position: fixed; z-index: 10000; display: flex; width: 344px; }
+.fr-snackbar--top { top: 0; flex-direction: column; margin-top: 32px; }
+.fr-snackbar--bottom { bottom: 0; flex-direction: column-reverse; margin-bottom: 24px; }   /* код: space-300 = 24; спека: 32 */
+.fr-snackbar--start { left: 0; margin-left: 32px; }
+.fr-snackbar--end { right: 0; margin-right: 32px; }
+.fr-snackbar--center { left: 50%; transform: translateX(-50%); }
+@media (max-width: 479px) { .fr-snackbar { width: 100%; padding: 8px 8px 0; } .fr-snackbar--top, .fr-snackbar--bottom { margin: 0; } }
+.fr-snackbar .fr-snack { margin-bottom: 8px; }
+.fr-snack {
+  display: flex; flex-direction: column; box-sizing: border-box; width: 100%; min-width: 344px; padding: 12px;
+  font-family: var(--f-base); color: var(--text-primary); background: var(--background-primary);
+  border-radius: var(--rounding-l); box-shadow: var(--box-shadow-m);
+  animation: fr-snack-appear .2s ease-out;
+}
+@keyframes fr-snack-appear { from { opacity: 0; } to { opacity: 1; } }
+.fr-snack__header { display: flex; width: 100%; }
+.fr-snack__icon { flex: none; width: 32px; height: 32px; padding: 4px; box-sizing: border-box; }
+.fr-snack__icon svg { display: block; width: 24px; height: 24px; }
+.fr-snack__text { display: flex; flex: 1 1 0; flex-direction: column; gap: 2px; min-width: 0; padding: 4px; }
+.fr-snack__title { margin: 0; font-size: 17px; line-height: 24px; font-weight: 600; letter-spacing: .2px; word-break: break-word; }
+.fr-snack__paragraph { margin: 2px 0 0; font-size: 15px; line-height: 20px; font-weight: 400; letter-spacing: .2px; word-break: break-word; }
+.fr-snack__title + .fr-snack__paragraph { margin-top: 2px; }
+.fr-snack__buttons { display: flex; gap: 8px; align-self: flex-start; margin-left: 8px; }
+.fr-snack__footer { display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px; }
+/* темы */
+.fr-snack--primary { color: var(--text-invert); background: var(--background-accent); }
+.fr-snack--success { color: var(--text-invert); background: var(--success-primary); }
+.fr-snack--alert   { background: var(--accent-primary); }
+.fr-snack--error   { color: var(--text-invert); background: var(--attention-primary); }
+
+/* ═══════════════════════════════════════════════
+   SWITCH — Figma «🖥️ Switch Web» TtQnUmJ9lm1d9nMmg7vNo3 (348:860, гайды 360:3739, спека 573:5880)
+   + fronton-react 2.16.0 switch/styles/base.module.css, 02.10.2026.
+   L 44×24 / ручка 20; M 36×20 / ручка 16; трек — рамка 2px прозрачная, ручка в ::before.
+   ═══════════════════════════════════════════════ */
+.fr-switch { --sw-track: var(--control-secondary); --sw-track-hover: var(--control-hover-secondary);
+  --sw-on: var(--control-primary); --sw-on-hover: var(--control-hover-primary);
+  --sw-knob: var(--control-invert); --sw-knob-on: var(--control-invert); --sw-knob-on-hover: var(--control-invert);
+  display: inline-flex; align-items: flex-start; gap: 12px; color: var(--text-primary); cursor: pointer; font-family: var(--f-base); }
+.fr-switch--accent { --sw-on: var(--control-accent); --sw-on-hover: var(--control-hover-accent); }
+.fr-switch__input {
+  position: relative; flex-shrink: 0; margin: 0; padding: 0; appearance: none; cursor: pointer;
+  background-color: var(--sw-track); border: 2px solid transparent; border-radius: var(--rounding-circular);
+  transition: background-color .15s linear, border .15s linear;
+}
+.fr-switch__input::before { content: ""; position: absolute; top: 0; left: 0; display: block; border-radius: var(--rounding-circular);
+  background-color: var(--sw-knob); transition: transform .15s ease-in-out, background-color .15s linear; }
+.fr-switch--l .fr-switch__input { width: 44px; height: 24px; }
+.fr-switch--l .fr-switch__input::before { width: 20px; height: 20px; }
+.fr-switch--m .fr-switch__input { width: 36px; height: 20px; }
+.fr-switch--m .fr-switch__input::before { width: 16px; height: 16px; }
+.fr-switch--l .fr-switch__input:checked::before { transform: translateX(20px); }
+.fr-switch--m .fr-switch__input:checked::before { transform: translateX(16px); }
+.fr-switch__input:checked { background-color: var(--sw-on); }
+.fr-switch__input:checked::before { background-color: var(--sw-knob-on); }
+.fr-switch:not(.is-disabled) .fr-switch__input:hover, .fr-switch.is-hover .fr-switch__input { background-color: var(--sw-track-hover); }
+.fr-switch:not(.is-disabled) .fr-switch__input:checked:hover, .fr-switch.is-hover .fr-switch__input:checked { background-color: var(--sw-on-hover); }
+.fr-switch:not(.is-disabled) .fr-switch__input:checked:hover::before, .fr-switch.is-hover .fr-switch__input:checked::before { background-color: var(--sw-knob-on-hover); }
+.fr-switch__input:focus { outline: none; }
+.fr-switch__input:focus-visible, .fr-switch.is-focused .fr-switch__input { box-shadow: 0 0 0 2px var(--secondary-yellow-primary); }
+.fr-switch.is-disabled { cursor: default; opacity: .4; }
+.fr-switch.is-disabled .fr-switch__input { cursor: default; }
+/* подпись: L — Body medium short 17/22, M — Body small short 15/18; сдвиг 1px вниз */
+.fr-switch__text { margin-top: 1px; letter-spacing: .2px; }
+.fr-switch--l .fr-switch__text { font-size: 17px; line-height: 22px; }
+.fr-switch--m .fr-switch__text { font-size: 15px; line-height: 18px; }
+.fr-switch--label-left { flex-direction: row-reverse; justify-content: space-between; }
+/* invert — по компонентам Figma: ручка тёмная во всех состояниях */
+.fr-switch.is-invert { color: var(--text-invert); --sw-track: var(--control-secondary-invert); --sw-track-hover: var(--control-hover-secondary-invert);
+  --sw-knob: var(--control-primary); --sw-knob-on: var(--control-primary); --sw-knob-on-hover: var(--control-hover-primary); }
+.fr-switch.is-invert:not(.fr-switch--accent) { --sw-on: var(--control-primary-invert); --sw-on-hover: var(--control-hover-primary-invert); }
+
+/* ═══════════════════════════════════════════════
+   TAB / TAB LIST — Figma «🖥️ Tab Web» xJH8qym6ko2gjrYj7ka8dI, Component v2 (2514:6765),
+   спека v2 (2686:2880), 02.10.2026. Вёрстка — по Figma v2; код fronton-react 2.16.0
+   (tab, tab-list) — предыдущая версия, расхождения в tab.json.
+   Вкладка: padding-top 6 · контент (иконка/текст/правый элемент, gap 4) · gap 5 · линия 3px.
+   Неактивная — opacity .5, disabled — .2; активная и hover — 1 + линия control/accent.
+   ═══════════════════════════════════════════════ */
+.fr-tab {
+  display: inline-flex; flex-direction: column; align-items: center; gap: 5px; padding: 6px 0 0; margin: 0;
+  font-family: var(--f-base); font-weight: 600; letter-spacing: .2px; white-space: nowrap;
+  color: var(--text-primary); background: none; border: 0; cursor: pointer; opacity: .5;
+  transition: opacity .2s ease-in-out;
+}
+.fr-tab__content { display: inline-flex; align-items: center; gap: 4px; max-width: 100%; }
+.fr-tab__label { overflow: hidden; text-overflow: ellipsis; }
+.fr-tab__line { align-self: stretch; height: 3px; background: transparent; }
+.fr-tab:hover, .fr-tab.is-hover, .fr-tab.is-active, .fr-tab[aria-selected="true"] { opacity: 1; }
+.fr-tab:hover .fr-tab__line, .fr-tab.is-hover .fr-tab__line,
+.fr-tab.is-active .fr-tab__line, .fr-tab[aria-selected="true"] .fr-tab__line { background: var(--control-accent); }
+.fr-tab.is-active, .fr-tab[aria-selected="true"] { cursor: default; }
+.fr-tab[disabled], .fr-tab.is-disabled { opacity: .2; pointer-events: none; }
+.fr-tab:focus { outline: none; }
+.fr-tab:focus-visible { box-shadow: 0 0 0 2px var(--secondary-yellow-primary); }
+/* размеры: XL 46 · L 40 · M 36 · S 32 */
+.fr-tab--xl { font-size: 27px; line-height: 32px; letter-spacing: .25px; }
+.fr-tab--l  { font-size: 21px; line-height: 26px; }
+.fr-tab--m  { font-size: 17px; line-height: 22px; }
+.fr-tab--s  { font-size: 15px; line-height: 18px; }
+.fr-tab__icon { flex: none; width: 16px; height: 16px; }
+.fr-tab--xl .fr-tab__icon { width: 24px; height: 24px; }
+.fr-tab--l .fr-tab__icon  { width: 20px; height: 20px; }
+/* правый элемент: счётчик «(n)» тем же стилем или бейдж XS */
+.fr-tab__badge { display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box;
+  min-width: 16px; height: 16px; padding: 0 2px; border: 2px solid var(--background-primary); border-radius: 100px;
+  background: var(--background-accent); color: var(--text-invert); font-size: 10px; line-height: 12px; font-weight: 600; letter-spacing: 0; }
+/* invert */
+.fr-tab.is-invert { color: var(--text-invert); }
+.fr-tab.is-invert .fr-tab__badge { background: var(--background-primary); color: var(--text-primary); border-color: var(--background-accent); }
+
+/* Tab list — вкладки через 16, разделитель 1px control/minor */
+.fr-tablist { position: relative; display: flex; align-items: center; gap: 8px; }
+.fr-tablist__tabs { position: relative; display: flex; flex: 1 1 auto; align-items: flex-end; gap: 16px; min-width: 0; overflow: hidden; }
+.fr-tablist--divider .fr-tablist__tabs::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--control-minor); pointer-events: none; }
+.fr-tablist__tabs .fr-tab { position: relative; z-index: 1; flex: none; }
+.fr-tablist--center .fr-tablist__tabs .fr-tab { flex: 1 1 0; min-width: 0; }
+.fr-tablist__fade { position: absolute; top: 0; bottom: 0; right: 0; width: 24px; z-index: 2; pointer-events: none;
+  background: linear-gradient(90deg, rgba(255,255,255,0), var(--background-primary)); }
+.fr-tablist__buttons { display: flex; flex: none; }
+.fr-tablist.is-invert .fr-tablist__tabs::after { background: var(--control-minor-invert); }
+.fr-tablist.is-invert .fr-tablist__fade { background: linear-gradient(90deg, rgba(33,40,43,0), var(--background-accent)); }
+
+/* ═══════════════════════════════════════════════
+   TEXTAREA — Figma «🖥️ Textarea Web» 00Z3GB9x0oXNSSw0GTkq7I (1:30, спека 467:8023)
+   + fronton-react 2.16.0 textarea/styles/base.module.css, 02.10.2026.
+   Устройство — как .fr-input: рамка <fieldset>, вырез под label — <legend>,
+   над полем 12px под «взлетевший» label. Label плавающий (по Figma): в покое
+   его нет — виден плейсхолдер; в фокусе / с текстом — в вырезе рамки.
+   Десктоп: высота блока 120 (поле 108). L 17/24, M и S 15/20.
+   ═══════════════════════════════════════════════ */
+.fr-textarea {
+  --ta-px: 16px; --ta-pt: 12px; --ta-pb: 12px; --ta-fs: 17px; --ta-lh: 24px;
+  --ta-label-fs: 15px; --ta-label-lh: 18px; --ta-clear: 20px; --ta-h: 108px;
+  --ta-border: var(--control-secondary); --ta-border-hover: var(--control-hover-secondary); --ta-border-focus: var(--control-primary);
+  --ta-text: var(--text-primary); --ta-minor: var(--text-minor);
+  display: flex; flex-direction: column; gap: 4px; width: 100%; padding-top: 12px; box-sizing: border-box; font-family: var(--f-base);
+}
+.fr-textarea--m { --ta-px: 12px; --ta-pt: 10px; --ta-pb: 10px; --ta-fs: 15px; --ta-lh: 20px; }
+.fr-textarea--s { --ta-px: 12px; --ta-pt: 6px;  --ta-pb: 6px;  --ta-fs: 15px; --ta-lh: 20px; --ta-label-fs: 13px; --ta-label-lh: 16px; --ta-clear: 16px; }
+.fr-textarea__control { position: relative; display: flex; }
+.fr-textarea__border {
+  position: absolute; inset: 0; z-index: 0; margin: 0; min-width: 0; padding: 0 calc(var(--ta-px) - 5px);
+  border: 1px solid var(--ta-border); border-radius: var(--rounding-m); background: transparent; pointer-events: none;
+  transition: border-color .2s ease-in-out;
+}
+.fr-textarea__border:has(.fr-textarea__legend) { top: -9px; }
+.fr-textarea__legend { display: block; height: 18px; max-width: .01px; padding: 0; font-size: var(--ta-label-fs); line-height: 18px; letter-spacing: .2px; white-space: nowrap; visibility: hidden; }
+.fr-textarea__legend > span { padding: 0 4px; }
+.fr-textarea__label {
+  position: absolute; z-index: 1; left: var(--ta-px); top: -9px; max-width: calc(100% - 2 * var(--ta-px));
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--ta-label-fs); line-height: var(--ta-label-lh); letter-spacing: .2px;
+  color: var(--ta-minor); pointer-events: none; opacity: 0; transition: opacity .15s, color .2s;
+}
+.fr-textarea--s .fr-textarea__label { top: -8px; }
+.fr-textarea__field {
+  position: relative; z-index: 1; display: block; flex: 1 1 auto; box-sizing: border-box; width: 100%; height: var(--ta-h); min-height: calc(var(--ta-pt) + var(--ta-lh) + var(--ta-pb));
+  margin: 0; padding: var(--ta-pt) calc(var(--ta-px) + var(--ta-clear) + 4px) var(--ta-pb) var(--ta-px);
+  border: 0; outline: none; background: transparent; resize: vertical;
+  font: inherit; font-size: var(--ta-fs); line-height: var(--ta-lh); letter-spacing: .2px; color: var(--ta-text);
+}
+.fr-textarea__field::placeholder { color: var(--ta-minor); opacity: 1; }
+.fr-textarea__clear { position: absolute; z-index: 2; top: calc(var(--ta-pt) + 2px); right: var(--ta-px); display: none; width: var(--ta-clear); height: var(--ta-clear);
+  padding: 0; border: 0; background: none; color: var(--ta-minor); cursor: pointer; }
+.fr-textarea__clear svg { display: block; width: 100%; height: 100%; }
+.fr-textarea__footer { display: flex; gap: 16px; justify-content: space-between; padding: 0 var(--ta-px); }
+.fr-textarea__counter { margin-left: auto; font-size: 13px; line-height: 16px; letter-spacing: .2px; color: var(--ta-minor); }
+/* label активен: фокус или есть значение */
+.fr-textarea:is(.is-focused, :focus-within, .has-value, :has(.fr-textarea__field:not(:placeholder-shown))) .fr-textarea__legend { max-width: 1000px; }
+.fr-textarea:is(.is-focused, :focus-within, .has-value, :has(.fr-textarea__field:not(:placeholder-shown))) .fr-textarea__label { opacity: 1; }
+.fr-textarea:is(.is-focused, :focus-within) .fr-textarea__label { color: var(--ta-text); }
+.fr-textarea:is(.has-value, :has(.fr-textarea__field:not(:placeholder-shown))):not(.is-disabled) .fr-textarea__clear { display: block; }
+/* рамка: hover → error → фокус (фокус перекрывает error) */
+.fr-textarea:not(.is-disabled):is(:hover, .is-hover) .fr-textarea__border { border-color: var(--ta-border-hover); }
+.fr-textarea.is-error .fr-textarea__border { border-color: var(--attention-primary); }
+.fr-textarea.is-error:not(.is-disabled):is(:hover, .is-hover) .fr-textarea__border { border-color: var(--attention-dark); }
+.fr-textarea:is(.is-focused, :focus-within) .fr-textarea__border { border-color: var(--ta-border-focus); border-width: 2px; padding: 0 calc(var(--ta-px) - 6px); }
+/* disabled: весь блок 40%, заливка control/minor */
+.fr-textarea.is-disabled { opacity: .4; }
+.fr-textarea.is-disabled .fr-textarea__border { background: var(--control-minor); border-color: var(--ta-border); }
+.fr-textarea.is-disabled .fr-textarea__field { resize: none; cursor: not-allowed; }
+/* mobile: только нижняя линия, высота по тексту */
+.fr-textarea--mobile { --ta-px: 0px; --ta-h: auto; }   /* отступы сверху/снизу — как на десктопе: L 12 · M 10 · S 6 */
+.fr-textarea--mobile .fr-textarea__border { top: 0 !important; border-width: 0 0 1px; border-radius: 0; padding: 0; }
+.fr-textarea--mobile .fr-textarea__legend { display: none; }
+.fr-textarea--mobile .fr-textarea__label { left: 0; top: -12px; }
+.fr-textarea--mobile .fr-textarea__field { resize: none; field-sizing: content; }
+.fr-textarea--mobile:is(.is-focused, :focus-within) .fr-textarea__border { border-width: 0 0 2px; padding: 0; }
+/* invert */
+.fr-textarea.is-invert { --ta-border: var(--control-secondary-invert); --ta-border-hover: var(--control-hover-secondary-invert); --ta-border-focus: var(--control-primary-invert);
+  --ta-text: var(--text-primary-invert); --ta-minor: var(--text-minor-invert); }
+.fr-textarea.is-invert.is-disabled .fr-textarea__border { background: var(--control-minor-invert); }
+
+/* ═══════════════════════════════════════════════
+   TOOLTIP — Figma «🖥️ Tooltip Web» tgyCVTLTaj0u1DmMtJaejx (210:19177, спека 2665:16)
+   + fronton-react 2.16.0 tooltip/styles.module.css + popover/styles.module.css (invert), 02.10.2026.
+   Плашка: background/accent, обводка 1px белым 40% (Figma), radius 4, padding 4×8, 15/18, одна строка.
+   Стрелка: квадрат 11.3 повёрнут на 45° (= треугольник 16×8), отступ от элемента 12 (код).
+   ═══════════════════════════════════════════════ */
+.fr-tooltip {
+  --tt-border: rgba(255, 255, 255, .4);
+  position: relative; display: inline-flex; box-sizing: border-box; max-width: 51ch; padding: 3px 7px; /* 4×8 в Figma с внутренней обводкой 1px */
+  font-family: var(--f-base); font-size: 15px; line-height: 18px; font-weight: 400; letter-spacing: .2px; color: var(--text-invert);
+  background: var(--background-accent); border: 1px solid var(--tt-border); border-radius: var(--rounding-m);
+  white-space: nowrap; pointer-events: none;
+}
+.fr-tooltip__text { position: relative; z-index: 1; overflow: hidden; text-overflow: ellipsis; }
+.fr-tooltip::after { content: ""; position: absolute; width: 11.3px; height: 11.3px; background: var(--background-accent); transform: rotate(45deg); }
+.fr-tooltip--top::after    { left: calc(50% - 5.65px); bottom: -6.65px; box-shadow: 1px 1px 0 0 var(--tt-border); }
+.fr-tooltip--bottom::after { left: calc(50% - 5.65px); top: -6.65px;    box-shadow: -1px -1px 0 0 var(--tt-border); }
+.fr-tooltip--right::after  { top: calc(50% - 5.65px);  left: -6.65px;   box-shadow: -1px 1px 0 0 var(--tt-border); }
+.fr-tooltip--left::after   { top: calc(50% - 5.65px);  right: -6.65px;  box-shadow: 1px -1px 0 0 var(--tt-border); }
+/* привязка к элементу: обёртка + показ по hover/focus с задержкой 500 мс, скрытие 200 мс */
+.fr-tooltip-anchor { position: relative; display: inline-flex; }
+.fr-tooltip-anchor > .fr-tooltip { position: absolute; z-index: 9000; opacity: 0; transition: opacity .2s ease-out; }
+.fr-tooltip-anchor:is(:hover, :focus-within, .is-open) > .fr-tooltip { opacity: 1; transition: opacity .2s ease-out .5s; }
+.fr-tooltip-anchor.is-open > .fr-tooltip { transition: none; }
+.fr-tooltip-anchor > .fr-tooltip--top    { bottom: calc(100% + 12px); left: 50%; transform: translateX(-50%); }
+.fr-tooltip-anchor > .fr-tooltip--bottom { top: calc(100% + 12px);    left: 50%; transform: translateX(-50%); }
+.fr-tooltip-anchor > .fr-tooltip--right  { left: calc(100% + 12px);   top: 50%;  transform: translateY(-50%); }
+.fr-tooltip-anchor > .fr-tooltip--left   { right: calc(100% + 12px);  top: 50%;  transform: translateY(-50%); }
+
+/* ═══════════════════════════════════════════════
+   LOADER — Figma «🖥️ Loader Web» Htl3ulQtM8FyBxNoG29Tip (201:13) + fronton-react 2.16.0 loader, 02.10.2026.
+   Геометрия по Figma: круг на всю ширину, толщина 1/9 размера, концы прямые
+   (SVG viewBox 0 0 50 50: r 22.22, stroke 5.56). Анимация — по коду: вращение 2s + «дыхание» дуги 1.5s,
+   длины штриха пересчитаны под r 22.22 (окружность 139.6). .is-static — неподвижная ¾ дуги, как в макете.
+   ═══════════════════════════════════════════════ */
+.fr-loader { --loader-size: 24px; position: relative; display: inline-block; flex: none; width: var(--loader-size); height: var(--loader-size); color: var(--brand-primary); }
+.fr-loader--s  { --loader-size: 20px; }
+.fr-loader--m  { --loader-size: 24px; }
+.fr-loader--l  { --loader-size: 40px; }
+.fr-loader--xl { --loader-size: 80px; }
+.fr-loader--secondary { color: var(--control-primary); }
+.fr-loader--invert { color: var(--control-invert); }
+.fr-loader--inherit { color: inherit; }
+.fr-loader__svg { position: absolute; inset: 0; width: 100%; height: 100%; animation: fr-loader-rotate 2s linear infinite; }
+.fr-loader--s .fr-loader__svg { inset: 2px; width: calc(100% - 4px); height: calc(100% - 4px); }   /* в Figma S — круг 16 в 20 */
+.fr-loader__path { fill: none; stroke: currentColor; stroke-width: 5.556; stroke-linecap: butt;
+  stroke-dasharray: 1.1, 222; stroke-dashoffset: 0; animation: fr-loader-dash 1.5s ease-in-out infinite; }
+.fr-loader.is-static .fr-loader__svg { animation: none; transform: rotate(180deg); }
+.fr-loader.is-static .fr-loader__path { animation: none; stroke-dasharray: 104.7, 222; }
+@keyframes fr-loader-rotate { 100% { transform: rotate(360deg); } }
+@keyframes fr-loader-dash {
+  0%   { stroke-dasharray: 1.1, 222;  stroke-dashoffset: 0; }
+  50%  { stroke-dasharray: 98.9, 222; stroke-dashoffset: -38.9; }
+  100% { stroke-dasharray: 98.9, 222; stroke-dashoffset: -137.8; }
+}
+@media (prefers-reduced-motion: reduce) { .fr-loader__svg, .fr-loader__path { animation-duration: 4s; } }
+
+/* ═══════════════════════════════════════════════
+   СТРАНИЦЫ КОМПОНЕНТОВ, сгенерированные build.py
+   Блоки, которых нет в рукописных button.html / price.html.
+   ═══════════════════════════════════════════════ */
+
+/* Плашки серьёзности расхождений */
+.pill--iss    { border-color: var(--warn-border); color: var(--warn-border); }
+.pill--high   { border-color: var(--attention-primary); color: var(--attention-primary); }
+.pill--medium { border-color: var(--warn-border); color: var(--warn-border); }
+.pill--low    { border-color: var(--border); color: var(--muted); }
+
+/* Карточка расхождения */
+.issue {
+  padding: 14px 16px; margin: 10px 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--border);
+  border-radius: var(--rounding-l);
+}
+.issue p { margin: 0 0 6px; }
+.issue p:last-child { margin-bottom: 0; }
+
+/* Выноска с важным правилом */
+.callout {
+  padding: 14px 16px; margin: 14px 0;
+  background: var(--warn-bg);
+  border: 1px solid var(--warn-border);
+  border-radius: var(--rounding-l);
+  font-size: 14px; line-height: 1.55;
+}
+
+/* Блок кода с разметкой */
+pre.code {
+  padding: 14px 16px; margin: 8px 0 16px;
+  overflow-x: auto;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--rounding-l);
+  font: 13px/1.6 var(--f-mono);
+  white-space: pre-wrap; word-break: break-word;
+}
+
+/* Подвал сгенерированной страницы */
+.cfoot {
+  margin-top: 48px; padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+/* ═══════════════════════════════════════════════
+   КНОПКИ — сверено с Figma 21.09.2026.
+   Скопировано из fronton-компоненты.css, чтобы страницы компонентов
+   рисовали то же, что прототипы. Менять — в обоих файлах.
+   Прежние версии .fr-icon-btn / .fr-link-btn удалены: они опирались
+   на --button-hover-color, что противоречит матрицам Figma.
+   ═══════════════════════════════════════════════
+
+/* invert — кнопка на тёмном фоне.
+   Источник: Figma «🖥️ Button Web» 7wfKu1grD3estuXYzrN9Zr, раздел Виды (3141:4123),
+   сверено 2026-09-21. В исходной выгрузке Storybook invert-классов не было,
+   хотя в Figma это официальные варианты (primary/secondary/outline/pseudo).
+   Ставится вместе с темой: .fr-btn.fr-btn--primary.is-invert */
+.fr-btn--primary.is-invert   { --button-color: var(--text-primary); --button-bg: var(--control-invert);      --button-hover-bg: var(--control_hover-primary-invert); }
+.fr-btn--secondary.is-invert { --button-color: var(--text-invert);  --button-bg: var(--control-minor-invert); --button-hover-bg: var(--control_hover-minor-invert); }
+.fr-btn--outline.is-invert   { --button-color: var(--text-invert);  --button-border-color: var(--control-secondary-invert); --button-hover-border-color: var(--control_hover-secondary-invert); }
+.fr-btn--pseudo.is-invert    { --button-color: var(--text-invert);  --button-hover-bg: var(--control-minor-invert); }
+/* alert-pseudo invert есть только в Storybook и требует класс-компаньон dark;
+   в Figma не подтверждён — см. button.json → discrepancies.alertPseudoInvertOnlyInCode */
+.fr-btn--alert-pseudo.is-invert { --button-color: var(--attention-light); --button-hover-bg: var(--attention-dark); }
+
+/* composite — составная кнопка: два слота контента, прижатых к краям.
+   Источник: Figma «🖥️ Button Web» 7wfKu1grD3estuXYzrN9Zr, нода 2283:13858, 2026-09-21.
+   6 тем × 3 размера × invert (invert у primary/secondary/outline/pseudo; у accent и
+   alert его нет — как у обычной кнопки). Кликается целиком, отвечает за ОДНО действие.
+   Ширина: фиксированная или растянутая по контейнеру (в Figma пример w:288px).
+   Слоты: .fr-btn__start и .fr-btn__end; иконка может стоять в любом из них. */
+.fr-btn--composite { justify-content: space-between; gap: 16px; }
+.fr-btn--composite .fr-btn__start,
+.fr-btn--composite .fr-btn__end { display: inline-flex; align-items: center; gap: 4px; }
+.fr-btn--composite .fr-btn__end { text-align: right; }
+/* размеры composite: те же padding, что у обычной кнопки, высота контента фиксирована */
+.fr-btn--composite.fr-btn--l { padding: 12px 24px; }
+.fr-btn--composite.fr-btn--l .fr-btn__start,
+.fr-btn--composite.fr-btn--l .fr-btn__end { min-height: 24px; }
+.fr-btn--composite.fr-btn--m .fr-btn__start,
+.fr-btn--composite.fr-btn--m .fr-btn__end,
+.fr-btn--composite.fr-btn--s .fr-btn__start,
+.fr-btn--composite.fr-btn--s .fr-btn__end { min-height: 20px; }
+
+/* Loading — состояние ожидания после клика.
+   Источник: Figma, разделы Состояния (3141:4407) и Анимация (3141:5211), 2026-09-21.
+   Спека: «Содержимое кнопки заменяется спиннером… Сама кнопка переходит в состояние disabled». */
+.fr-btn.is-loading { pointer-events: none; opacity: .4; }
+.fr-btn.is-loading .fr-btn__label { display: none; }
+.fr-btn__spinner { width: 24px; height: 24px; animation: fr-btn-rotate 2s linear infinite; }
+.fr-btn--s .fr-btn__spinner, .fr-btn--m .fr-btn__spinner { width: 20px; height: 20px; }
+@keyframes fr-btn-rotate { to { transform: rotate(360deg); } }
+
+/* ─────────────────────────────────────────────
+   ICON BUTTON — кнопка-иконка без подложки и padding
+   Источник: Figma «🖥️ Button icon Web» Xx0mY3OCvAYYgAfniu3yGO, нода 1:30, 2026-09-21.
+   Матрица: Type=Primary|Secondary × Size=L|M|S × State=Default|Hover, плюс invert.
+   Размер — это размер САМОЙ ИКОНКИ (24/20/16), без внутренних отступов.
+   Используется внутри: Chip, Counter, Input, Textarea, Dropdown, Datepicker.
+   ───────────────────────────────────────────── */
+.fr-icon-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 0; background: none; border: 0; cursor: pointer;
+  color: var(--text-primary);
+  transition: color .2s ease-out, opacity .2s ease-out;
+}
+.fr-icon-btn--l { width: 24px; height: 24px; }
+.fr-icon-btn--m { width: 20px; height: 20px; }
+.fr-icon-btn--s { width: 16px; height: 16px; }
+/* primary: тёмная иконка, на hover — серая подложка не появляется, меняется оттенок */
+.fr-icon-btn--primary { color: var(--text-primary); }
+.fr-icon-btn--primary:hover { color: var(--control-minor); }
+/* secondary: приглушённая иконка, на hover темнеет */
+.fr-icon-btn--secondary { color: var(--text-minor); }
+.fr-icon-btn--secondary:hover { color: var(--text-primary); }
+.fr-icon-btn.is-invert { color: var(--text-invert); }
+.fr-icon-btn--secondary.is-invert { color: var(--control-secondary-invert); }
+.fr-icon-btn--secondary.is-invert:hover { color: var(--text-invert); }
+.fr-icon-btn[disabled] { pointer-events: none; opacity: .4; }
+
+/* ─────────────────────────────────────────────
+   LINK BUTTON — кнопка-ссылка без рамки и padding
+   Figma «🖥️ Button link Web» AsVdOEmHxvKTEKzOkFVzjC (1:30) + fronton-react 2.16.0
+   button/link-button/styles.module.css. Перепроверено 02.10.2026.
+   Темы = variant кода: primary (в коде normal) 400 · accent 600 · secondary 400 ·
+   minor 400 · underline 400. Цвет у primary и accent одинаковый — различает НАЧЕРТАНИЕ.
+   Hover/pressed: primary/accent/underline — подложка + box-shadow ±2px (текст не сдвигается);
+   secondary/minor — без подложки, текст темнеет до primary.
+   ───────────────────────────────────────────── */
+.fr-link-btn {
+  --lb-color: var(--text-primary); --lb-hover-color: var(--text-primary); --lb-hover-bg: var(--control-minor);
+  position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+  padding: 0; background: transparent; border: 0; border-radius: var(--rounding-m); cursor: pointer;
+  font-family: var(--f-base); font-weight: 400; letter-spacing: .2px; text-decoration: none;
+  color: var(--lb-color); user-select: none; -webkit-tap-highlight-color: transparent;
+  transition: color .2s ease-out, background-color .2s ease-out, box-shadow .2s ease-out;
+}
+.fr-link-btn:hover, .fr-link-btn:active, .fr-link-btn.is-hover {
+  color: var(--lb-hover-color); background-color: var(--lb-hover-bg);
+  box-shadow: -2px 0 0 0 var(--lb-hover-bg), 2px 0 0 0 var(--lb-hover-bg);
+}
+.fr-link-btn:focus { outline: none; }
+.fr-link-btn:focus-visible { box-shadow: 0 0 0 2px var(--secondary-yellow-primary); }
+.fr-link-btn[disabled], .fr-link-btn[aria-disabled="true"] { pointer-events: none; opacity: .4; }
+/* размеры */
+.fr-link-btn--m  { font-size: 17px; line-height: 24px; }
+.fr-link-btn--s  { font-size: 15px; line-height: 20px; }
+.fr-link-btn--xs { font-size: 13px; line-height: 16px; }
+.fr-link-btn__icon { flex: none; }
+/* в коде margin 4px у .iconLeft/.iconRight; здесь gap — иконка без класса стороны */
+.fr-link-btn--m .fr-link-btn__icon  { width: 24px; height: 24px; }
+.fr-link-btn--s .fr-link-btn__icon  { width: 20px; height: 20px; }
+.fr-link-btn--xs .fr-link-btn__icon { width: 16px; height: 16px; }
+/* темы */
+.fr-link-btn--accent    { font-weight: 600; }
+.fr-link-btn--secondary { --lb-color: var(--text-secondary); --lb-hover-bg: transparent; }
+.fr-link-btn--minor     { --lb-color: var(--text-minor);     --lb-hover-bg: transparent; }
+.fr-link-btn--underline {
+  --lb-hover-bg: var(--brand-light);
+  text-decoration-line: underline; text-decoration-thickness: var(--space-25);
+  text-decoration-color: var(--control-accent); text-underline-offset: var(--space-50);
+  border-radius: var(--rounding-m) var(--rounding-m) 0 0;
+}
+.fr-link-btn--underline.fr-link-btn--s, .fr-link-btn--underline.fr-link-btn--xs { text-underline-offset: var(--space-25); }
+.fr-link-btn--underline:hover, .fr-link-btn--underline:active, .fr-link-btn--underline.is-hover { text-decoration-color: var(--control-hover-accent); }
+/* invert — на тёмном фоне */
+.fr-link-btn.is-invert { --lb-color: var(--text-invert); --lb-hover-color: var(--text-invert); --lb-hover-bg: var(--control-minor-invert); }
+.fr-link-btn--secondary.is-invert { --lb-color: var(--text-secondary-invert); --lb-hover-color: var(--text-primary-invert); --lb-hover-bg: transparent; }
+.fr-link-btn--minor.is-invert     { --lb-color: var(--text-minor-invert);     --lb-hover-color: var(--text-primary-invert); --lb-hover-bg: transparent; }
+.fr-link-btn--underline.is-invert { --lb-hover-bg: var(--brand-dark); }
+.fr-link-btn--underline.is-invert:hover, .fr-link-btn--underline.is-invert:active,
+.fr-link-btn--underline.is-invert.is-hover { text-decoration-color: var(--brand-light); }
+
+
+
+/* Скопировано из fronton-компоненты.css — см. примечание выше про два файла. */
+/* ─────────────────────────────────────────────
+   ICON — иконка интерфейса (Fronton Icons)
+   Источник: Figma «🌄 Fronton Icons» 7LxWPDwhiuhWaBT7vlEqfa, 2026-09-21.
+   Набор на основе Phosphor Icons: 1056 иконок в 18 категориях
+   плюс фирменные иконки услуг Лемана (29 штук).
+
+   Цвет НЕ задаётся: иконка наследует его от родителя через currentColor.
+   Базовый цвет — --text-primary, отдельно красить не нужно.
+
+   Толщина обводки зависит от размера («чем меньше, тем тоньше»):
+     12px → 1px · 16/20/24px → 1.25px · 32px → 1.7px · 48px → 2.5px
+   Она зашита в сам SVG, CSS её не переопределяет.
+   ───────────────────────────────────────────── */
+.fr-icon { display: inline-flex; align-items: center; justify-content: center; flex: none; }
+.fr-icon svg { display: block; width: 100%; height: 100%; }
+.fr-icon--12 { width: 12px; height: 12px; }
+.fr-icon--16 { width: 16px; height: 16px; }
+.fr-icon--20 { width: 20px; height: 20px; }
+.fr-icon--24 { width: 24px; height: 24px; }  /* базовый */
+.fr-icon--32 { width: 32px; height: 32px; }
+.fr-icon--48 { width: 48px; height: 48px; }
+
+/* ═══════════════════════════════════════════════
+   ПЛАШКИ ЦВЕТОВ — крупные карточки.
+   Прежние .sw были 12×12px: по ним нельзя было
+   оценить сам цвет, приходилось читать токен.
+   ═══════════════════════════════════════════════ */
+.swgrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 14px;
+  margin-bottom: 8px;
+}
+.swcard {
+  border: 1px solid var(--border);
+  border-radius: var(--rounding-l);
+  overflow: hidden;
+  background: var(--surface);
+}
+/* Сама плашка: крупная, ~в 4 раза больше прежней по стороне */
+.swcard__box {
+  height: 84px;
+  border-bottom: 1px solid var(--border);
+}
+.swcard__meta { padding: 10px 12px 12px; }
+.swcard__meta code.cp { display: block; margin-bottom: 4px; }
+.swcard__hex {
+  font: 12px/1.4 var(--f-mono);
+  color: var(--muted);
+  text-transform: uppercase;
+}
+.swcard__note { display: block; font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+/* Полупрозрачные invert-цвета: шахматка, чтобы была видна прозрачность */
+.swcard--alpha .swcard__box {
+  background-image:
+    linear-gradient(45deg, #d8d8d8 25%, transparent 25%),
+    linear-gradient(-45deg, #d8d8d8 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #d8d8d8 75%),
+    linear-gradient(-45deg, transparent 75%, #d8d8d8 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+}
+.swcard--alpha .swcard__box span { display: block; height: 100%; }
+/* На тёмной подложке — как эти цвета выглядят в реальности */
+.swgrid--dark { padding: 16px; background: #21282B; border-radius: var(--rounding-l); }
+.swgrid--dark .swcard { border-color: #3A4245; background: #1A2023; }
+.swgrid--dark .swcard__hex, .swgrid--dark .swcard__note { color: #9AA4A8; }
+.swgrid--dark code.cp { background: #11191C; border-color: #39444A; color: #D8DCDD; }
+
+/* ═══════════════════════════════════════════════
+   ТЕНИ — крупные карточки, по аналогии с цветами.
+   Прежние .shbox не имели стилей вообще (потерялись
+   при чистке), а *-up варианты не показывались.
+   ═══════════════════════════════════════════════ */
+.shgrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 22px;
+  margin-bottom: 8px;
+}
+.shcard {
+  border: 1px solid var(--border);
+  border-radius: var(--rounding-l);
+  background: var(--surface);
+  padding: 30px 20px 16px;
+}
+/* Плашка, на которой видно саму тень. Фон белый — на сером тень читается плохо */
+.shbox {
+  height: 92px;
+  margin-bottom: 18px;
+  background: var(--background-primary);
+  border-radius: var(--rounding-l);
+}
+.shcard code.cp { display: block; margin-bottom: 6px; }
+.shcard__desc { display: block; font-size: 12px; line-height: 1.5; color: var(--muted); }
+.shcard__layers {
+  display: block; margin-top: 8px;
+  font: 11px/1.6 var(--f-mono); color: var(--muted);
+  word-break: break-word;
+}
+/* Ряд для *-up: тень направлена вверх, поэтому отступ сверху больше */
+.shcard--up { padding-top: 16px; padding-bottom: 30px; }
+.shcard--up .shbox { margin-top: 18px; margin-bottom: 0; }
+
+/* ═══════════════════════════════════════════════
+   ПРОЗРАЧНОСТИ — по аналогии с тенями.
+   Три ступени 4/6/8 = 40/60/80%. В Fronton приходят
+   не как отдельный токен, а суффиксом к цвету:
+   --text-primary_opacity-6 и т.п.
+   ═══════════════════════════════════════════════ */
+.opgrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 22px;
+  margin-bottom: 8px;
+}
+.opcard {
+  border: 1px solid var(--border);
+  border-radius: var(--rounding-l);
+  background: var(--surface);
+  padding: 20px;
+}
+/* Шахматка под плашкой — чтобы прозрачность была видна, а не читалась как серый */
+.opbox {
+  height: 92px;
+  margin-bottom: 16px;
+  border-radius: var(--rounding-l);
+  background-color: #fff;
+  background-image:
+    linear-gradient(45deg, #E8E8E8 25%, transparent 25%, transparent 75%, #E8E8E8 75%),
+    linear-gradient(45deg, #E8E8E8 25%, transparent 25%, transparent 75%, #E8E8E8 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 8px 8px;
+  position: relative;
+  overflow: hidden;
+}
+.opbox span {
+  position: absolute; inset: 0;
+  background: var(--background-accent);
+  border-radius: var(--rounding-l);
+}
+.opcard code.cp { display: block; margin-bottom: 6px; }
+.opcard__pct {
+  display: block; margin-bottom: 6px;
+  font: 600 15px/1.3 var(--f-mono); color: var(--text-primary);
+}
+.opcard__desc { display: block; font-size: 12px; line-height: 1.5; color: var(--muted); }
+.opcard__hex {
+  display: block; margin-top: 8px;
+  font: 11px/1.6 var(--f-mono); color: var(--muted);
+}
+
+/* ═══════════════════════════════════════════════
+   СЕТКА — брейкпоинты и колонки.
+   Каждый брейкпоинт показан в масштабе: ширина
+   макета приведена к ширине карточки, поэтому
+   видно пропорцию полей и колонок, а не абсолют.
+   ═══════════════════════════════════════════════ */
+.bpcard {
+  border: 1px solid var(--border);
+  border-radius: var(--rounding-l);
+  background: var(--surface);
+  padding: 18px 20px 20px;
+  margin-bottom: 14px;
+}
+.bpcard__head {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  align-items: baseline; margin-bottom: 4px;
+}
+.bpcard__name { font-weight: 600; font-size: 15px; color: var(--text-primary); }
+.bpcard__w { font: 12px/1.4 var(--f-mono); color: var(--muted); }
+.bpcard__meta {
+  display: block; margin-bottom: 14px;
+  font: 12px/1.6 var(--f-mono); color: var(--muted);
+}
+/* Полоса-визуализация: поля по краям + колонки с гаттерами */
+.bpbar {
+  display: flex; align-items: stretch;
+  height: 54px; border-radius: var(--rounding-m);
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.bpbar__pad {
+  flex: 0 0 auto;
+  background: repeating-linear-gradient(45deg,
+    var(--border) 0 3px, transparent 3px 7px);
+}
+.bpbar__cols { flex: 1 1 auto; display: flex; }
+.bpbar__col { flex: 1 1 0; background: var(--service-light); }
+.bpbar__gut { flex: 0 0 auto; }
+.bpnote { font-size: 12px; line-height: 1.55; color: var(--muted); margin-top: 10px; }
+
+/* ═══════════════════════════════════════════════
+   ИЛЛЮСТРАЦИИ — отдельный файл Figma «🌄 Illustrations».
+   Размерная шкала + правила использования (Do/Don't).
+   ═══════════════════════════════════════════════ */
+.ilsize {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 18px; margin-bottom: 8px;
+}
+.ilcard {
+  border: 1px solid var(--border);
+  border-radius: var(--rounding-l);
+  background: var(--surface);
+  padding: 18px 18px 16px;
+}
+/* Пропорциональная плашка-заглушка: показывает соотношение сторон размера */
+.ilbox {
+  display: flex; align-items: center; justify-content: center;
+  background: var(--code-bg);
+  border: 1px dashed var(--border);
+  border-radius: var(--rounding-m);
+  margin-bottom: 12px;
+  font: 11px/1.4 var(--f-mono); color: var(--muted);
+}
+.ilcard__t { display: block; font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+.ilcard__d { display: block; font-size: 12px; line-height: 1.5; color: var(--muted); }
+/* Do / Don't */
+.dodont { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0 4px; }
+@media (max-width: 640px) { .dodont { grid-template-columns: 1fr; } }
+.dd {
+  border: 1px solid var(--border); border-left-width: 3px;
+  border-radius: var(--rounding-m); padding: 14px 16px;
+  font-size: 13px; line-height: 1.55;
+}
+.dd--do { border-left-color: var(--ok-border); background: var(--ok-bg); }
+.dd--no { border-left-color: var(--err-border); background: var(--err-bg); }
+.dd__t {
+  display: block; font-weight: 700; font-size: 10px;
+  letter-spacing: .6px; text-transform: uppercase; margin-bottom: 6px;
+}
+.dd--do .dd__t { color: var(--ok-border); }
+.dd--no .dd__t { color: var(--err-border); }
+/* Список сцен */
+.scenes { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.scene {
+  font: 12px/1.5 var(--f-base); padding: 3px 9px;
+  border: 1px solid var(--border); border-radius: var(--rounding-circular);
+  background: var(--surface); color: var(--text-secondary);
+}
+.scene em { font-style: normal; color: var(--muted); font-size: 11px; }
+
+/* Галерея иллюстраций: картинка + подпись + размеры */
+.ilgrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(176px, 1fr));
+  gap: 16px; margin-bottom: 8px;
+}
+.ilitem {
+  border: 1px solid var(--border);
+  border-radius: var(--rounding-l);
+  background: var(--surface);
+  padding: 12px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+/* Иллюстрации нарисованы под светлый фон — подложка всегда белая */
+.ilitem__pic {
+  display: flex; align-items: center; justify-content: center;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--rounding-m);
+  min-height: 104px; padding: 8px;
+}
+.ilitem__pic img { max-width: 100%; height: auto; display: block; }
+.ilitem__name { font-size: 12px; line-height: 1.4; color: var(--text-primary); font-weight: 600; }
+.ilitem__sz { font: 11px/1.4 var(--f-mono); color: var(--muted); }
+.ilitem--missing .ilitem__pic { background: var(--err-bg); color: var(--err-border); font-size: 11px; text-align: center; }
+
+/* ═══════════════════════════════════════════════
+   ТИПОГРАФИКА / ОТСТУПЫ / РАДИУСЫ
+   Эти три блока были свёрстаны классами, для которых
+   в ds.css не было ни одного правила — всё падало в
+   голый инлайн-текст. Приводим к той же карточной
+   логике, что тени, прозрачности, сетка и иллюстрации.
+   ═══════════════════════════════════════════════ */
+
+/* ─── Типографика ─── */
+.tysample {
+  border: 1px solid var(--border);
+  border-radius: var(--rounding-l);
+  background: var(--surface);
+  padding: 14px 18px 18px;
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+/* Метаданные стиля: имя, кегль/интерлиньяж, вес, семейство, LS */
+.tymeta {
+  display: flex; flex-wrap: wrap; gap: 6px; align-items: baseline;
+  font: 11px/1.6 var(--f-mono); color: var(--muted);
+  padding-bottom: 10px; margin-bottom: 12px;
+  border-bottom: 1px dashed var(--border);
+}
+.tymeta b {
+  font: 600 12px/1.4 var(--f-base); color: var(--text-primary);
+  margin-right: 2px;
+}
+.tymeta code.cp { font-size: 10px; }
+/* Сами образцы: обрезаем по ширине, чтобы Display не ломал сетку */
+.tybig, .tymid, .tysmall {
+  color: var(--text-primary);
+  overflow-wrap: anywhere;
+  margin: 0;
+}
+.tybig { margin-block: 2px; }
+
+/* ─── Отступы ─── */
+.spgrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px; margin-bottom: 8px;
+}
+.spcard {
+  border: 1px solid var(--border);
+  border-radius: var(--rounding-l);
+  background: var(--surface);
+  padding: 16px 18px;
+}
+.spcard code.cp { display: block; margin-bottom: 4px; }
+.spcard__val { font: 600 13px/1.4 var(--f-mono); color: var(--text-primary); }
+.spcard__note { display: block; margin-top: 4px; font-size: 12px; line-height: 1.5; color: var(--muted); }
+/* Полоса реальной ширины токена — видно пропорцию между ступенями */
+.spcard__bar {
+  display: block; height: 14px; margin-top: 10px;
+  background: var(--service-light);
+  border: 1px solid var(--service-primary);
+  border-radius: var(--rounding-s);
+  max-width: 100%;
+}
+/* Сырая шкала --space-*: компактная сетка, значений много */
+.spscale {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(124px, 1fr));
+  gap: 8px;
+}
+.spitem {
+  border: 1px solid var(--border);
+  border-radius: var(--rounding-m);
+  background: var(--surface);
+  padding: 9px 11px;
+}
+.spitem code.cp { display: block; font-size: 10px; margin-bottom: 3px; }
+.spitem__v { font: 11px/1.4 var(--f-mono); color: var(--muted); }
+.spitem__b {
+  display: block; height: 6px; margin-top: 6px;
+  background: var(--service-primary); border-radius: 3px; max-width: 100%;
+}
+
+/* ─── Радиусы ─── */
+.rgrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 16px;
+}
+.rcard {
+  border: 1px solid var(--border);
+  border-radius: var(--rounding-l);
+  background: var(--surface);
+  padding: 16px 18px 18px;
+}
+/* Плашка показывает сам радиус — заливка контрастная к фону карточки */
+.rbox {
+  height: 72px; margin-bottom: 12px;
+  background: var(--service-light);
+  border: 2px solid var(--service-dark);
+}
+.rcard code.cp { display: block; margin-bottom: 4px; }
+.rcard__val { font: 600 13px/1.4 var(--f-mono); color: var(--text-primary); }
+.rcard__note { display: block; margin-top: 4px; font-size: 12px; line-height: 1.5; color: var(--muted); }
+/* Параметры стиля отдельными чипами — читается лучше, чем строка через точки */
+.tyfield {
+  font: 10px/1.5 var(--f-mono); color: var(--muted);
+  background: var(--code-bg); border: 1px solid var(--border);
+  border-radius: var(--rounding-s); padding: 1px 6px; white-space: nowrap;
+}
+
+/* ─── Простые списки «токен → значение» (.tgrp/.trow)
+   Используются в прозрачностях, шрифтах и иконках.
+   Стилей тоже не было — строки слипались в один абзац. ─── */
+.tgrp {
+  border: 1px solid var(--border);
+  border-radius: var(--rounding-l);
+  background: var(--surface);
+  overflow: hidden;
+}
+.tgrp h3 { margin: 0; padding: 14px 18px 10px; font-size: 14px; }
+.trow {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  align-items: baseline; justify-content: space-between;
+  padding: 10px 18px;
+  border-top: 1px solid var(--border);
+}
+.tgrp > .trow:first-child { border-top: none; }
+.trow .val {
+  font: 12px/1.5 var(--f-mono); color: var(--muted);
+  text-align: right; overflow-wrap: anywhere;
+}
+.trow .note { font-size: 12px; color: var(--muted); border: none; padding: 0; margin: 0; }
+
+/* Вспомогательные элементы для примеров аккордеона в справочнике.
+   Это НЕ классы Fronton — в проде на их месте настоящие Badge / Price / Label. */
+
+/* Цвета эмблемы аватара. В Fronton модификаторов цвета нет вообще — цвет
+   выбирается рантаймом случайно. Для примеров в справочнике заводим классы
+   по 8 парам из Figma (Spec → «Виды и размеры»). */
+.fr-avatar .fr-avatar__picture--purple { background: var(--secondary-purple-light); color: var(--secondary-purple-dark); }
+.fr-avatar__picture--blue   { background: var(--secondary-blue-light);   color: var(--secondary-blue-dark); }
+.fr-avatar__picture--green  { background: var(--secondary-green-light);  color: var(--secondary-green-dark); }
+.fr-avatar .fr-avatar__picture--green2 { background: var(--success-light);          color: var(--success-dark); }
+.fr-avatar .fr-avatar__picture--orange { background: var(--secondary-orange-light); color: var(--secondary-orange-dark); }
+.fr-avatar__picture--red    { background: var(--attention-light);        color: var(--attention-dark); }
+.fr-avatar .fr-avatar__picture--yellow { background: var(--accent-light);           color: var(--accent-dark); }
+/* Outline-вид: без заливки, обводка --control-secondary */
+.fr-avatar .fr-avatar__picture--outline { background: none; border: 1px solid var(--control-secondary); }
+
+/* ═══════════════════════════════════════════════
+   BADGE
+   В fronton-компоненты.css для бейджа есть ТОЛЬКО базовое правило
+   .fr-badge и .fr-badge--accent. Модификаторов размеров, видов и
+   invert там нет вовсе, хотя в Figma это 12 вариантов × 2 темы.
+   Всё ниже — реконструкция по component set 536:333 / 536:361.
+   ═══════════════════════════════════════════════ */
+.fr-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  letter-spacing: .2px;
+  font-weight: 600;
+  border: 2px solid var(--background-primary);
+  border-radius: var(--rounding-circular);
+  /* Перенос текста в бейдже запрещён спецификацией */
+  white-space: nowrap;
+  /* Дефолт — Primary, как в Figma (в CSS Fronton дефолт был тёмный = Secondary) */
+  background: var(--attention-primary);
+  color: var(--secondary-white);
+}
+/* ─ Размеры ─
+   В Figma боксы квадратные: 28×28, 24×24, 20×20, 12×12 — то есть
+   28/24/20/12 это ВЫСОТА бейджа целиком, вместе с обводкой 2px.
+   Поэтому height фиксируем, а min-width делаем равным height —
+   при одном символе получается круг. Вертикальный padding не нужен:
+   он бы добавился к height и превратил круг в овал.
+   Горизонтальный padding работает только при 2+ символах,
+   растягивая бейдж вширь. */
+.fr-badge--l  { height: 28px; min-width: 28px; padding: 0 6px; font-size: 15px; line-height: 1; }
+.fr-badge--m  { height: 24px; min-width: 24px; padding: 0 5px; font-size: 15px; line-height: 1; }
+.fr-badge--s  { height: 20px; min-width: 20px; padding: 0 4px; font-size: 13px; line-height: 1; }
+/* XS — точка без текста */
+.fr-badge--xs { width: 12px; height: 12px; min-width: 12px; padding: 0; font-size: 0; line-height: 0; }
+/* ─ Виды ─ */
+.fr-badge--primary   { background: var(--attention-primary); color: var(--secondary-white); border-color: var(--background-primary); }
+.fr-badge--secondary { background: var(--background-accent);  color: var(--text-primary-invert); border-color: var(--background-primary); }
+.fr-badge--pseudo    { background: var(--background-primary); color: var(--text-primary); border-color: var(--control-secondary); }
+/* ─ Инверсия: для тёмного фона меняется цвет обводки ─ */
+.fr-badge.is-invert.fr-badge--primary,
+.fr-badge.is-invert.fr-badge--secondary { border-color: var(--background-accent); }
+.fr-badge.is-invert.fr-badge--secondary { background: var(--background-primary); color: var(--text-primary); }
+.fr-badge.is-invert.fr-badge--pseudo { background: var(--background-accent); color: var(--text-primary-invert); border-color: var(--control-secondary); }
+
+/* ═══ Radio (Button radio) ═══
+   В ds.css правил не было вообще — блок построен заново по Figma
+   (component set 201:323 / 201:306 — L, 201:289 / 201:272 — M).
+   Индикатор — круг с обводкой; выбранное состояние рисуется как
+   box-shadow inset, толщина которого равна (size - 2*dotRadius)/2:
+   L: (24-10)/2=7px, M: (20-8)/2=6px — оба значения сняты из SVG. */
+.fr-radio { display: inline-flex; align-items: flex-start; gap: 8px; padding: 8px; margin-left: -8px; color: var(--text-primary); cursor: pointer; transition: opacity .2s ease-in-out; }
+.fr-radio.fr-disabled { pointer-events: none; cursor: default; opacity: .4; }
+
+.fr-radio-icon {
+  position: relative; flex-shrink: 0; box-sizing: border-box;
+  display: inline-flex; width: var(--size); height: var(--size);
+  border-radius: var(--rounding-circular);
+  --outer-color: var(--control-secondary);
+  --inner-color: var(--control-primary);
+  --inner-width: 0px;
+  --transition-duration: 200ms;
+}
+.fr-radio-icon.fr-l { --size: 24px; --chacked-border-width: 7px; }
+.fr-radio-icon.fr-m { --size: 20px; --chacked-border-width: 6px; }
+.fr-radio-icon.fr-alert { --outer-color: var(--attention-primary); }
+.fr-radio-icon::before {
+  position: absolute; inset: 0; content: ""; border-radius: var(--rounding-circular);
+  border: 2px solid var(--outer-color);
+}
+.fr-radio-icon::after {
+  position: absolute; inset: 0; content: ""; border-radius: var(--rounding-circular);
+  box-shadow: 0 0 0 var(--inner-width) var(--inner-color) inset;
+  transition: box-shadow var(--transition-duration) cubic-bezier(.4, 0, .5, 2.6);
+}
+.fr-radio__input-inner { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+.fr-radio__input-inner:checked + .fr-radio-icon { --inner-width: var(--chacked-border-width); }
+
+.fr-radio:hover:not(.fr-disabled) .fr-radio-icon,
+.fr-radio:active:not(.fr-disabled) .fr-radio-icon { --outer-color: var(--control-hover-secondary); }
+.fr-radio:hover:not(.fr-disabled) .fr-radio-icon.fr-alert,
+.fr-radio:active:not(.fr-disabled) .fr-radio-icon.fr-alert { --outer-color: var(--attention-dark); }
+
+/* Focused — по табуляции; в исходной CSS отсутствовало, добавлено по спеке (204:1126 и др.) */
+.fr-radio__input-inner:focus-visible + .fr-radio-icon { box-shadow: 0 0 0 2px var(--secondary-yellow-primary); }
+
+.fr-radio__label-text { display: block; font-size: inherit; line-height: inherit; color: var(--text-primary); user-select: none; padding-top: 1px; }
+
+/* ─ Invert: для тёмного фона (var(--background-accent)). Цвета сняты
+   напрямую из fill/stroke SVG-икон component set 201:306/201:272.
+   ВАЖНО: механика «дырки» (::after инвертирует толщину заливки,
+   а центр остаётся прозрачным и просвечивает фон карточки) работает
+   только если фон реально тёмный — --inner-color здесь белый
+   (var(--control-invert)), и именно тёмный фон карточки, просвечивая
+   в прозрачном центре, образует тёмную точку — обратная полярность
+   относительно светлой темы, где точку образует белая страница. */
+.fr-radio.is-invert { color: var(--text-primary-invert); }
+.fr-radio.is-invert .fr-radio-icon { --outer-color: rgba(255,255,255,.5); --inner-color: var(--control-invert); }
+.fr-radio.is-invert .fr-radio-icon.fr-alert { --outer-color: var(--attention-primary); }
+.fr-radio.is-invert:hover:not(.fr-disabled) .fr-radio-icon,
+.fr-radio.is-invert:active:not(.fr-disabled) .fr-radio-icon { --outer-color: rgba(255,255,255,.6); }
+.fr-radio.is-invert:hover:not(.fr-disabled) .fr-radio-icon.fr-alert,
+.fr-radio.is-invert:active:not(.fr-disabled) .fr-radio-icon.fr-alert { --outer-color: var(--attention-dark); }
+.fr-radio.is-invert .fr-radio__label-text { color: var(--text-primary-invert); }
+
+/* ═══ Caption ═══
+   В исходных файлах отсутствовал как самостоятельный компонент —
+   Fronton прямо помечает его «выгружен, но не разобран». Есть только
+   чужие фрагменты внутри Textarea/Numericinput/Rating с разными
+   отступами. Блок ниже написан заново по Figma (206:1204 / 206:2205). */
+.fr-caption { display: flex; align-items: flex-start; gap: 4px; font-size: var(--fs-minor); line-height: var(--lh-minor); letter-spacing: .2px; color: var(--text-minor); }
+.fr-caption__icon { flex-shrink: 0; width: 16px; height: 16px; }
+.fr-caption__text { flex: 1 0 0; word-break: break-word; }
+
+/* Warning красит только иконку (всегда красная); текст остаётся
+   серым, как в Default — легко перепутать с «жёлтым» warning-цветом. */
+.fr-caption--warning .fr-caption__icon,
+.fr-caption--error .fr-caption__icon { color: var(--attention-primary); }
+.fr-caption--error { color: var(--attention-primary); }
+
+/* ─ Invert: только текст default/warning темнеет до полупрозрачного
+   белого — иконка Warning/Error остаётся тем же красным в обеих темах. ─ */
+.fr-caption.is-invert { color: var(--text-minor-invert); }
+.fr-caption.is-invert.fr-caption--error { color: var(--attention-primary); }
+
+/* ═══ Hint ═══
+   Всплывающая подсказка. Всегда тёмный фон (background/accent = #21282b) —
+   тёмная тема не меняет цвета. Хвостик (Tip) позиционируется
+   модификатором --bottom/--top/--left/--right.
+   Figma: MCZRd0QOs9aemsij5tG1Jd / node 208:15638 */
+.fr-hint { display: inline-flex; flex-direction: column; align-items: center; color: var(--background-accent, #21282b); width: 256px; }
+.fr-hint--bottom { flex-direction: column; }
+.fr-hint--top { flex-direction: column-reverse; }
+.fr-hint--left { flex-direction: row-reverse; align-items: center; width: auto; }
+.fr-hint--right { flex-direction: row; align-items: center; width: auto; }
+.fr-hint--left .fr-hint__block,
+.fr-hint--right .fr-hint__block { width: 256px; }
+
+.fr-hint__block {
+  display: flex; flex-direction: column; gap: 16px;
+  background: var(--background-accent, #21282b);
+  border: 1px solid rgba(255,255,255,0.4);
+  border-radius: 8px; padding: 16px; width: 100%;
+  box-sizing: border-box;
+}
+
+.fr-hint__header { display: flex; align-items: flex-start; gap: 0; width: 100%; }
+
+/* Picture-вариант (Type=Pic left): картинка 50×50 слева, padding-right 12px */
+.fr-hint__picture { flex-shrink: 0; padding-right: 12px; }
+.fr-hint__picture img { display: block; width: 50px; height: 50px; object-fit: cover; border-radius: var(--rounding-s, 4px); }
+.fr-hint__text { display: flex; flex-direction: column; gap: 4px; flex: 1 0 0; min-width: 0; }
+.fr-hint__title { margin: 0; font-family: var(--f-base); font-weight: 600; font-size: 17px; line-height: 24px; letter-spacing: .2px; color: var(--text-primary-invert, #fff); word-break: break-word; }
+.fr-hint__paragraph { margin: 2px 0 0; font-family: var(--f-base); font-weight: 400; font-size: 15px; line-height: 18px; letter-spacing: .2px; color: var(--text-primary-invert, #fff); word-break: break-word; }
+
+.fr-hint__close {
+  flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px; margin: -6px -6px 0 4px;
+  padding: 6px; border: none; background: none; cursor: pointer; border-radius: 100px;
+  color: var(--text-primary-invert, #fff);
+}
+.fr-hint__close svg { width: 20px; height: 20px; display: block; }
+.fr-hint__close:hover { background: rgba(255,255,255,0.1); }
+
+.fr-hint__footer { display: flex; align-items: center; gap: 8px; justify-content: flex-end; }
+
+/* Кнопки в footer: S invert — белый текст, 15px DemiBold */
+.fr-hint__btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 6px 12px; border-radius: var(--rounding-m, 4px);
+  font-family: var(--f-base); font-weight: 600; font-size: 15px; line-height: 20px;
+  letter-spacing: .2px; cursor: pointer; border: none; white-space: nowrap;
+}
+.fr-hint__btn--pseudo { background: none; color: var(--text-primary-invert, #fff); }
+.fr-hint__btn--pseudo:hover { background: rgba(255,255,255,0.1); }
+.fr-hint__btn--primary { background: var(--control-primary-invert, #fff); color: var(--text-primary, #21282b); }
+.fr-hint__btn--primary:hover { background: rgba(255,255,255,0.9); }
+
+/* Хвостик: треугольник 16×8px, fill = background/accent */
+.fr-hint__tip { display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.fr-hint--bottom .fr-hint__tip,
+.fr-hint--top .fr-hint__tip { width: 16px; height: 8px; }
+.fr-hint__tip--side { width: 8px; height: 16px; }
+.fr-hint__tip svg { display: block; width: 100%; height: 100%; }
+
+/* ═══ Image ═══
+   Обёртка для медиа с 4 типами: Image / Video / Loading / Error.
+   Размер и пропорции задаёт контейнер (width/height/aspect-ratio),
+   скругление — модификатором. object-fit: cover (default) / contain.
+   Figma: bDzuLUt1yIvYY3fuqXG2Dd / component set 2001:146 */
+.fr-image {
+  position: relative; display: inline-block; overflow: hidden;
+  width: 40px; height: 40px; border-radius: 0;
+  background: var(--background-secondary, #f5f4f1);
+}
+.fr-image img,
+.fr-image video { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+/* object-fit режимы */
+.fr-image--cover img,
+.fr-image--cover video { object-fit: cover; }
+.fr-image--contain img,
+.fr-image--contain video { object-fit: contain; }
+
+/* Скругления */
+.fr-image--r0 { border-radius: 0; }
+.fr-image--r4 { border-radius: var(--rounding-m, 4px); }
+.fr-image--r8 { border-radius: var(--rounding-l, 8px); }
+.fr-image--r16 { border-radius: var(--rounding-xl, 16px); }
+.fr-image--circle { border-radius: var(--rounding-circular, 100vmin); }
+
+/* Type=Video: затемняющий оверлей + иконка Play по центру */
+.fr-image--video::after {
+  content: ""; position: absolute; inset: 0;
+  background: var(--secondary-black, #000); opacity: .3; pointer-events: none;
+}
+.fr-image__play {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  z-index: 1; width: 24px; height: 24px; color: #fff; pointer-events: none;
+}
+.fr-image__play svg { display: block; width: 100%; height: 100%; }
+
+/* Type=Loading: скелетон-шиммер */
+.fr-image--loading { background: var(--background-secondary, #f5f4f1); }
+.fr-image__skeleton {
+  position: absolute; inset: 0;
+  background: var(--control-secondary, #ccc6b8); opacity: .25;
+}
+
+/* Type=Error: фон background/secondary + иконка Camera (control/minor) по центру */
+.fr-image--error { background: var(--background-secondary, #f5f4f1); }
+.fr-image__camera {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  color: var(--control-minor, #e3e1d8);
+  width: 32px; height: 32px; max-width: 100px; max-height: 100px;
+}
+.fr-image__camera svg { display: block; width: 100%; height: 100%; }
+
+/* select — рамка выбора (control/accent, inset -4px) */
+.fr-image.is-select { outline: 2px solid var(--control-accent, #fdc300); outline-offset: 2px; }
+
+/* ═══ Label ═══
+   Компактная цветная плашка-тег (НЕ подпись к форме). Высота 24px,
+   текст 13/16, иконки 16px слева/справа опционально. Два пресет-набора:
+   Default (светлые заливки, тёмный текст) и Accent (насыщенные заливки,
+   текст белый/тёмный под фон). 10 цветов в каждом + Outline (рамка).
+   Фон/текст — «любой», пресеты лишь готовые наборы (можно задать свои
+   через inline style или собственный класс). Модификатор angle — срез
+   верхнего левого угла. Figma xe1D9kKwUqMVM7gVgOt9Gc (2632:1818 / 2632:1797),
+   код fronton-react label/styles.module.css. */
+.fr-label {
+  display: inline-flex; align-items: center; height: 24px; box-sizing: border-box;
+  padding: var(--space-50, 4px); border: 1px solid transparent; border-radius: var(--rounding-l, 8px);
+  overflow: hidden; vertical-align: middle;
+  background: var(--control-minor); color: var(--text-primary);
+  font-family: var(--f-base); font-size: 13px; line-height: 16px; letter-spacing: .2px;
+}
+.fr-label__text { padding: 0 var(--space-50, 4px); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.fr-label__icon { flex-shrink: 0; display: inline-flex; width: 16px; height: 16px; }
+.fr-label__icon svg { display: block; width: 100%; height: 100%; }
+
+/* Срезанный верхний левый угол (angle) */
+.fr-label--angle { border-radius: 0 var(--rounding-l, 8px) var(--rounding-l, 8px); }
+
+/* — Пресеты: Default (светлые) — текст всегда text/primary — */
+.fr-label--default    { background: var(--control-minor); }
+.fr-label--outline    { background: transparent; border-color: var(--control-secondary); }
+.fr-label--brand      { background: var(--brand-light); }
+.fr-label--success    { background: var(--success-light); }
+.fr-label--alert      { background: var(--accent-light); }
+.fr-label--attention  { background: var(--attention-light); }
+.fr-label--red        { background: var(--secondary-red-light); }
+.fr-label--orange     { background: var(--secondary-orange-light); }
+.fr-label--blue       { background: var(--secondary-blue-light); }
+.fr-label--purple     { background: var(--secondary-purple-light); }
+
+/* — Accent-пресеты: насыщенные заливки, текст под фон — */
+.fr-label--accent.fr-label--default   { background: var(--control-primary);          color: var(--text-primary-invert); }
+.fr-label--accent.fr-label--outline   { background: transparent; border-color: var(--control-secondary); color: var(--text-primary); }
+.fr-label--accent.fr-label--brand     { background: var(--control-accent);           color: var(--secondary-grey); }
+.fr-label--accent.fr-label--success   { background: var(--success-primary);          color: var(--text-primary-invert); }
+.fr-label--accent.fr-label--alert     { background: var(--accent-primary);           color: var(--secondary-grey); }
+.fr-label--accent.fr-label--attention { background: var(--attention-primary);        color: var(--text-primary-invert); }
+.fr-label--accent.fr-label--red       { background: var(--secondary-red-primary);    color: var(--text-primary-invert); }
+.fr-label--accent.fr-label--orange    { background: var(--secondary-orange-primary); color: var(--text-primary-invert); }
+.fr-label--accent.fr-label--blue      { background: var(--secondary-blue-primary);   color: var(--text-primary-invert); }
+.fr-label--accent.fr-label--purple    { background: var(--secondary-purple-primary); color: var(--text-primary-invert); }
+
+/* ═══ List ═══
+   Список из строк (list-item). Устройство как в fronton-react
+   list-new + list-item-new. Контейнер padding 8px 0. Строка —
+   gap 12px (L) / 8px (M), padding 12×16 (L) / 8×16 (M).
+   Слева: icon/checkbox/radio/large-icon/img; справа:
+   chevron/switch/counter/button/text/icon. Subtitle top/bottom,
+   section title, divider, 4 состояния, skeleton, invert.
+   Figma mSNQ1pktfRYyVSsszU4yGr (list item 3653:3834). */
+.fr-list { display: flex; flex-direction: column; width: 100%; padding: 8px 0; margin: 0; list-style: none; background: var(--background-primary); }
+
+.fr-list__item {
+  position: relative; display: flex; gap: 12px; align-items: center;
+  width: 100%; padding: 12px 16px; box-sizing: border-box;
+  text-align: start; background: transparent; border: 0; font: inherit; color: inherit;
+  cursor: pointer; user-select: none; transition: background-color .15s ease-in-out;
+}
+.fr-list__item--m { gap: 8px; padding: 8px 16px; }
+.fr-list__item:hover,
+.fr-list__item.is-hover { background: var(--background-secondary); }
+.fr-list__item:active,
+.fr-list__item.is-pressed { background: var(--control-minor); }
+.fr-list__item.is-disabled { pointer-events: none; opacity: .4; }
+
+/* Выравнивание строки по верху/низу (для subtitle top/bottom) */
+.fr-list__item--align-top { align-items: flex-start; }
+.fr-list__item--align-bottom { align-items: flex-end; }
+
+/* Левый элемент: иконка/чекбокс/радио 24px (L) / 20px (M) */
+.fr-list__left { flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; padding: 2px 0; }
+.fr-list__left svg { display: block; width: 24px; height: 24px; }
+.fr-list__item--m .fr-list__left svg { width: 20px; height: 20px; }
+/* Крупная иконка/картинка 48px (L) / 40px (M) */
+.fr-list__left--large { padding: 0; }
+.fr-list__left--large svg,
+.fr-list__left--large img { width: 48px; height: 48px; object-fit: contain; border-radius: var(--rounding-m, 4px); }
+.fr-list__item--m .fr-list__left--large svg,
+.fr-list__item--m .fr-list__left--large img { width: 40px; height: 40px; }
+
+/* Центральная зона: текст + notice + right */
+.fr-list__content { display: flex; flex: 1 0 0; gap: 12px; align-items: center; min-width: 0; }
+.fr-list__text { display: flex; flex-direction: column; flex: 1 0 0; gap: 4px; min-width: 0; padding: 2px 0; }
+.fr-list__item--m .fr-list__text { gap: 2px; padding: 1px 0; }
+/* Subtitle сверху (Top) — порядок переворачивается */
+.fr-list__text--reverse { flex-direction: column-reverse; }
+
+.fr-list__title { margin: 0; font-family: var(--f-base); font-weight: 400; font-size: 17px; line-height: 22px; letter-spacing: .2px; color: var(--text-primary); }
+.fr-list__item--m .fr-list__title { font-size: 15px; line-height: 20px; }
+.fr-list__title--accent { font-weight: 600; }
+.fr-list__subtitle { margin: 0; font-family: var(--f-base); font-weight: 400; font-size: 13px; line-height: 16px; letter-spacing: .2px; color: var(--text-secondary); }
+
+/* Notice — бейдж справа от текста */
+.fr-list__notice { flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; margin: 2px; }
+
+/* Правый элемент: chevron/switch/counter/text/icon/button */
+.fr-list__right { flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; padding: 2px 0; color: var(--text-secondary); }
+.fr-list__right svg { display: block; width: 24px; height: 24px; }
+.fr-list__item--m .fr-list__right svg { width: 20px; height: 20px; }
+.fr-list__right-text { font-family: var(--f-base); font-size: 15px; line-height: 20px; letter-spacing: .2px; color: var(--text-secondary); white-space: nowrap; }
+
+/* Заголовок секции — отдельная строка */
+.fr-list__section { padding: 8px 16px; font-family: var(--f-base); font-weight: 400; font-size: 13px; line-height: 16px; letter-spacing: .2px; color: var(--text-secondary); }
+
+/* Разделитель между строками */
+.fr-list__divider { height: 1px; margin: 8px 0; background: var(--control-minor); border: 0; }
+.fr-list__item + .fr-list__item { position: relative; }
+
+/* Skeleton — заглушки текста/иконок при загрузке */
+.fr-list__skeleton { background: var(--control-secondary); opacity: .25; border-radius: var(--rounding-m, 4px); }
+.fr-list__title.fr-list__skeleton,
+.fr-list__subtitle.fr-list__skeleton { height: 1em; width: 60%; color: transparent; }
+.fr-list__left.fr-list__skeleton,
+.fr-list__right.fr-list__skeleton { border-radius: 100px; }
+
+/* Invert (тёмный фон) */
+.fr-list.is-invert { background: var(--background-accent); }
+.fr-list.is-invert .fr-list__title { color: var(--text-primary-invert); }
+.fr-list.is-invert .fr-list__subtitle,
+.fr-list.is-invert .fr-list__section,
+.fr-list.is-invert .fr-list__right,
+.fr-list.is-invert .fr-list__right-text { color: var(--text-secondary-invert); }
+.fr-list.is-invert .fr-list__item:hover,
+.fr-list.is-invert .fr-list__item.is-hover { background: rgba(255,255,255,.08); }
+.fr-list.is-invert .fr-list__item:active,
+.fr-list.is-invert .fr-list__item.is-pressed { background: var(--control-minor-invert); }
+.fr-list.is-invert .fr-list__divider { background: var(--control-minor-invert); }
+
+/* ═══ Logo Lemana PRO ═══
+   Логотип — набор SVG (assets/logo/*.svg), раскрашиваемых CSS-переменными:
+   формы знака (left/right/angles) + надписи (Lemana/PRO). Переменные и их
+   значения взяты 1:1 из fronton-react logo-lemana-pro.module.css.
+   Варианты: vertical-ru/en 72×56, icon 32×32, mini 24×24,
+   horizontal (2 строки) 98×28, line (1 строка) 127×19.
+   Темы: default / monochrome × обычная / invert.
+   Figma msBsG6HQOkY20Z9RzC6YSi (321:206, 499:319). */
+.fr-logo {
+  display: inline-flex; align-items: center; justify-content: center;
+  --logo-left-form-color: #fdc300;
+  --logo-right-form-color: #bf8900;
+  --logo-angles-form-color: #815f00;
+  --logo-lemana-letters-color: #21282b;
+  --logo-pro-letters-color: #fdc300;
+}
+.fr-logo svg { display: block; }
+
+/* Monochrome — одноцветный знак (чёрный), «уголки» выбиваются белым */
+.fr-logo--mono {
+  --logo-left-form-color: #21282b;
+  --logo-right-form-color: #21282b;
+  --logo-angles-form-color: #ffffff;
+  --logo-lemana-letters-color: #21282b;
+  --logo-pro-letters-color: #21282b;
+}
+
+/* Invert — для тёмного фона. В цветной теме белеет только надпись Lemana */
+.fr-logo.is-invert:not(.fr-logo--mono) {
+  --logo-lemana-letters-color: #ffffff;
+}
+/* В monochrome на тёмном знак белый, уголки — цветом фона, формы приглушены */
+.fr-logo--mono.is-invert {
+  --logo-left-form-color: #ffffff;
+  --logo-right-form-color: #ffffff;
+  --logo-angles-form-color: #21282b;
+  --logo-lemana-letters-color: #ffffff;
+  --logo-pro-letters-color: #ffffff;
+}
+
+/* ═══ Pagination ═══
+   Постраничная навигация. Кнопки «Назад»/«Дальше» по краям, между ними
+   номера страниц 40×40 и разделители «…». Активная страница обведена
+   рамкой 2px, неактивная подсвечивается фоном при наведении.
+   Desktop — одна строка, gap 12. Mobile — две строки: номера
+   враспор (justify-between) и кнопка «Дальше» во всю ширину.
+   Второй тип номера — outline (рамка вместо заливки).
+   Figma VX9zP3DVPDLYwr0FFatD6A (207:15127, кнопка-номер 244:39116). */
+.fr-pagination {
+  display: flex; align-items: center; gap: 12px;
+  font-family: var(--f-base); color: var(--text-primary);
+}
+
+/* Номер страницы */
+.fr-pagination__page {
+  flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px; box-sizing: border-box;
+  padding: 0; margin: 0; border: 2px solid transparent; border-radius: 120px;
+  background: none; cursor: pointer; color: inherit;
+  font-family: inherit; font-weight: 600; font-size: 15px; line-height: 20px; letter-spacing: .2px;
+  transition: background-color .15s ease-in-out, border-color .15s ease-in-out;
+}
+.fr-pagination__page:hover,
+.fr-pagination__page.is-hover { background: var(--control-minor); }
+/* Текущая страница — рамка, фон при наведении не меняется */
+.fr-pagination__page.is-active,
+.fr-pagination__page[aria-current="page"] { border-color: var(--control-primary); }
+.fr-pagination__page.is-active:hover,
+.fr-pagination__page[aria-current="page"]:hover { background: none; }
+.fr-pagination__page:disabled,
+.fr-pagination__page.is-disabled { pointer-events: none; opacity: .4; }
+
+/* Тип outline — у неактивных номеров тоже есть рамка */
+.fr-pagination--outline .fr-pagination__page { border-color: var(--control-secondary); }
+.fr-pagination--outline .fr-pagination__page:hover { background: var(--control-minor); }
+.fr-pagination--outline .fr-pagination__page.is-active,
+.fr-pagination--outline .fr-pagination__page[aria-current="page"] { border-color: var(--control-primary); }
+
+/* Разделитель «…» */
+.fr-pagination__ellipsis {
+  flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center;
+  min-width: 8px; height: 20px; line-height: 20px;
+  font-size: 14px; letter-spacing: .25px; color: var(--text-primary); user-select: none;
+}
+
+/* Кнопки «Назад» / «Дальше» — pseudo M */
+.fr-pagination__nav {
+  flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center;
+  padding: 10px 20px; border: 0; border-radius: 100px;
+  background: none; cursor: pointer; color: inherit; white-space: nowrap;
+  font-family: inherit; font-weight: 600; font-size: 15px; line-height: 20px; letter-spacing: .2px;
+}
+.fr-pagination__nav:hover { background: var(--control-minor); }
+.fr-pagination__nav:disabled,
+.fr-pagination__nav.is-disabled { pointer-events: none; opacity: .4; }
+
+/* Список номеров — в десктопе просто в потоке, в мобильном враспор */
+.fr-pagination__list { display: flex; align-items: center; gap: 12px; }
+
+/* Mobile: две строки, номера враспор, «Дальше» во всю ширину (secondary) */
+.fr-pagination--mobile {
+  flex-direction: column; gap: 16px; width: 320px; max-width: 100%;
+  padding: 0 16px; box-sizing: border-box;
+}
+.fr-pagination--mobile .fr-pagination__list { width: 100%; gap: 0; justify-content: space-between; }
+.fr-pagination--mobile .fr-pagination__nav { width: 100%; background: var(--control-minor); }
+.fr-pagination--mobile .fr-pagination__nav:hover { background: var(--control-secondary); }
+
+/* Invert — для тёмного фона */
+.fr-pagination.is-invert { color: var(--text-primary-invert); }
+.fr-pagination.is-invert .fr-pagination__ellipsis { color: var(--text-primary-invert); }
+.fr-pagination.is-invert .fr-pagination__page:hover,
+.fr-pagination.is-invert .fr-pagination__page.is-hover,
+.fr-pagination.is-invert .fr-pagination__nav:hover { background: var(--control-minor-invert); }
+.fr-pagination.is-invert .fr-pagination__page.is-active,
+.fr-pagination.is-invert .fr-pagination__page[aria-current="page"] { border-color: var(--control-primary-invert); }
+.fr-pagination.is-invert.fr-pagination--outline .fr-pagination__page { border-color: var(--control-secondary-invert); }
+.fr-pagination.is-invert.fr-pagination--mobile .fr-pagination__nav { background: var(--control-minor-invert); }

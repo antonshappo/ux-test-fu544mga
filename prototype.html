@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Корзина — Магпортал</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap">
+<link rel="stylesheet" href="assets/fonts.css">
+<link rel="stylesheet" href="assets/ds.css">
+<link rel="stylesheet" href="assets/cart.css?v=2">
+<link rel="stylesheet" href="assets/svc2.css?v=1">
+</head>
+<body class="kz">
+<div class="kz-app">
+
+  <!-- ═══ Side menu (2224:238849) ═══ -->
+  <aside class="kz-side">
+    <div>
+      <div class="kz-side__logo"><img src="assets/fig/logo-magportal.svg" alt="Магпортал"></div>
+      <nav class="kz-side__nav">
+        <div class="kz-mi"><span>Заказы</span></div>
+        <div class="kz-mi"><span>Сборки</span></div>
+        <div class="kz-mi"><span>Разборки</span></div>
+        <div class="kz-mi"><span>Сметы</span></div>
+        <div class="kz-mi is-active"><span>Корзины</span></div>
+        <div class="kz-mi"><span>Клиенты</span></div>
+        <div class="kz-mi"><span>Товары</span></div>
+        <div class="kz-mi"><span>Маршрутизация и доставка</span></div>
+        <div class="kz-mi"><span>Отчёты</span><img src="assets/fig/chevron-down.svg" alt=""></div>
+      </nav>
+    </div>
+    <div class="kz-side__profile">
+      <div class="fr-avatar fr-avatar--m">
+        <div class="fr-avatar__picture">КК</div>
+        <div class="fr-avatar__name">Константин Константинов</div>
+        <div class="fr-avatar__description">Магазин 4 Отдел 2</div>
+      </div>
+      <button class="fr-btn fr-btn--secondary fr-btn--s"><img class="kz-ico20" src="assets/fig/chat-circle-dots.svg" alt="">Написать в поддержку</button>
+    </div>
+  </aside>
+
+  <!-- ═══ Рабочая область ═══ -->
+  <div class="kz-main">
+
+    <!-- Шапка «Корзины» (2224:238851; бургер — 2285:134772) -->
+    <header class="kz-head">
+      <div class="kz-head__l">
+        <button class="kz-head__burger" aria-label="Меню"><img src="assets/fig/list-24.svg" alt=""></button>
+        <p class="kz-h2">Корзины</p>
+      </div>
+      <div class="kz-head__r">
+        <div class="kz-bsearch">
+          <div class="kz-bsearch__l">
+            <button class="fr-btn fr-btn--secondary fr-btn--s">№ корзины<img class="kz-ico20" src="assets/fig/chevron-down-small.svg" alt=""></button>
+            <span class="kz-bsearch__ph">Введи номер корзины</span>
+          </div>
+          <button class="fr-btn fr-btn--secondary fr-btn--m fr-btn--square" aria-label="Найти"><img class="kz-ico20" src="assets/fig/magnifying-glass.svg" alt=""></button>
+        </div>
+        <button class="fr-btn fr-btn--primary fr-btn--m"><img class="kz-ico20 kz-ico--invert" src="assets/fig/plus-invert.svg" alt="">Создать корзину</button>
+      </div>
+    </header>
+
+    <div class="kz-body">
+
+      <!-- ═══ Список корзин (2224:238822) ═══ -->
+      <section class="kz-blist">
+        <div class="kz-mine">
+          <label class="fr-switch fr-switch--m"><input type="checkbox" role="switch" class="fr-switch__input"><span class="fr-switch__text">Мои корзины</span></label>
+        </div>
+        <div class="kz-blist__cards" id="baskets"></div>
+        <nav class="fr-pagination" aria-label="Страницы">
+          <button class="fr-pagination__page" aria-current="page">1</button>
+          <button class="fr-pagination__page">2</button>
+          <button class="fr-pagination__page">3</button>
+          <span class="fr-pagination__dots">…</span>
+          <button class="fr-pagination__page">99</button>
+          <button class="fr-pagination__page" aria-label="Следующая"><img class="kz-ico20" src="assets/fig/chevron-right.svg" alt=""></button>
+        </nav>
+      </section>
+
+      <!-- ═══ Корзина ═══ -->
+      <section class="kz-cart">
+
+        <!-- шапка номера заказа 998×104 -->
+        <div class="kz-order">
+          <p class="kz-h2">2106 0737 3458</p>
+          <div class="kz-order__meta"><span>Сегодня, 12:31</span><span>Константин Константинопольский</span></div>
+        </div>
+
+        <!-- Карточка клиента 1008×200 -->
+        <div class="kz-client">
+          <div><div class="kz-city"><span>Санкт-Петербург</span><img class="kz-ico24" src="assets/fig/chevron-right.svg" alt=""></div></div>
+          <div class="kz-cl">
+            <div class="kz-cl__main">
+              <div class="kz-cl__ava">
+                <img src="assets/fig/user-circle.svg" alt="">
+                <div class="kz-cl__home">Дом<img src="assets/fig/key-small.svg" alt=""></div>
+              </div>
+              <div class="kz-cl__data">
+                <p class="kz-cl__name">Константин<br>Константинопольский</p>
+                <div class="kz-cl__fields">
+                  <div class="kz-cl__f">
+                    <div class="kz-cl__cap"><img class="kz-key" src="assets/fig/key.svg" alt="">Ключ-карта для дома</div>
+                    <div class="kz-cl__val">9301 0093 0243 71302</div>
+                  </div>
+                  <div class="kz-cl__f">
+                    <div class="kz-cl__cap">Телефон:<img class="kz-ico16" src="assets/fig/check-circle.svg" alt=""></div>
+                    <div class="kz-cl__val">+7 929 123-45-99<img class="kz-ico16" src="assets/fig/copy.svg" alt=""></div>
+                  </div>
+                  <div class="kz-cl__f">
+                    <div class="kz-cl__cap">Почта:</div>
+                    <div class="kz-cl__val kz-cl__val--mail"><span>miklashevskyi@domainmail.com</span><img class="kz-ico16" src="assets/fig/copy.svg" alt=""></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="kz-cl__acts">
+              <button class="kz-iconbtn" aria-label="Изменить"><img class="kz-ico20" src="assets/fig/pencil-simple.svg" alt=""></button>
+              <button class="kz-iconbtn" aria-label="Сменить клиента"><img class="kz-ico20" src="assets/fig/arrows-ccw.svg" alt=""></button>
+              <button class="kz-iconbtn" aria-label="Удалить клиента"><img class="kz-ico20" src="assets/fig/trash-red.svg" alt=""></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Добавление товаров и услуг 1008×162 -->
+        <div class="kz-add">
+          <p class="kz-add__t">Добавление товаров и услуг</p>
+          <div class="kz-add__row">
+            <div class="kz-lmsearch">
+              <span class="kz-lmsearch__ph">Введи ЛМ, название или штрихкод</span>
+              <div class="kz-lmsearch__r">
+                <img class="kz-ico24" src="assets/fig/barcode.svg" alt="">
+                <button class="kz-lmsearch__go" aria-label="Найти"><img src="assets/fig/magnifying-glass-24-invert.svg" alt=""></button>
+              </div>
+            </div>
+            <button class="fr-btn fr-btn--secondary fr-btn--m" id="btnAddServices" data-act="add-services"><img class="kz-ico20" src="assets/fig/plus.svg" alt="">Добавить услуги</button>
+          </div>
+        </div>
+
+        <!-- Товары -->
+        <div class="kz-goods">
+          <div class="kz-lbar">
+            <div class="kz-lbar__l">
+              <label class="fr-checkbox fr-checkbox--l"><input type="checkbox" class="fr-checkbox__input" hidden><span class="fr-checkbox__box"><svg viewBox="0 0 20 20" fill="none"><path d="M16.875 5.625L8.125 14.375L3.75 10" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/></svg></span></label>
+              <div style="display:flex;align-items:center">
+                <span class="kz-lbar__ok">Есть в наличии в регионе Санкт-Петербург</span>
+                <span class="kz-lbar__cnt" id="lbarCnt"></span>
+              </div>
+            </div>
+            <div class="kz-lbar__r">
+              <button class="fr-btn fr-btn--pseudo fr-btn--s fr-btn--square" aria-label="Скачать"><img class="kz-ico20" src="assets/fig/download-simple.svg" alt=""></button>
+              <button class="fr-btn fr-btn--pseudo fr-btn--s fr-btn--square" aria-label="Свернуть"><img class="kz-ico20" src="assets/fig/chevron-down-20.svg" alt=""></button>
+            </div>
+          </div>
+          <div id="items" style="display:flex;flex-direction:column;gap:8px"></div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ Футер корзины (2268:220433 — описание; 2268:298464 — хинт с выездом мастера) ═══ -->
+<div class="kz-foot">
+  <div class="kz-foot__panel">
+    <button class="fr-btn fr-btn--accent fr-btn--m kz-foot__go" data-act="checkout">Перейти к оформлению</button>
+    <div class="kz-foot__sum">
+      <div class="kz-foot__line" id="footLine"></div>
+      <div class="kz-foot__div"></div>
+      <div class="kz-foot__tot">
+        <span>Итого:</span>
+        <span class="fr-price fr-price--l is-accent"><span class="fr-price__integer" id="footTotal"></span><span class="fr-price__currency">₽</span></span>
+        <button class="sv-info" id="footInfo" aria-label="Подробности заказа" hidden><img src="assets/fig/svc/info-24.svg" alt=""></button>
+      </div>
+    </div>
+  </div>
+  <!-- хинт вне панели: у панели clip-path для тени вверх -->
+  <div class="sv-hint" id="footHint" hidden></div>
+</div>
+
+<!-- ═══ Конфигуратор «Добавление услуг» — правая панель поверх корзины (2268:227263, адаптивы 2655:511758/516567/517006) ═══ -->
+<div class="sv-ov" id="cfg" hidden>
+  <div class="sv-ov__back" data-act="cfg-close"></div>
+  <section class="sv-panel" id="cfgPanel" role="dialog" aria-modal="true" aria-label="Добавление услуг">
+    <header class="sv-phead">
+      <button class="sv-iconbtn" data-act="back" aria-label="Назад"><img src="assets/fig/svc/arrow-left-24.svg" alt=""></button>
+      <p class="sv-phead__t">Добавление услуг</p>
+      <div class="sv-search" aria-disabled="true"><span>ЛМ-код, название или штрихкод</span></div>
+      <div class="sv-phead__sp"></div>
+      <button class="sv-iconbtn" data-act="cfg-close" aria-label="Закрыть"><img src="assets/fig/svc/x-24.svg" alt=""></button>
+    </header>
+    <!-- страницы каталога: каталог 2637:444511 · отдел 2268:268350 · категория 2268:268307 -->
+    <div class="sv-page" id="cfgPage" hidden></div>
+    <!-- конфигуратор: крошки (только у самостоятельных конфигураторов) + две колонки -->
+    <div class="sv-pwrap" id="cfgBody">
+      <div class="sv-crumbsrow" id="cfgCrumbs" hidden></div>
+      <div class="sv-pbody">
+        <nav class="sv-pmenu" id="cfgMenu" hidden aria-label="Конфигураторы категории"></nav>
+        <div class="sv-pleft" id="cfgLeft"></div>
+        <aside class="sv-pright" id="cfgRight"></aside>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ═══ Дровер услуг (2268:268457) ═══ -->
+<div class="fr-drawer fr-drawer--s sv-drawer" id="drawer" hidden>
+  <div class="sv-drawer__back" data-act="drawer-close"></div>
+  <div class="fr-drawer__panel" role="dialog" aria-modal="true" aria-labelledby="drawerT">
+    <div class="fr-drawer__header"><h3 class="fr-drawer__title" id="drawerT">Добавление услуг</h3>
+      <div class="fr-drawer__adornment"><button class="sv-iconbtn" data-act="drawer-close" aria-label="Закрыть"><img src="assets/fig/svc/x-24.svg" alt=""></button></div></div>
+    <div class="fr-drawer__content"><div class="sv-dlist" id="drawerList"></div></div>
+  </div>
+</div>
+
+<!-- ═══ Подтверждение удаления (2268:228726 · 2268:269155) ═══ -->
+<div class="fr-modal fr-modal--s sv-confirm" id="confirm" hidden>
+  <div class="fr-modal__window" role="dialog" aria-modal="true" aria-labelledby="confirmT">
+    <button class="fr-btn fr-btn--pseudo fr-btn--l fr-btn--square fr-btn--rounded fr-modal__close" data-act="confirm-no" aria-label="Закрыть"><img src="assets/fig/svc/x-24.svg" alt=""></button>
+    <div class="fr-modal__header"><h2 class="fr-modal__title" id="confirmT">Удалить услуги?</h2></div>
+    <div class="fr-modal__footer fr-modal__footer--wide">
+      <button class="fr-btn fr-btn--secondary fr-btn--l" data-act="confirm-no">Нет, оставить</button>
+      <button class="fr-btn fr-btn--alert fr-btn--l" data-act="confirm-yes">Удалить</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ Загрузка корзины после изменений (3046:204857) ═══ -->
+<div class="sv-loading" id="loading" hidden><span class="fr-loader fr-loader--xl" role="status" aria-label="Загрузка"><svg class="fr-loader__svg" viewBox="0 0 50 50"><circle class="fr-loader__path" cx="25" cy="25" r="22.22"/></svg></span></div>
+
+<!-- ═══ Обвязка прототипа: выбор сценария (не часть макета) ═══ -->
+<div class="sv-scen" id="scen"></div>
+
+<script src="assets/svc2.js?v=1"></script>
+</body>
+</html>

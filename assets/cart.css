@@ -1,0 +1,322 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   Экран «Корзина» — Магпортал, отдел 15 Кухни
+   Эталон: Figma WQlMpk9S4nxxpcuQudQPbF, node 2224:238724 (контент)
+           + 2634:429793 (адаптивы: поведение по брейкпоинтам)
+   Атомы ДС (.fr-btn, .fr-counter, .fr-checkbox, .fr-switch, .fr-label,
+   .fr-price, .fr-priceblock, .fr-avatar, .fr-pagination) — из ds.css
+   справочника. Здесь только продуктовые композиции, префикс kz-.
+   Числа в комментариях — из get_design_context соответствующих нод.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ds.css справочника задаёт body/h1/h2 для своих страниц — гасим */
+body.kz {
+  margin: 0; padding: 0;
+  background: var(--background-secondary-beige, #F5F4F1);   /* фон фрейма 2224:238724 */
+  color: var(--text-primary);
+  font-family: var(--font-base);
+  font-size: 15px; line-height: 20px; letter-spacing: .2px;
+  -webkit-font-smoothing: antialiased;
+}
+.kz * { box-sizing: border-box; }
+.kz p { margin: 0; }
+.kz button { font-family: inherit; }
+.kz img { display: block; }
+
+.kz-roboto { font-family: Roboto, var(--font-base); }
+
+/* ═══ Каркас ═══════════════════════════════════════════════════════════ */
+.kz-app { display: flex; min-height: 100vh; }
+
+/* ─── Side menu 240 (2224:238849) ─── */
+.kz-side {
+  position: sticky; top: 0; height: 100vh;
+  width: 240px; flex: 0 0 240px;
+  display: flex; flex-direction: column; justify-content: space-between;
+  background: var(--background-primary);
+  z-index: 40;
+}
+.kz-side__logo { height: 72px; padding: 17px 16px 16px; }
+.kz-side__logo img { width: 186px; height: 39px; }
+.kz-side__nav { flex: 1 1 auto; overflow-y: auto; }
+.kz-mi {
+  display: flex; gap: 8px; align-items: center;
+  padding: 12px 16px;
+  font-size: 17px; line-height: 24px; letter-spacing: .2px;   /* Body medium/long */
+  background: var(--background-primary); cursor: default;
+}
+.kz-mi span { flex: 1 1 0; min-width: 0; }
+.kz-mi img { width: 20px; height: 20px; }
+.kz-mi.is-active { background: var(--control-minor); }
+.kz-side__profile {
+  display: flex; flex-direction: column; gap: 12px; align-items: stretch;
+  padding: 16px; border-top: 1px solid var(--control-minor);
+}
+.kz-side__profile .fr-avatar { width: 100%; }
+.kz-side__profile .fr-avatar__picture { background: var(--control-minor); color: var(--text-primary); font-size: 14px; font-weight: 600; }
+.kz-side__profile .fr-avatar__name { white-space: normal; }
+.kz-side__profile .fr-btn { width: 100%; }
+
+/* ─── Рабочая область ─── */
+.kz-main { flex: 1 1 0; min-width: 0; padding-left: 12px; padding-bottom: 104px; }
+
+/* Шапка раздела «Корзины» 1668×74 (2224:238851) */
+.kz-head {
+  position: sticky; top: 0; z-index: 30;
+  display: flex; align-items: center; gap: 16px;
+  height: 74px; padding: 17px 32px;
+  background: var(--background-primary);
+  border-bottom: 1px solid var(--control-minor);
+}
+.kz-head__l { flex: 1 1 0; min-width: 0; display: flex; align-items: center; gap: 24px; }
+.kz-head__burger { display: none; width: 24px; height: 24px; padding: 0; border: 0; background: none; cursor: pointer; }
+.kz-head__burger img { width: 24px; height: 24px; }
+.kz-h2 { font-size: 27px; line-height: 32px; font-weight: 600; letter-spacing: .25px; white-space: nowrap; }  /* Desktop heading/h2 */
+.kz-head__r { display: flex; align-items: center; gap: 24px; }
+
+/* Поиск по номеру корзины 440×40: фон и рамка 2px control-minor */
+.kz-bsearch {
+  width: 440px; display: flex; align-items: center; gap: 8px;
+  padding-left: 4px; background: var(--control-minor);
+  border: 2px solid var(--control-minor); border-radius: 4px;
+}
+.kz-bsearch__l { flex: 1 1 0; min-width: 0; display: flex; align-items: center; gap: 12px; }
+.kz-bsearch__ph {
+  flex: 1 1 0; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font-family: Roboto, sans-serif; font-size: 16px; line-height: 24px; letter-spacing: .05px;
+  color: var(--text-minor);
+}
+
+.kz-ico20 { width: 20px; height: 20px; flex: none; }
+.kz-ico16 { width: 16px; height: 16px; flex: none; }
+.kz-ico24 { width: 24px; height: 24px; flex: none; }
+
+/* Тело: список корзин 488 + 16 + корзина 1008 (на 1920) */
+.kz-body { display: flex; align-items: flex-start; gap: 16px; padding-top: 12px; }
+
+/* ═══ Список корзин 488 (2224:238822) ═════════════════════════════════ */
+.kz-blist { width: 488px; flex: 0 0 488px; display: flex; flex-direction: column; gap: 8px; }
+.kz-mine {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px; background: var(--background-primary); border-radius: 4px;
+}
+.kz-mine .fr-switch__text { font-size: 15px; line-height: 18px; padding-top: 1px; }
+.kz-blist__cards { display: flex; flex-direction: column; gap: 8px; }
+
+/* Card List — desck */
+.kz-bcard {
+  display: flex; flex-direction: column; gap: 8px; align-items: stretch;
+  padding: 16px; border-radius: 8px; background: var(--background-primary);
+  overflow: hidden; cursor: default;
+}
+.kz-bcard.is-active { background: var(--control-minor); }
+.kz-bcard__store { display: flex; align-items: center; gap: 12px; font-size: 15px; line-height: 18px; white-space: nowrap; }
+.kz-bcard__cart { display: flex; flex-direction: column; gap: 12px; }
+.kz-bcard__hd { display: flex; align-items: flex-end; justify-content: space-between; gap: 8px; }
+.kz-bcard__num { display: flex; align-items: center; gap: 12px; }
+.kz-bcard__no { font-size: 17px; line-height: 24px; font-weight: 600; white-space: nowrap; }
+.kz-bcard__items { display: flex; align-items: flex-end; gap: 24px; overflow: hidden; }
+.kz-bcard__lines { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.kz-bcard__lines p, .kz-bcard__more {
+  font-size: 15px; line-height: 18px; color: var(--text-secondary);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.kz-bcard__more { flex: none; text-align: right; }
+.kz-bcard__row { display: flex; gap: 8px; font-size: 15px; line-height: 18px; white-space: nowrap; overflow: hidden; }
+.kz-bcard__row span:first-child { color: var(--text-secondary); flex: none; }
+.kz-bcard__row span:last-child { flex: 1 1 0; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.kz-bcard__ft { display: flex; flex-wrap: wrap; gap: 4px 8px; padding-right: 12px; font-size: 15px; line-height: 18px; color: var(--text-secondary); white-space: nowrap; }
+.kz-bcard__ft span:last-child { flex: 1 1 0; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+
+/* Пресеты Label из макета */
+.fr-label.kz-lbl--store  { background: var(--brand-light); }          /* «032» */
+.fr-label.kz-lbl--online { background: var(--secondary-blue-light); } /* «Онлайн корзина» */
+.fr-label.kz-lbl--fav    { background: transparent; border-color: var(--control-minor); } /* «Избранное клиента» */
+.fr-label.kz-lbl--service{ background: var(--service-light); }        /* «Услуги мастера» */
+.kz .fr-label { font-size: 13px; line-height: 16px; letter-spacing: .2px; }
+
+.kz-blist .fr-pagination { margin-top: 40px; }
+
+/* ═══ Колонка корзины 1008 ════════════════════════════════════════════ */
+.kz-cart { width: 1008px; flex: 0 0 1008px; display: flex; flex-direction: column; gap: 24px; }
+
+/* Шапка номера заказа 998×104 — в макете именно 998, не 1008 */
+.kz-order {
+  width: 998px; padding: 24px 32px; border-radius: 8px; background: var(--background-primary);
+  display: flex; flex-direction: column; gap: 4px; white-space: nowrap; overflow: hidden;
+}
+.kz-order__meta { display: flex; gap: 21px; align-items: center; font-size: 15px; line-height: 20px; color: var(--text-secondary); }
+
+/* Карточка клиента 1008×200 */
+.kz-client {
+  height: 200px; padding: 32px; border-radius: 8px; background: var(--background-primary);
+  display: flex; flex-direction: column; gap: 16px;
+}
+.kz-city {
+  width: 280px; display: flex; align-items: center; gap: 8px;
+  padding: 12px 16px; border: 1px solid var(--control-minor); border-radius: 8px;
+  background: var(--background-primary); cursor: pointer;
+}
+.kz-city span { flex: 1 1 0; min-width: 0; font-size: 15px; line-height: 18px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.kz-cl {
+  display: flex; align-items: flex-start; gap: 16px;
+  padding: 8px 20px; border: 1px solid var(--control-minor); border-radius: 8px;
+}
+.kz-cl__main { flex: 1 1 0; min-width: 0; display: flex; align-items: center; gap: 16px; }
+.kz-cl__ava { width: 35px; flex: 0 0 35px; display: flex; flex-direction: column; align-items: center; }
+.kz-cl__ava > img { width: 35px; height: 35px; margin-bottom: -3px; }
+.kz-cl__home { height: 24px; display: flex; align-items: center; justify-content: center; padding: 4px; font-size: 15px; line-height: 20px; }
+.kz-cl__home img { width: 21.416px; height: 6.995px; }
+.kz-cl__data { flex: 1 1 0; min-width: 0; display: flex; align-items: center; gap: 24px; align-self: stretch; }
+.kz-cl__name { font-size: 15px; line-height: 20px; font-weight: 600; white-space: nowrap; }
+.kz-cl__fields { flex: 1 1 0; min-width: 0; display: flex; align-items: center; gap: 24px; }
+.kz-cl__f { display: flex; flex-direction: column; gap: 4px; }
+.kz-cl__cap { display: flex; align-items: center; gap: 8px; font-size: 13px; line-height: 16px; color: var(--text-secondary); white-space: nowrap; }
+.kz-cl__cap img.kz-key { width: 24.477px; height: 7.995px; }
+.kz-cl__val { display: flex; align-items: center; gap: 4px; font-size: 15px; line-height: 20px; white-space: nowrap; }
+.kz-cl__val--mail { width: 208px; }
+.kz-cl__val--mail span { flex: 1 1 0; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.kz-cl__acts { display: flex; align-items: center; gap: 16px; }
+.kz-iconbtn { display: flex; align-items: center; justify-content: center; padding: 0; border: 0; background: none; border-radius: 4px; cursor: pointer; }
+
+/* Добавление товаров и услуг 1008×162 */
+.kz-add { padding: 32px; border-radius: 8px; background: var(--background-primary); display: flex; flex-direction: column; gap: 32px; }
+.kz-add__t { font-family: Roboto, sans-serif; font-weight: 500; font-size: 20px; line-height: 26px; letter-spacing: .15px; } /* 💾 Desktop heading/h3 */
+.kz-add__row { display: flex; align-items: center; gap: 20px; }
+.kz-lmsearch {
+  flex: 1 1 0; min-width: 0; height: 40px; display: flex; align-items: center; justify-content: space-between;
+  padding-left: 4px; border: 1px solid var(--control-primary); border-radius: 4px; overflow: hidden;
+}
+.kz-lmsearch__ph { padding-left: 12px; font-family: Roboto, sans-serif; font-size: 16px; line-height: 24px; letter-spacing: .05px; color: var(--text-minor); white-space: nowrap; }
+.kz-lmsearch__r { display: flex; align-items: center; gap: 12px; height: 100%; }
+.kz-lmsearch__go { width: 40px; height: 40px; margin: -1px -1px -1px 0; background: var(--control-primary); border-radius: 0 4px 4px 0; display: flex; align-items: center; justify-content: center; border: 0; cursor: pointer; }
+.kz-lmsearch__go img { width: 24px; height: 24px; }
+
+/* Панель управления списком 1006×48 */
+.kz-goods { display: flex; flex-direction: column; gap: 8px; }
+.kz-lbar {
+  width: 1006px; height: 48px; display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px; border-radius: 8px; background: var(--background-primary);
+}
+.kz-lbar__l { display: flex; align-items: center; gap: 16px; overflow: hidden; }
+.kz-lbar__ok { font-family: Roboto, sans-serif; font-weight: 500; font-size: 16px; line-height: 24px; letter-spacing: .05px; color: var(--success-primary); white-space: nowrap; }
+.kz-lbar__cnt { display: flex; align-items: center; font-family: Roboto, sans-serif; font-size: 14px; line-height: 20px; }
+.kz-lbar__dot { width: 19px; text-align: center; color: var(--text-minor); letter-spacing: .168px; }
+.kz-lbar__r { display: flex; }
+
+/* ═══ Карточка товара (десктоп) ═══════════════════════════════════════ */
+.kz-item {
+  display: flex; flex-direction: column; gap: 16px; padding: 16px;
+  border: 2px solid var(--control-minor); border-radius: 8px; background: var(--background-primary);
+}
+.kz-goodsrow { display: flex; align-items: flex-start; gap: 24px; padding: 16px 0 8px; }
+.kz-goodsrow__lead { display: flex; align-items: flex-start; gap: 24px; flex: none; }
+.kz-photo { width: 143px; height: 143px; border-radius: 8px; object-fit: cover; flex: none; }
+.kz-gbody { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 24px; }
+.kz-gtop { display: flex; align-items: flex-start; justify-content: space-between; }
+.kz-gname { width: 367px; display: flex; flex-direction: column; gap: 12px; }
+.kz-gmeta { width: 191px; display: flex; align-items: center; font-size: 13px; line-height: 16px; white-space: nowrap; }
+.kz-gmeta__dot { width: 19px; text-align: center; font-size: 11px; line-height: 14px; }
+.kz-gtitle { font-size: 17px; line-height: 24px; letter-spacing: .2px; }      /* Body medium/long */
+.kz-gmenu { width: 316px; display: flex; justify-content: flex-end; }
+.kz-dots {
+  width: 32px; height: 32px; padding: 6px; border: 0; border-radius: 100px;
+  background: var(--control-minor); display: flex; align-items: center; justify-content: center; cursor: pointer;
+}
+.kz-gfoot { display: flex; align-items: flex-start; justify-content: space-between; }
+.kz-gbtns { width: 320px; display: flex; align-items: flex-start; gap: 16px; }
+.kz-link {
+  width: 40px; height: 40px; padding: 10px; border: 0; border-radius: 1000px;
+  background: var(--control-minor); display: flex; align-items: center; justify-content: center; cursor: pointer;
+}
+/* Пилюля «Сборка»: в Figma padding 10/13 с обводкой внутрь → в CSS 9/12 + 1px рамка */
+.kz-asm {
+  display: flex; align-items: center; gap: 8px;
+  padding: 9px 12px; border: 1px solid var(--control-minor); border-radius: 100px;
+}
+.kz-asm__lbl { display: flex; align-items: center; gap: 4px; font-size: 15px; line-height: 18px; color: var(--control-primary); }
+.kz-asm .fr-switch { display: flex; }
+.kz-gright { width: 289px; display: flex; align-items: flex-start; justify-content: flex-end; gap: 24px; }
+.kz-picker { width: 139px; flex: none; display: flex; flex-direction: column; gap: 4px; }
+.kz-stock { height: 20px; display: flex; align-items: center; font-size: 13px; line-height: 16px; font-weight: 600; color: var(--success-primary); }
+
+/* Услуги мастера (аутстор) */
+.kz-srv { display: flex; flex-direction: column; gap: 16px; }
+.kz-srv__row { display: flex; flex-wrap: wrap; gap: 8px; }
+.kz-srvcard {
+  width: 298.667px; height: 92px; display: flex; align-items: flex-start; gap: 16px;
+  padding: 12px 16px; border: 1px solid var(--control-minor); border-radius: 8px; background: var(--background-primary);
+}
+.kz-srvcard__t {
+  flex: 1 1 0; min-width: 0; height: 40px; overflow: hidden;
+  font-size: 15px; line-height: 20px; letter-spacing: .2px;            /* Body small/long */
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+}
+.kz-srvcard__add {
+  align-self: center; width: 48px; height: 48px; padding: 12px; border: 0; border-radius: 8px;
+  background: var(--control-minor); display: flex; align-items: center; justify-content: center; cursor: pointer;
+}
+.kz-srvcard__add:hover, .kz-dots:hover, .kz-link:hover { background: var(--control-hover-minor); }
+
+/* ═══ Футер корзины 1006×104 (2268:252139) ════════════════════════════ */
+.kz-foot {
+  position: fixed; bottom: 0; z-index: 35; height: 104px; pointer-events: none;
+  /* left/width выставляются по колонке корзины, см. адаптив ниже */
+  left: 758px; width: 1006px;
+}
+.kz-foot__panel {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 72px; pointer-events: auto;
+  background: var(--background-primary);
+  /* Shadows / shadow5, в макете замаскирована — видна только вверх */
+  box-shadow: 0 -1px 18px 0 rgba(0,0,0,.12), 0 -6px 10px 0 rgba(0,0,0,.14), 0 -3px 5px 0 rgba(0,0,0,.2);
+  clip-path: inset(-32px 0 0 0);
+}
+.kz-foot__go { position: absolute; left: 32px; top: 16px; }
+.kz-foot__sum { position: absolute; right: 32px; top: 21px; display: flex; align-items: center; gap: 16px; }
+.kz-foot__line { display: flex; align-items: center; font-size: 15px; line-height: 20px; white-space: nowrap; }
+.kz-foot__dot { width: 19px; text-align: center; font-family: Roboto, sans-serif; font-size: 14px; color: var(--text-minor); }
+.kz-foot__div { width: 1px; height: 30px; background: var(--control-minor); }
+.kz-foot__tot { display: flex; align-items: center; gap: 8px; }
+.kz-foot__tot > span:first-child { font-size: 17px; line-height: 22px; }
+
+/* ═══ Адаптив — по фреймам 2634:429793 ════════════════════════════════
+   ≥1764 : меню 240 + список 488 + корзина 1008 (контентный фрейм 2224)
+   1280–1763 : меню уходит в бургер, отступы 32, корзина резиновая
+   <1280 : списка корзин нет, корзина на всю ширину с отступами 32
+   ═══════════════════════════════════════════════════════════════════ */
+@media (max-width: 1764px) {
+  .kz-side { display: none; }
+  .kz-head__burger { display: block; }
+  .kz-main { padding-left: 0; }
+  .kz-body { padding: 12px 32px 0; }
+  .kz-cart { flex: 1 1 0; width: auto; min-width: 0; }
+  .kz-order, .kz-lbar { width: 100%; }
+  .kz-foot { left: calc(32px + 488px + 16px); right: 32px; width: auto; }
+}
+@media (max-width: 1280px) {
+  .kz-blist { display: none; }
+  .kz-foot { left: 32px; right: 32px; }
+}
+
+/* Иконки атомов — ассеты Figma как <img> вместо инлайн-svg справочника */
+.kz .fr-counter__btn img { width: 20px; height: 20px; flex: none; }
+.kz .fr-label__icon img { width: 16px; height: 16px; }
+.kz .fr-btn img { flex: none; }
+
+/* Профиль: имя в макете переносится на 2 строки — сетка аватара не должна фиксировать 20px */
+.kz-side__profile .fr-avatar { grid-template-rows: auto auto; }
+.kz-side__profile .fr-btn { white-space: nowrap; gap: 4px; }
+/* Иконка в primary-кнопке: ассет Figma экспортируется с заливкой #21282B,
+   в инстансе она перекрашена в text/primary-invert */
+.kz-ico--invert { filter: brightness(0) invert(1); }
+/* «Дом»: в макете контейнер 35px, ключ обрезается и не виден */
+.kz-cl__home { width: 35px; overflow: hidden; justify-content: flex-start; }
+
+/* Поиск корзины: в Figma 440×40 — рамка 2px рисуется внутрь, кнопка 40 перекрывает её */
+.kz-bsearch { height: 40px; }
+.kz-bsearch > .fr-btn--square { margin: -2px -2px -2px 0; }
+/* Пагинация в макете прижата к низу кадра: y=1160 при списке до 1029 */
+.kz-blist .fr-pagination { margin-top: 140px; width: fit-content; }
+/* В макете у «…» тот же слот 40px, что у страниц (Group 25: шаг 52) */
+.kz-blist .fr-pagination { margin-top: 136px; }
+.kz-blist .fr-pagination__dots { width: 40px; display: inline-flex; justify-content: center; }
+.kz-cl__home img { display: none; }   /* в рендере Figma ключ полностью обрезан контейнером 35px */
