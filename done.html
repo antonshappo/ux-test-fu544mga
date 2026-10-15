@@ -25,6 +25,7 @@ html, body { margin: 0; height: 100%; overflow: hidden; background: #F5F4F1; fon
 .fin-ico--ok path { stroke-dasharray: 20; stroke-dashoffset: 20; animation: fin-draw .35s ease-out .5s forwards; }
 .fin-ico--done { background: var(--control-minor); }
 .fin-txt { display: flex; flex-direction: column; gap: 8px; }
+.fin-back { width: 100%; box-sizing: border-box; text-decoration: none; }
 .fin-t { margin: 0; font-size: 27px; line-height: 32px; font-weight: 600; letter-spacing: .25px; }
 .fin-p { margin: 0; font-size: 17px; line-height: 24px; letter-spacing: .2px; color: var(--text-secondary); }
 @keyframes fin-fade { from { opacity: 0; } }
@@ -40,9 +41,12 @@ html, body { margin: 0; height: 100%; overflow: hidden; background: #F5F4F1; fon
   <div class="fin-card" role="status">
     <div class="fin-ico fin-ico--done"><svg viewBox="0 0 24 24" fill="none"><path d="M3.75 12H20.25M13.5 5.25L20.25 12L13.5 18.75" stroke="#21282B" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
     <div class="fin-txt"><p class="fin-t">Задание завершено</p><p class="fin-p">Спасибо! Можно переходить к следующему заданию</p></div>
+    <a class="fr-btn fr-btn--secondary fr-btn--l fin-back" href="index.html">К списку заданий</a>
   </div>
 </div>
 <script>
+  // Отметка для стартовой страницы: какое задание пройдено и чем закончилось (только в браузере участника)
+  try { const t = new URLSearchParams(location.search).get('task'); if (t) localStorage.setItem('ux-task-' + t, 'done'); } catch (e) {}
   // Корзина участника под затемнением: задание и состав берём из адреса
   const P = new URLSearchParams(location.search);
   document.getElementById('bg').src = 'prototype.html?frozen=1&task=' + encodeURIComponent(P.get('task') || '') + '&cart=' + encodeURIComponent(P.get('cart') || '');

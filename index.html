@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Задания — услуги в корзине</title>
+<link rel="stylesheet" href="assets/fonts.css">
+<link rel="stylesheet" href="assets/ds.css">
+<style>
+/* Стартовая страница теста: три задания прототипа. Атомы — ds.css (fr-btn, fr-label, fr-infobar). */
+html, body { margin: 0; background: var(--background-secondary, #F5F4F1); font-family: var(--f-base); color: var(--text-primary); }
+* { box-sizing: border-box; }
+p, h1, h2 { margin: 0; }
+.st-h1, .st-h2 { font-family: var(--f-base); text-transform: none; }   /* ds.css задаёт h1/h2 титульный шрифт и капс — гасим
+.st { max-width: 720px; margin: 0 auto; padding: 64px 16px 80px; display: flex; flex-direction: column; gap: 32px; }
+.st-head { display: flex; flex-direction: column; gap: 12px; }
+.st-h1 { font-size: 34px; line-height: 40px; font-weight: 600; letter-spacing: .25px; }
+.st-lead { font-size: 17px; line-height: 24px; letter-spacing: .2px; color: var(--text-secondary); }
+.st .fr-infobar { width: 100%; }
+.st-ib { flex: none; padding: 4px; }
+.st-ib img { display: block; width: 24px; height: 24px; }
+.st-steps { margin: 4px 0 0; padding-left: 20px; font-size: 15px; line-height: 20px; letter-spacing: .2px; }
+.st-steps li + li { margin-top: 4px; }
+.st-list { display: flex; flex-direction: column; gap: 16px; }
+.st-card { display: flex; gap: 24px; align-items: flex-start; padding: 24px; border-radius: 8px; background: var(--background-primary); }
+.st-num { flex: none; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  background: var(--control-minor); font-size: 17px; line-height: 24px; font-weight: 600; }
+.st-body { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+.st-trow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.st-h2 { font-size: 21px; line-height: 26px; font-weight: 600; letter-spacing: .2px; }
+.st-task { font-size: 17px; line-height: 24px; letter-spacing: .2px; }
+.st-card .fr-btn { flex: none; align-self: center; text-decoration: none; }
+.st-lbl--done { background: var(--control-minor); }
+.st-foot { font-size: 13px; line-height: 16px; letter-spacing: .2px; color: var(--text-minor); }
+@media (max-width: 600px) {
+  .st { padding-top: 32px; }
+  .st-card { flex-wrap: wrap; }
+  .st-card .fr-btn { width: 100%; }
+}
+</style>
+</head>
+<body>
+<main class="st">
+  <div class="st-head">
+    <h1 class="st-h1">Услуги в корзине</h1>
+    <p class="st-lead">Три задания в прототипе корзины Магпортала. Каждое открывается со своей корзиной, проходить можно в любом порядке.</p>
+  </div>
+
+  <div class="fr-infobar fr-infobar--alert">
+    <div class="fr-infobar__content"><span class="st-ib"><img src="assets/fig/svc/info-24.svg" alt=""></span>
+      <div class="fr-infobar__text">
+        <p class="fr-infobar__title">Как проходить</p>
+        <ol class="st-steps">
+          <li>Нажми «Начать» у задания — откроется корзина.</li>
+          <li>Добавь услуги, как сказано в задании.</li>
+          <li>Когда закончишь, нажми «Перейти к оформлению» внизу корзины.</li>
+          <li>На последнем экране нажми «К списку заданий» и переходи к следующему.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <div class="st-list" id="list"></div>
+
+  <p class="st-foot">Это прототип: товары, клиент и цены ненастоящие. Заказ не оформляется.</p>
+</main>
+
+<script>
+  // Формулировки заданий — черновик, проверить перед отправкой
+  const TASKS = [
+    { id: 'zamer', title: 'Замер', text: 'Добавь в корзину замер помещения для установки кухни.' },
+    { id: 'tovar', title: 'Услуга к товару', text: 'Добавь к варочной панели в корзине установку и подключение.' },
+    { id: 'kuhnya', title: 'Установка кухни', text: 'Добавь услуги установки кухни: сборку и установку кухонного каркаса — 2 шт., установку газовой варочной поверхности, установку и подключение врезной мойки, установку столешницы ДСП.' }
+  ];
+  const status = id => { try { return localStorage.getItem('ux-task-' + id); } catch (e) { return null; } };
+  document.getElementById('list').innerHTML = TASKS.map((t, i) => {
+    const s = status(t.id);
+    // Метка нейтральная для обоих исходов — как и страница «Задание завершено», не подсказываем, верно ли выполнено
+    const lbl = s ? '<span class="fr-label st-lbl--done"><span class="fr-label__text">Пройдено</span></span>' : '';
+    return `<section class="st-card">
+      <span class="st-num">${i + 1}</span>
+      <div class="st-body"><div class="st-trow"><h2 class="st-h2">${t.title}</h2>${lbl}</div><p class="st-task">${t.text}</p></div>
+      <a class="fr-btn ${s ? 'fr-btn--secondary' : 'fr-btn--primary'} fr-btn--l" href="prototype.html?task=${t.id}">${s ? 'Пройти ещё раз' : 'Начать'}</a>
+    </section>`;
+  }).join('');
+</script>
+</body>
+</html>
