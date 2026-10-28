@@ -623,7 +623,7 @@
     closePanel(); drawer(false); $('confirm').hidden = true; $('footHint').hidden = true;
     const t = TASK_TEXT[key];
     $('taskK').textContent = 'Задание ' + t.n + ' из 3'; $('taskT').textContent = t.title; $('taskX').innerHTML = taskHtml(t);
-    taskCard(true);   // при старте задание раскрыто; «Понятно» или клик мимо — сворачивает во вкладку
+    taskCard(true);   // при старте задание раскрыто и висит до «Понятно» (клики по корзине и Esc его не сворачивают)
     renderCart();
   }
   // Состав корзины в строку для адреса: «ключ=услуга*кол,…;…» (cfg:kp=kp-1*2;p-hob=hob-el*1)
@@ -651,7 +651,6 @@
   /* ══ События ══════════════════════════════════════════════════════ */
   document.addEventListener('click', e => {
     const b = e.target.closest('[data-act]');
-    if (!e.target.closest('#task') && !$('taskCard').hidden) taskCard(false);
     if (!e.target.closest('.sv-cc__menuwrap') && menuFor) { menuFor = null; renderItems(); }
     if (!b) { if (!e.target.closest('#footHint')) $('footHint').hidden = true; return; }
     const act = b.dataset.act, id = b.dataset.id;
@@ -692,8 +691,7 @@
   info.addEventListener('click', e => { e.stopPropagation(); $('footHint').hidden = !$('footHint').hidden; });
   document.addEventListener('keydown', e => {
     if (e.key !== 'Escape') return;
-    if (!$('taskCard').hidden) taskCard(false);
-    else if (!$('confirm').hidden) { $('confirm').hidden = true; pendingDel = null; }
+    if (!$('confirm').hidden) { $('confirm').hidden = true; pendingDel = null; }
     else if (!$('drawer').hidden) drawer(false);
     else if (!$('cfg').hidden) closePanel();
     else if (menuFor) { menuFor = null; renderItems(); }
