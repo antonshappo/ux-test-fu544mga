@@ -160,7 +160,8 @@
       'Силиконовый герметик не входит в стоимость работ'] },
     { id: 'tl-2', name: 'Установка и подключение встраиваемого электрического духового шкафа', price: 2020 },
     { id: 'tl-3', name: 'Установка и подключение вытяжки встраиваемой', price: 1630 },
-    { id: 'tl-4', name: 'Установка и подключение встраиваемого холодильника', price: 2140 } ]);
+    { id: 'tl-4', name: 'Установка и подключение встраиваемого холодильника', price: 2140 },
+    { id: 'tl-5', name: 'Установка и подключение варочной электрической поверхности', price: 2040 } ]);   // дубль услуги к варочной панели — для кейса C11
   CONFIGS.sl = kitchenCfg('Сантехника ЛМН', [
     { id: 'sl-1', name: 'Установка и подключение врезной мойки', price: 1550, incl: [
       'Разметка выпила в столешнице.', 'Выпил отверстия под мойку.', 'Установка мойки на герметик.',
@@ -271,7 +272,7 @@
       <button class="fr-counter__btn" aria-label="Уменьшить" data-act="${act}-dec" data-id="${id}"><img src="${I}minus-20.svg" alt=""></button>
       <div class="fr-counter__value"><span>${q}</span></div>
       <button class="fr-counter__btn" aria-label="Увеличить" data-act="${act}-inc" data-id="${id}"${q >= MAX_QTY ? ' disabled' : ''}><img src="${I}plus-20.svg" alt=""></button></div>`;
-  const infobar = text => `<div class="fr-infobar fr-infobar--alert"><div class="fr-infobar__content"><span class="sv-ibico"><img src="${I}info-24.svg" alt=""></span>
+  const infobar = (text, icon) => `<div class="fr-infobar fr-infobar--alert"><div class="fr-infobar__content"><span class="sv-ibico"><img src="${I}${icon || 'info'}-24.svg" alt=""></span>
       <div class="fr-infobar__text"><p class="fr-infobar__paragraph">${text}</p></div></div></div>`;
   const myLabel = () => `<span class="fr-label fr-label--default">Мой отдел</span>`;
 
@@ -350,8 +351,8 @@
   function cfgCard(key) {
     const a = added[key], cfg = CONFIGS[a.cfg], n = lineCount(a.sel);
     const label = services(a.cfg).map(s => s.label).filter(Boolean)[0];
-    const rows = services(a.cfg).filter(s => a.sel[s.id]).map(s =>
-      `<div class="sv-cc__row"><span>${esc(s.cartName || s.name)}</span>${priceHtml(unit(s, a.sel[s.id]) * a.sel[s.id], 'fr-price--s is-default')}</div>`).join('');   // 2268:268893: 15/20 Regular
+    const rows = services(a.cfg).filter(s => a.sel[s.id]).map((s, i) =>
+      `<div class="sv-cc__row"><span class="sv-cc__name"><span class="sv-cc__num">${i + 1}.</span><span>${esc(s.cartName || s.name)}</span></span>${priceHtml(unit(s, a.sel[s.id]) * a.sel[s.id], 'fr-price--s is-default')}</div>`).join('');   // 2268:268893: 15/20 Regular; нумерация — 2881:115803
     return `
       <article class="kz-item sv-cc">
         <div class="sv-cc__top">
@@ -372,7 +373,14 @@
         <div class="sv-cc__comphead">${lbl('kz-lbl--service', 'Состав услуг')}
           <button class="sv-cc__edit" data-act="edit" data-id="${key}">Изменить<img src="${I}chevron-right-20.svg" alt=""></button></div>
         <div class="sv-cc__comp" role="button" tabindex="0" data-act="edit" data-id="${key}" aria-label="Изменить состав услуг">${rows}</div>
+        ${hasDup(key) ? infobar('Эти услуги уже есть в корзине. Проверь, не добавлены ли они по ошибке', 'warning') : ''}
       </article>`;
+  }
+  /* C11 (3137:632741): та же услуга добавлена и отдельно, и к товару — предупреждение в карточке отдельной позиции */
+  const selNames = a => services(a.cfg).filter(s => a.sel[s.id] > 0).map(s => s.name);
+  function hasDup(key) {
+    const own = selNames(added[key]);
+    return Object.keys(added).some(k => !k.startsWith('cfg:') && selNames(added[k]).some(n => own.includes(n)));
   }
   function renderItems() {
     const standalone = Object.keys(added).filter(k => k.startsWith('cfg:')).sort((a, b) => CFG_ORDER.indexOf(added[a].cfg) - CFG_ORDER.indexOf(added[b].cfg));
@@ -596,11 +604,24 @@
   }
 
   /* ══ Задания ═════════════════════════════════════════════════════ */
+  // Тексты — как на стартовой странице (index.html, TASKS); менять в обоих местах
+  const TASK_TEXT = {
+    zamer: { n: 1, title: 'Замер', text: 'Добавь в корзину замер помещения для установки кухни и нажми «Перейти к оформлению».' },
+    tovar: { n: 2, title: 'Услуга к товару', text: 'Добавь к варочной панели в корзине установку и подключение и нажми «Перейти к оформлению».' },
+    kuhnya: { n: 3, title: 'Установка кухни', text: 'Добавь услуги установки кухни: сборку и установку кухонного каркаса — 2 шт., установку газовой варочной поверхности, установку и подключение врезной мойки, установку столешницы ДСП. Затем нажми «Перейти к оформлению».' }
+  };
+  function taskCard(show) {
+    $('taskCard').hidden = !show;
+    document.querySelector('.ut-task__tab').setAttribute('aria-expanded', show);
+  }
   function startScenario(key) {
     scen = key;
     items = (SCENARIOS[key].items || []).map(i => Object.assign({}, i));
     added = {}; menuFor = null;
     closePanel(); drawer(false); $('confirm').hidden = true; $('footHint').hidden = true;
+    const t = TASK_TEXT[key];
+    $('taskK').textContent = 'Задание ' + t.n + ' из 3'; $('taskT').textContent = t.title; $('taskX').textContent = t.text;
+    taskCard(true);   // при старте задание раскрыто; «Понятно» или клик мимо — сворачивает во вкладку
     renderCart();
   }
   // Состав корзины в строку для адреса: «ключ=услуга*кол,…;…» (cfg:kp=kp-1*2;p-hob=hob-el*1)
@@ -628,10 +649,13 @@
   /* ══ События ══════════════════════════════════════════════════════ */
   document.addEventListener('click', e => {
     const b = e.target.closest('[data-act]');
+    if (!e.target.closest('#task') && !$('taskCard').hidden) taskCard(false);
     if (!e.target.closest('.sv-cc__menuwrap') && menuFor) { menuFor = null; renderItems(); }
     if (!b) { if (!e.target.closest('#footHint')) $('footHint').hidden = true; return; }
     const act = b.dataset.act, id = b.dataset.id;
     if (act === 'hint-close') $('footHint').hidden = true;
+    if (act === 'task-toggle') taskCard($('taskCard').hidden);
+    if (act === 'task-close') taskCard(false);
     switch (act) {
       case 'open': openProduct(id); break;
       case 'add-services': drawer(true); break;
@@ -666,7 +690,8 @@
   info.addEventListener('click', e => { e.stopPropagation(); $('footHint').hidden = !$('footHint').hidden; });
   document.addEventListener('keydown', e => {
     if (e.key !== 'Escape') return;
-    if (!$('confirm').hidden) { $('confirm').hidden = true; pendingDel = null; }
+    if (!$('taskCard').hidden) taskCard(false);
+    else if (!$('confirm').hidden) { $('confirm').hidden = true; pendingDel = null; }
     else if (!$('drawer').hidden) drawer(false);
     else if (!$('cfg').hidden) closePanel();
     else if (menuFor) { menuFor = null; renderItems(); }
@@ -683,7 +708,7 @@
   startScenario(tq);
   // Финальные страницы показывают корзину участника приглушённой: ?frozen=1&cart=…
   if (P.get('cart')) { added = parseCart(P.get('cart')); renderCart(); }
-  if (P.get('frozen')) document.body.classList.add('is-frozen');
+  if (P.get('frozen')) { document.body.classList.add('is-frozen'); taskCard(false); }
 
   // Для проверки: &state=added — состав-эталон задания; &open=1 (tovar) — конфигуратор; &drawer=1; &page=catalog|dept|cat|cfg; &menu=1; &confirm=1
   if (st === 'added') { const t = SCENARIOS[scen].target; Object.keys(t).forEach(k => { added[k] = { cfg: SID[Object.keys(t[k])[0]], sel: Object.assign({}, t[k]) }; }); renderCart(); }

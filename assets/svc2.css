@@ -412,3 +412,34 @@ body.is-loading .kz-blist { opacity: .4; pointer-events: none; }
 
 /* Финальные страницы: корзина под затемнением неинтерактивна */
 body.is-frozen { pointer-events: none; overflow: hidden; }
+
+/* 11. Карточка отдельной позиции — 2881:115803: состав нумерованный (висячий отступ), «⋯» в 24 от цены, верх без метки — 56 */
+.sv-cc__top { min-height: 56px; }
+.sv-cc__menuwrap { margin-left: 8px; }
+.sv-cc__name { display: flex; gap: 4px; min-width: 0; }
+.sv-cc__num { flex: none; }
+.sv-cc__row .fr-price { flex: none; }
+/* 12. Предупреждение о дубле (C11, 3137:632748): Infobar alert на всю ширину, иконка Warning 24 */
+.sv-cc .fr-infobar { width: 100%; }
+
+/* 13. Обвязка теста: задание — вкладка у левого края под логотипом, поверх панелей и модалок.
+   Тёмная, чтобы не путалась с интерфейсом Магпортала */
+.ut-task { position: fixed; left: 0; top: 88px; z-index: 300; display: flex; align-items: flex-start; gap: 8px; font-family: var(--f-base); }
+.ut-task__tab {
+  display: flex; flex-direction: column; align-items: center; gap: 8px; width: 40px; padding: 12px 8px;
+  border: 0; border-radius: 0 8px 8px 0; background: var(--text-primary, #21282B); color: #fff; cursor: pointer;
+  font-size: 15px; line-height: 20px; font-weight: 600; letter-spacing: .2px; box-shadow: var(--box-shadow-m);
+}
+.ut-task__tab img { width: 24px; height: 24px; filter: invert(1); }
+.ut-task__tab span { writing-mode: vertical-rl; transform: rotate(180deg); }
+.ut-task__tab:hover { background: #3a4245; }
+.ut-task__tab:focus-visible { outline: 2px solid var(--secondary-yellow-primary); outline-offset: 2px; }
+.ut-task__card {
+  width: 320px; padding: 16px; border-radius: 8px; background: var(--background-primary); box-shadow: var(--box-shadow-m);
+  display: flex; flex-direction: column; align-items: flex-start; gap: 8px; color: var(--text-primary);
+}
+.ut-task__card[hidden] { display: none; }
+.ut-task__k { margin: 0; font-size: 13px; line-height: 16px; letter-spacing: .2px; color: var(--text-secondary); }
+.ut-task__t { margin: 0; font-family: var(--f-base); text-transform: none; font-size: 17px; line-height: 24px; font-weight: 600; letter-spacing: .2px; }
+.ut-task__x { margin: 0 0 8px; font-size: 15px; line-height: 20px; letter-spacing: .2px; }
+body.is-frozen .ut-task { display: none; }
