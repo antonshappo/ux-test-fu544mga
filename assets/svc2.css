@@ -445,3 +445,8 @@ body.is-frozen { pointer-events: none; overflow: hidden; }
 .ut-task__x p, .ut-task__x ul { margin: 0; }
 .ut-task__x ul { padding-left: 20px; }
 body.is-frozen .ut-task { display: none; }
+
+/* 14. Плитка добавленной услуги к товару (3427:147802): колонка тянется на всю высоту 89, цена прижата к низу,
+   название до 3 строк сверху — цена не прыгает при коротком названии */
+.sv-tile.is-added .sv-tile__info { align-self: stretch; }
+.sv-tile.is-added .sv-tile__info > .fr-price { margin-top: auto; }
