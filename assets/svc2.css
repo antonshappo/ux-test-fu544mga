@@ -450,3 +450,6 @@ body.is-frozen .ut-task { display: none; }
    название до 3 строк сверху — цена не прыгает при коротком названии */
 .sv-tile.is-added .sv-tile__info { align-self: stretch; }
 .sv-tile.is-added .sv-tile__info > .fr-price { margin-top: auto; }
+/* Кнопка «Удалить услугу» — Button primary / M — invert (3427:147722): белый круг, hover — control-hover-primary-invert */
+.sv-tile.is-added .sv-tile__btn { background: var(--control-primary-invert); transition: background-color .15s ease-in-out; }
+.sv-tile.is-added .sv-tile__btn:hover, .sv-tile.is-added:hover .sv-tile__btn { background: var(--control-hover-primary-invert); }
