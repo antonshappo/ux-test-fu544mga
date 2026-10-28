@@ -441,5 +441,7 @@ body.is-frozen { pointer-events: none; overflow: hidden; }
 .ut-task__card[hidden] { display: none; }
 .ut-task__k { margin: 0; font-size: 13px; line-height: 16px; letter-spacing: .2px; color: var(--text-secondary); }
 .ut-task__t { margin: 0; font-family: var(--f-base); text-transform: none; font-size: 17px; line-height: 24px; font-weight: 600; letter-spacing: .2px; }
-.ut-task__x { margin: 0 0 8px; font-size: 15px; line-height: 20px; letter-spacing: .2px; }
+.ut-task__x { margin: 0 0 8px; font-size: 15px; line-height: 20px; letter-spacing: .2px; display: flex; flex-direction: column; gap: 4px; }
+.ut-task__x p, .ut-task__x ul { margin: 0; }
+.ut-task__x ul { padding-left: 20px; }
 body.is-frozen .ut-task { display: none; }

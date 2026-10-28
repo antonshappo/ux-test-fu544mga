@@ -608,8 +608,10 @@
   const TASK_TEXT = {
     zamer: { n: 1, title: 'Замер', text: 'Добавь в корзину замер помещения для установки кухни и нажми «Перейти к оформлению».' },
     tovar: { n: 2, title: 'Услуга к товару', text: 'Добавь к варочной панели в корзине установку и подключение и нажми «Перейти к оформлению».' },
-    kuhnya: { n: 3, title: 'Установка кухни', text: 'Добавь услуги установки кухни: сборку и установку кухонного каркаса — 2 шт., установку газовой варочной поверхности, установку и подключение врезной мойки, установку столешницы ДСП. Затем нажми «Перейти к оформлению».' }
+    kuhnya: { n: 3, title: 'Установка кухни', text: 'Добавь услуги установки кухни:', list: ['Сборка и установка кухонного каркаса — 2 шт.', 'Установка газовой варочной поверхности — 1 шт.', 'Установка и подключение врезной мойки — 1 шт.', 'Установка столешницы ДСП — 1 шт.'], after: 'Затем нажми «Перейти к оформлению».' }
   };
+  // Перечень — буллетами с новой строки, у каждой позиции количество
+  const taskHtml = t => `<p>${esc(t.text)}</p>${t.list ? `<ul>${t.list.map(x => `<li>${esc(x)}</li>`).join('')}</ul><p>${esc(t.after)}</p>` : ''}`;
   function taskCard(show) {
     $('taskCard').hidden = !show;
     document.querySelector('.ut-task__tab').setAttribute('aria-expanded', show);
@@ -620,7 +622,7 @@
     added = {}; menuFor = null;
     closePanel(); drawer(false); $('confirm').hidden = true; $('footHint').hidden = true;
     const t = TASK_TEXT[key];
-    $('taskK').textContent = 'Задание ' + t.n + ' из 3'; $('taskT').textContent = t.title; $('taskX').textContent = t.text;
+    $('taskK').textContent = 'Задание ' + t.n + ' из 3'; $('taskT').textContent = t.title; $('taskX').innerHTML = taskHtml(t);
     taskCard(true);   // при старте задание раскрыто; «Понятно» или клик мимо — сворачивает во вкладку
     renderCart();
   }
