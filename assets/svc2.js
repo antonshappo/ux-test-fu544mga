@@ -630,7 +630,7 @@
     const media = isProd ? `<img class="sv-dup__ph" src="assets/products/${it.photo}.png" alt="">`
       : `<span class="sv-dup__ic"><img src="${I}kitchen-design-32.svg" alt=""></span>`;
     return `<div class="sv-dup__row${gone ? ' is-gone' : ''}">${media}
-      <div class="sv-dup__src"><p class="sv-dup__kind">${isProd ? 'Услуга к товару' : 'Услуга из каталога'}</p>
+      <div class="sv-dup__src"><p class="sv-dup__kind">${isProd ? 'Услуги мастера' : 'Состав услуг'}</p>
         <p class="sv-dup__where">${esc(isProd ? it.name : CONFIGS[a.cfg].title)}</p></div>
       <div class="sv-dup__sum"><span class="sv-dup__qty">${q} шт. × ${money(unit(s, q))} ₽</span>${priceHtml(unit(s, q) * q, 'fr-price--m is-accent')}</div>
       ${gone ? `<button class="fr-btn fr-btn--pseudo fr-btn--m sv-dup__undo" data-act="dup-undo" data-id="${id}">Вернуть</button>`
@@ -640,7 +640,7 @@
   function renderDupModal() {
     // Вординг один для любого числа дублей (решение Антона 31.10)
     $('dupT').textContent = 'Дубли услуг в корзине';
-    $('dupLead').textContent = 'Эти услуги добавлены и к товару, и из каталога. Удали лишние, если они добавлены по ошибке.';
+    $('dupLead').textContent = 'Одни и те же услуги добавлены в корзину дважды. Удали лишние, если они добавлены по ошибке.';
     $('dupList').innerHTML = dupState.dups.map(d => `<section class="sv-dup__item"><h3 class="sv-dup__name">${esc(d.name)}</h3>
       ${dupRow(d.p, d.c)}${dupRow(d.c, d.p)}</section>`).join('');
   }
