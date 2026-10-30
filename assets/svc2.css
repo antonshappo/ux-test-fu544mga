@@ -512,3 +512,7 @@ body.is-frozen .ut-task { display: none; }
    неактивная корзина — Secondary M Disabled под прозрачностью 40 % (как в Figma), это уже задано в п. 17 */
 .sv-dup__undo { gap: 8px; }
 .sv-dup__undo img { width: 20px; height: 20px; }
+/* Корзина в модалке — Button pseudo / M, Icon only (Figma 3485:278126): без фона, hover control-minor;
+   неактивная — Disabled с фоном, под прозрачностью 40 % */
+.sv-dup__del { background: transparent; }
+.sv-dup__del:disabled { background: var(--control-minor); opacity: .4; }
