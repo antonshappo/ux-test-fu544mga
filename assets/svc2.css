@@ -525,5 +525,7 @@ body.is-frozen .ut-task { display: none; }
 .sv-dup__head .sv-dup__name { flex: 1 1 0; margin: 0; }
 .sv-dup__head .fr-btn { flex: none; }
 .sv-dup__kept { flex: none; font-size: 13px; line-height: 16px; letter-spacing: .2px; color: var(--text-secondary); }
-.sv-dup__total { margin: 0; padding: 16px 40px 0; font-size: 15px; line-height: 20px; letter-spacing: .2px; color: var(--text-secondary); }
+/* итог — под кнопками, как Description в футере модалки ДС */
+.sv-dup__foot { flex-wrap: wrap; row-gap: 16px; }
+.sv-dup__foot .sv-dup__total { flex: 1 0 100%; margin: 0; font-size: 15px; line-height: 20px; letter-spacing: .2px; color: var(--text-secondary); }
 .fr-infobar--vertical .fr-infobar__actions .fr-infobar__btn { white-space: nowrap; }
