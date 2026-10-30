@@ -10,6 +10,7 @@
 
   const I = 'assets/fig/svc/';
   const LOADING_MS = 1200;
+  const DUP = ['snack', 'modal'].includes(new URLSearchParams(location.search).get('dup')) ? new URLSearchParams(location.search).get('dup') : 'card';
   const MAX_QTY = 9999;     // описание карточки услуги 2836:434: на максимуме плюс неактивен
   const MIN_ORDER = 1500;   // минимальная стоимость заказа услуг (решение Антона 14.10: было 5000); разницу покрывает «Выезд мастера»
 
@@ -209,12 +210,8 @@
   const SCENARIOS = {
     zamer: {
       label: 'Замер',
-      items: [   // 3050:231941
-        { id: 'p-door', photo: 'door', name: 'Дверь межкомнатная глухая с замком и петлями в комплекте Юлия-1 70x200 см эмаль цвет мокко', price: 13000, qty: 1,
-          tiles: ['Установка межкомнатной распашной двери', 'Вывоз бывших в употреблении дверей и окон'] },
-        { id: 'p-trim', photo: 'nalichnik', name: 'Комплект наличников телескопических 2140x70x10 мм эмаль мокко', price: 3000, qty: 2 },
-        { id: 'p-hinge', photo: 'petlya', name: 'Петля без врезки Fuaro 500-2ВВ 100x75x2.5 мм сталь цвет матовый никель 1 шт.', price: 300, qty: 4 }
-      ],
+      goods: { weight: '485,69' },
+      items: kitchenItems(),   // была дверь (3050:231941) — респондента №1 смутило: задание про кухонный замер, а в корзине дверь
       target: { 'cfg:measure': { 'msr-room': 1 } }
     },
     tovar: {
@@ -382,6 +379,14 @@
     const own = selNames(added[key]);
     return Object.keys(added).some(k => !k.startsWith('cfg:') && selNames(added[k]).some(n => own.includes(n)));
   }
+  // Пары дублей в состоянии корзины A: одна и та же услуга (по названию) у товара и в отдельной позиции
+  function dupsOf(A) {
+    const res = [], picked = k => services(A[k].cfg).filter(s => A[k].sel[s.id] > 0);
+    Object.keys(A).filter(k => !k.startsWith('cfg:')).forEach(pk => picked(pk).forEach(ps =>
+      Object.keys(A).filter(k => k.startsWith('cfg:')).forEach(ck => picked(ck).filter(cs => cs.name === ps.name).forEach(cs =>
+        res.push({ name: ps.name, price: ps.price, p: { key: pk, sid: ps.id }, c: { key: ck, sid: cs.id }, id: pk + '|' + ck + '|' + ps.name })))));
+    return res;
+  }
   function renderItems() {
     const standalone = Object.keys(added).filter(k => k.startsWith('cfg:')).sort((a, b) => CFG_ORDER.indexOf(added[a].cfg) - CFG_ORDER.indexOf(added[b].cfg));
     $('items').innerHTML = standalone.map(cfgCard).join('') + items.map(goodsCard).join('');
@@ -546,7 +551,7 @@
       <div class="sv-prod"><img src="assets/products/${it.photo}.png" alt="">
         <div class="sv-prod__i"><p class="sv-prod__cap"><span>Услуги к товару:</span><span>ЛМ 8664 8552</span></p><p class="sv-prod__n">${esc(it.name)}</p></div></div>` : '') + `
       <div class="sv-comp">
-        <div class="sv-comp__head"><div class="sv-comp__hrow"><p>Состав услуг</p>${n ? `<button class="sv-iconbtn" aria-label="Печать"><img src="${I}printer-24.svg" alt=""></button>` : ''}</div><div class="sv-comp__div"></div></div>
+        <div class="sv-comp__head"><div class="sv-comp__hrow"><p>Состав услуг</p>${n ? `<span class="sv-tip"><button class="sv-iconbtn" aria-label="Распечатать предрасчёт" aria-describedby="tipPrint"><img src="${I}printer-24.svg" alt=""></button><span class="sv-tip__b" role="tooltip" id="tipPrint">Распечатать предрасчёт</span></span>` : ''}</div><div class="sv-comp__div"></div></div>
         <div class="sv-comp__body">${body}</div>
         ${tab}
       </div>`;
@@ -589,13 +594,59 @@
     document.body.classList.add('is-loading'); $('loading').hidden = false;
     setTimeout(() => { fn(); document.body.classList.remove('is-loading'); $('loading').hidden = true; }, LOADING_MS);
   }
+  /* Дубли C11 — три варианта для сравнения, параметр &dup=:
+     card  — жёлтая плашка в карточке отдельной позиции (по умолчанию, 3137:632748);
+     snack — плашка + снекбар в момент появления дубля (3452:269074);
+     modal — при «Применить» модалка «какую оставить»; «Оставить обе» → плашка в карточке */
+  let pendingApply = null, snackTimer = null;
   function applyCfg() {
+    const next = {}; Object.keys(added).forEach(k => { next[k] = { cfg: added[k].cfg, sel: Object.assign({}, added[k].sel) }; });
+    const touched = buf.cfgs.map(c => buf.item || cfgKey(c));
     buf.cfgs.forEach(c => {
       const sel = {}; Object.keys(buf.sel[c]).forEach(k => { if (buf.sel[c][k] > 0) sel[k] = buf.sel[c][k]; });
       const key = buf.item || cfgKey(c);
-      if (lineCount(sel)) added[key] = { cfg: c, sel }; else delete added[key];
+      if (lineCount(sel)) next[key] = { cfg: c, sel }; else delete next[key];
     });
-    closePanel(); withLoading(renderCart);
+    const before = dupsOf(added).map(d => d.id);
+    const fresh = dupsOf(next).filter(d => !before.includes(d.id));
+    if (DUP === 'modal' && fresh.length) { pendingApply = { next, dups: fresh, touched }; openDupModal(); return; }
+    commitApply(next, DUP === 'snack' && fresh.length > 0);
+  }
+  function commitApply(next, snack) {
+    added = next; pendingApply = null; $('dupModal').hidden = true;
+    closePanel(); withLoading(() => { renderCart(); if (snack) showSnack(); });
+  }
+  function showSnack() {
+    $('snack').hidden = false; clearTimeout(snackTimer);
+    snackTimer = setTimeout(() => { $('snack').hidden = true; }, 6000);
+  }
+  // Модалка: по паре на дубль, радио «где оставить»; по умолчанию — копия, которая уже была в корзине
+  function openDupModal() {
+    const it = k => items.find(i => i.id === k);
+    const where = (r, isNew) => r.key.startsWith('cfg:')
+      ? `В наборе «${esc(CONFIGS[added[r.key] ? added[r.key].cfg : r.key.slice(4)].title)}»`
+      : `К товару «${esc(it(r.key).name)}»`;
+    const opt = (d, i, side, r) => {
+      const isNew = pendingApply.touched.includes(r.key);
+      const def = !isNew;
+      return `<label class="fr-radio sv-dup__opt"><input type="radio" class="fr-radio__input-inner" name="dup${i}" value="${side}"${def ? ' checked' : ''}><span class="fr-radio-icon fr-l"></span>
+        <span class="fr-radio__label-text"><span class="sv-dup__where">${where(r)}</span><span class="sv-dup__note">${isNew ? 'добавляешь сейчас' : 'уже в корзине'}</span></span></label>`;
+    };
+    const n = pendingApply.dups.length;
+    $('dupT').textContent = n > 1 ? 'Услуги уже есть в корзине' : 'Услуга уже есть в корзине';
+    $('dupLead').textContent = n > 1 ? 'Выбери, где оставить каждую. Повторы удалятся.' : 'Выбери, где её оставить. Повтор удалится.';
+    $('dupList').innerHTML = pendingApply.dups.map((d, i) => `<fieldset class="sv-dup__item"><legend class="sv-dup__name"><span>${esc(d.name)}</span>${priceHtml(d.price, 'fr-price--s is-default')}</legend>
+      ${opt(d, i, 'p', d.p)}${opt(d, i, 'c', d.c)}</fieldset>`).join('');
+    $('dupModal').hidden = false;
+  }
+  function resolveDups() {
+    const next = pendingApply.next;
+    pendingApply.dups.forEach((d, i) => {
+      const keep = document.querySelector(`input[name="dup${i}"]:checked`).value;
+      const drop = keep === 'p' ? d.c : d.p;
+      if (next[drop.key]) { delete next[drop.key].sel[drop.sid]; if (!lineCount(next[drop.key].sel)) delete next[drop.key]; }
+    });
+    commitApply(next, false);
   }
   function askDelete(key) {
     pendingDel = key; menuFor = null;
@@ -621,6 +672,7 @@
     items = (SCENARIOS[key].items || []).map(i => Object.assign({}, i));
     added = {}; menuFor = null;
     closePanel(); drawer(false); $('confirm').hidden = true; $('footHint').hidden = true;
+    $('onb').hidden = false; $('snack').hidden = true; $('dupModal').hidden = true; pendingApply = null;
     const t = TASK_TEXT[key];
     $('taskK').textContent = 'Задание ' + t.n + ' из 3'; $('taskT').textContent = t.title; $('taskX').innerHTML = taskHtml(t);
     taskCard(true);   // при старте задание раскрыто и висит до «Понятно» (клики по корзине и Esc его не сворачивают)
@@ -670,6 +722,11 @@
       case 'confirm-no': $('confirm').hidden = true; pendingDel = null; break;
       case 'confirm-yes': delete added[pendingDel]; pendingDel = null; $('confirm').hidden = true; withLoading(renderCart); break;
       case 'checkout': checkout(); break;
+      case 'onb-close': $('onb').hidden = true; break;
+      case 'snack-close': $('snack').hidden = true; clearTimeout(snackTimer); break;
+      case 'dup-cancel': $('dupModal').hidden = true; pendingApply = null; break;
+      case 'dup-keep': commitApply(pendingApply.next, false); break;
+      case 'dup-resolve': resolveDups(); break;
       case 'cfg-close': closePanel(); break;
       case 'apply': applyCfg(); break;
       case 'more': open.has(id) ? open.delete(id) : open.add(id); renderCfg(); break;
@@ -691,7 +748,8 @@
   info.addEventListener('click', e => { e.stopPropagation(); $('footHint').hidden = !$('footHint').hidden; });
   document.addEventListener('keydown', e => {
     if (e.key !== 'Escape') return;
-    if (!$('confirm').hidden) { $('confirm').hidden = true; pendingDel = null; }
+    if (!$('dupModal').hidden) { $('dupModal').hidden = true; pendingApply = null; }
+    else if (!$('confirm').hidden) { $('confirm').hidden = true; pendingDel = null; }
     else if (!$('drawer').hidden) drawer(false);
     else if (!$('cfg').hidden) closePanel();
     else if (menuFor) { menuFor = null; renderItems(); }
@@ -702,6 +760,7 @@
   });
 
   const P = new URLSearchParams(location.search), st = P.get('state');   // читаем до replaceState
+  // &demo=1 — витрина для команды (dubli.html): без вкладки «Задание»
   renderBaskets(); renderDrawer();
   let tq = P.get('task') || TASK_ALIAS[P.get('s')] || 'zamer';
   if (!SCENARIOS[tq]) tq = 'zamer';
@@ -709,6 +768,7 @@
   // Финальные страницы показывают корзину участника приглушённой: ?frozen=1&cart=…
   if (P.get('cart')) { added = parseCart(P.get('cart')); renderCart(); }
   if (P.get('frozen')) { document.body.classList.add('is-frozen'); taskCard(false); }
+  if (P.get('demo')) { taskCard(false); $('task').hidden = true; }
 
   // Для проверки: &state=added — состав-эталон задания; &open=1 (tovar) — конфигуратор; &drawer=1; &page=catalog|dept|cat|cfg; &menu=1; &confirm=1
   if (st === 'added') { const t = SCENARIOS[scen].target; Object.keys(t).forEach(k => { added[k] = { cfg: SID[Object.keys(t[k])[0]], sel: Object.assign({}, t[k]) }; }); renderCart(); }

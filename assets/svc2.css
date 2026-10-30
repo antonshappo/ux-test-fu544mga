@@ -453,3 +453,38 @@ body.is-frozen .ut-task { display: none; }
 /* Кнопка «Удалить услугу» — Button primary / M — invert (3427:147722): белый круг, hover — control-hover-primary-invert */
 .sv-tile.is-added .sv-tile__btn { background: var(--control-primary-invert); transition: background-color .15s ease-in-out; }
 .sv-tile.is-added .sv-tile__btn:hover, .sv-tile.is-added:hover .sv-tile__btn { background: var(--control-hover-primary-invert); }
+
+/* 14. Онбординг в блоке «Добавление товаров и услуг» (2438:435519): Infobar secondary на всю ширину */
+.sv-onb { width: 100%; }
+.sv-onb[hidden] { display: none; }
+
+/* 15. Тултип на иконке принтера (под иконкой) в «Составе услуг»: «Распечатать предрасчёт» (по hover и фокусу) */
+.sv-tip { position: relative; display: inline-flex; }
+.sv-tip__b {
+  position: absolute; right: -8px; top: calc(100% + 8px); z-index: 10; padding: 8px 12px; border-radius: 4px; white-space: nowrap;
+  background: var(--background-accent); color: var(--text-primary-invert, #fff); font-size: 13px; line-height: 16px; letter-spacing: .2px;
+  opacity: 0; visibility: hidden; transition: opacity .15s ease-in-out; pointer-events: none;
+}
+.sv-tip__b::after { content: ""; position: absolute; right: 12px; bottom: 100%; width: 16px; height: 8px; background: var(--background-accent); clip-path: polygon(50% 0, 100% 100%, 0 100%); }   /* под иконкой: сверху колонка обрезает */
+.sv-tip:hover .sv-tip__b, .sv-tip:focus-within .sv-tip__b { opacity: 1; visibility: visible; }
+
+/* 16. Дубль, вариант «снекбар» (3452:269074): Snackbar alert 344, accent/primary, тень M.
+   В макете снекбар перекрывает «Перейти к оформлению» — поднят над футером (104 + 16) */
+.sv-snack {
+  position: fixed; z-index: 95; left: calc(756px + 32px); bottom: 120px; width: 344px; padding: 12px; border-radius: 8px;
+  background: var(--accent-primary, #FFE55A); color: var(--text-primary); box-shadow: var(--box-shadow-m);
+}
+.sv-snack[hidden] { display: none; }
+@media (max-width: 1764px) { .sv-snack { left: calc(32px + 488px + 16px + 32px); } }
+@media (max-width: 1280px) { .sv-snack { left: 64px; } }
+
+/* 17. Дубль, вариант «модалка»: пара «где оставить» на каждую повторяющуюся услугу */
+.sv-dup__lead { color: var(--text-secondary); }
+.sv-dup__list { display: flex; flex-direction: column; gap: 16px; margin-top: 16px !important; }
+.sv-dup__item { margin: 0; padding: 16px; border: 0; border-radius: 8px; background: var(--background-secondary); display: flex; flex-direction: column; gap: 4px; }
+.sv-dup__name { float: left; width: 100%; padding: 0; margin-bottom: 4px; display: flex; justify-content: space-between; gap: 16px; font-weight: 600; font-size: 17px; line-height: 24px; }
+.sv-dup__name .fr-price { flex: none; }
+.sv-dup__opt { clear: both; margin-left: -8px; font-size: 15px; line-height: 20px; }
+.sv-dup__opt .fr-radio__label-text { display: flex; flex-direction: column; gap: 2px; padding-top: 2px; }
+.sv-dup__note { font-size: 13px; line-height: 16px; color: var(--text-minor); }
+.ut-task[hidden] { display: none; }

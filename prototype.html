@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="assets/fonts.css">
 <link rel="stylesheet" href="assets/ds.css">
 <link rel="stylesheet" href="assets/cart.css?v=2">
-<link rel="stylesheet" href="assets/svc2.css?v=5">
+<link rel="stylesheet" href="assets/svc2.css?v=6">
 </head>
 <body class="kz">
 <div class="kz-app">
@@ -127,6 +127,16 @@
         <!-- Добавление товаров и услуг 1008×162 -->
         <div class="kz-add">
           <p class="kz-add__t">Добавление товаров и услуг</p>
+          <!-- Онбординг (2438:435519): Infobar secondary, закрывается крестиком -->
+          <div class="fr-infobar fr-infobar--secondary sv-onb" id="onb">
+            <div class="fr-infobar__content">
+              <div class="fr-infobar__text">
+                <p class="fr-infobar__title">Теперь услуги можно добавить к товару или выбрать в каталоге</p>
+                <p class="fr-infobar__paragraph">Под товаром есть блок «Услуги мастера». Каталог Платформы услуг открывается по кнопке «Добавить услуги»</p>
+              </div>
+              <button class="fr-infobar__close" data-act="onb-close" aria-label="Закрыть"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M15.625 4.375L4.375 15.625M15.625 15.625L4.375 4.375" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            </div>
+          </div>
           <div class="kz-add__row">
             <div class="kz-lmsearch">
               <span class="kz-lmsearch__ph">Введи ЛМ, название или штрихкод</span>
@@ -226,6 +236,31 @@
   </div>
 </div>
 
+<!-- ═══ Дубль, вариант «снекбар» (&dup=snack, 3452:269074): Snackbar alert ═══ -->
+<div class="sv-snack" id="snack" role="status" hidden>
+  <div class="fr-infobar__content">
+    <span class="sv-ibico"><img src="assets/fig/svc/warning-fill-24.svg" alt=""></span>
+    <div class="fr-infobar__text">
+      <p class="fr-infobar__title">Услуги уже есть в корзине</p>
+      <p class="fr-infobar__paragraph">Проверь, не добавлены ли они по ошибке</p>
+    </div>
+    <button class="fr-infobar__close" data-act="snack-close" aria-label="Закрыть"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M15.625 4.375L4.375 15.625M15.625 15.625L4.375 4.375" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  </div>
+</div>
+
+<!-- ═══ Дубль, вариант «модалка» (&dup=modal): при «Применить», выбор, где оставить услугу ═══ -->
+<div class="fr-modal fr-modal--s sv-dup" id="dupModal" hidden>
+  <div class="fr-modal__window" role="dialog" aria-modal="true" aria-labelledby="dupT">
+    <button class="fr-btn fr-btn--pseudo fr-btn--l fr-btn--square fr-btn--rounded fr-modal__close" data-act="dup-cancel" aria-label="Закрыть"><img src="assets/fig/svc/x-24.svg" alt=""></button>
+    <div class="fr-modal__header"><h2 class="fr-modal__title" id="dupT">Услуга уже есть в корзине</h2></div>
+    <div class="fr-modal__content"><p class="sv-dup__lead" id="dupLead"></p><div class="sv-dup__list" id="dupList"></div></div>
+    <div class="fr-modal__footer fr-modal__footer--wide">
+      <button class="fr-btn fr-btn--secondary fr-btn--l" data-act="dup-keep">Оставить обе</button>
+      <button class="fr-btn fr-btn--primary fr-btn--l" data-act="dup-resolve">Убрать повторы</button>
+    </div>
+  </div>
+</div>
+
 <!-- ═══ Загрузка корзины после изменений (3046:204857) ═══ -->
 <div class="sv-loading" id="loading" hidden><span class="fr-loader fr-loader--xl" role="status" aria-label="Загрузка"><svg class="fr-loader__svg" viewBox="0 0 50 50"><circle class="fr-loader__path" cx="25" cy="25" r="22.22"/></svg></span></div>
 
@@ -243,6 +278,6 @@
   </section>
 </div>
 
-<script src="assets/svc2.js?v=5"></script>
+<script src="assets/svc2.js?v=6"></script>
 </body>
 </html>
