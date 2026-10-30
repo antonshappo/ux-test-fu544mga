@@ -269,8 +269,8 @@
       <button class="fr-counter__btn" aria-label="Уменьшить" data-act="${act}-dec" data-id="${id}"><img src="${I}minus-20.svg" alt=""></button>
       <div class="fr-counter__value"><span>${q}</span></div>
       <button class="fr-counter__btn" aria-label="Увеличить" data-act="${act}-inc" data-id="${id}"${q >= MAX_QTY ? ' disabled' : ''}><img src="${I}plus-20.svg" alt=""></button></div>`;
-  const infobar = (text, icon) => `<div class="fr-infobar fr-infobar--alert"><div class="fr-infobar__content"><span class="sv-ibico"><img src="${I}${icon || 'info'}-24.svg" alt=""></span>
-      <div class="fr-infobar__text"><p class="fr-infobar__paragraph">${text}</p></div></div></div>`;
+  const infobar = (text, icon, action) => `<div class="fr-infobar fr-infobar--alert${action ? ' fr-infobar--vertical' : ''}"><div class="fr-infobar__content"><span class="sv-ibico"><img src="${I}${icon || 'info'}-24.svg" alt=""></span>
+      <div class="fr-infobar__text"><p class="fr-infobar__paragraph">${text}</p></div>${action ? `<div class="fr-infobar__actions">${action}</div>` : ''}</div></div>`;
   const myLabel = () => `<span class="fr-label fr-label--default">Мой отдел</span>`;
 
   /* ══ Корзина ══════════════════════════════════════════════════════ */
@@ -293,7 +293,7 @@
   function tile(it) {
     const cfg = CONFIGS[it.cfg], a = added[it.id];
     if (a && lineCount(a.sel)) {
-      return `<div class="sv-tile is-added" role="button" tabindex="0" data-act="open" data-id="${it.id}">
+      return `<div class="sv-tile is-added${flaggedOf(added).some(d => d.p.key === it.id) ? ' is-dup' : ''}" role="button" tabindex="0" data-act="open" data-id="${it.id}">
         <div class="sv-tile__ico"><img src="${I}services-40.svg" alt=""></div>
         <div class="sv-tile__info"><p class="sv-tile__t">${esc(cfg.title)}</p>${priceHtml(lineSum(it.cfg, a.sel), 'fr-price--m is-accent')}</div>
         <button class="sv-tile__btn" data-act="ask-del" data-id="${it.id}" aria-label="Удалить услуги"><img src="${I}trash-20.svg" alt=""></button></div>`;
@@ -348,7 +348,7 @@
   function cfgCard(key) {
     const a = added[key], cfg = CONFIGS[a.cfg], n = lineCount(a.sel);
     const label = services(a.cfg).map(s => s.label).filter(Boolean)[0];
-    const dupNames = dupsOf(added).filter(d => d.c.key === key).map(d => d.name);   // вариант Б (31.10): строки-дубли выделены
+    const dupNames = flaggedOf(added).filter(d => d.c.key === key).map(d => d.name);   // вариант Б (31.10): строки-дубли выделены
     const rows = services(a.cfg).filter(s => a.sel[s.id]).map((s, i) =>
       `<div class="sv-cc__row${dupNames.includes(s.name) ? ' is-dup' : ''}"><span class="sv-cc__name"><span class="sv-cc__num">${i + 1}.</span><span>${esc(s.cartName || s.name)}</span></span>${priceHtml(unit(s, a.sel[s.id]) * a.sel[s.id], 'fr-price--s is-default')}</div>`).join('');   // 2268:268893: 15/20 Regular; нумерация — 2881:115803
     return `
@@ -371,15 +371,16 @@
         <div class="sv-cc__comphead">${lbl('kz-lbl--service', 'Состав услуг')}
           <button class="sv-cc__edit" data-act="edit" data-id="${key}">Изменить<img src="${I}chevron-right-20.svg" alt=""></button></div>
         <div class="sv-cc__comp" role="button" tabindex="0" data-act="edit" data-id="${key}" aria-label="Изменить состав услуг">${rows}</div>
-        ${hasDup(key) ? infobar('Эти услуги уже есть в корзине. Проверь, не добавлены ли они по ошибке', 'warning') : ''}
+        ${hasDup(key) ? infobar('Эти услуги уже есть в корзине. Проверь, не добавлены ли они по ошибке', 'warning',
+          DUP === 'modal' ? '<button class="fr-infobar__btn" data-act="dup-open">Проверить дубли</button>' : '') : ''}
       </article>`;
   }
   /* C11 (3137:632741): та же услуга добавлена и отдельно, и к товару — предупреждение в карточке отдельной позиции */
   const selNames = a => services(a.cfg).filter(s => a.sel[s.id] > 0).map(s => s.name);
-  function hasDup(key) {
-    const own = selNames(added[key]);
-    return Object.keys(added).some(k => !k.startsWith('cfg:') && selNames(added[k]).some(n => own.includes(n)));
-  }
+  // Дубль, который сотрудник оставил осознанно («Оставить обе»), больше не подсвечивается и не попадает в плашку
+  let dupOk = new Set();
+  const flaggedOf = A => dupsOf(A).filter(d => !dupOk.has(d.id));
+  const hasDup = key => flaggedOf(added).some(d => d.c.key === key);
   // Пары дублей в состоянии корзины A: одна и та же услуга (по названию) у товара и в отдельной позиции
   function dupsOf(A) {
     const res = [], picked = k => services(A[k].cfg).filter(s => A[k].sel[s.id] > 0);
@@ -608,8 +609,8 @@
       const key = buf.item || cfgKey(c);
       if (lineCount(sel)) next[key] = { cfg: c, sel }; else delete next[key];
     });
-    const before = dupsOf(added).map(d => d.id);
-    const fresh = dupsOf(next).some(d => !before.includes(d.id));
+    const before = flaggedOf(added).map(d => d.id);
+    const fresh = flaggedOf(next).some(d => !before.includes(d.id));
     added = next;
     closePanel();
     withLoading(() => {
@@ -623,11 +624,16 @@
     snackTimer = setTimeout(() => { $('snack').hidden = true; }, 6000);
   }
   // Модалка показывает ВСЕ дубли корзины, не только новые: в корзине важна полная картина
-  function openDupModal() { dupState = { dups: dupsOf(added), drop: {} }; renderDupModal(); $('dupModal').hidden = false; }
-  function dupRow(r, other) {
+  function openDupModal() {
+    const dups = dupsOf(added), keep = {};
+    dups.forEach(d => { if (dupOk.has(d.id)) keep[d.id] = true; });
+    dupState = { dups, drop: {}, keep }; renderDupModal(); $('dupModal').hidden = false;
+  }
+  const groupDropped = d => dupState.drop[d.p.key + '|' + d.p.sid] || dupState.drop[d.c.key + '|' + d.c.sid];
+  function dupRow(r, other, kept) {
     const a = added[r.key], s = services(a.cfg).find(x => x.id === r.sid), q = a.sel[r.sid], id = r.key + '|' + r.sid;
     const isProd = !r.key.startsWith('cfg:'), it = isProd && items.find(i => i.id === r.key);
-    const gone = dupState.drop[id], locked = !gone && dupState.drop[other.key + '|' + other.sid];
+    const gone = dupState.drop[id], locked = kept || (!gone && dupState.drop[other.key + '|' + other.sid]);
     const media = isProd ? `<img class="sv-dup__ph" src="assets/products/${it.photo}.png" alt="">`
       : `<span class="sv-dup__ic"><img src="${I}kitchen-design-32.svg" alt=""></span>`;
     return `<div class="sv-dup__row${gone ? ' is-gone' : ''}">${media}
@@ -635,20 +641,28 @@
         <p class="sv-dup__where">${esc(isProd ? it.name : CONFIGS[a.cfg].title)}</p></div>
       <div class="sv-dup__sum"><span class="sv-dup__qty">${q} шт. × ${money(unit(s, q))} ₽</span>${priceHtml(unit(s, q) * q, 'fr-price--m is-accent')}</div>
       ${gone ? `<button class="fr-btn fr-btn--pseudo fr-btn--m sv-dup__undo" data-act="dup-undo" data-id="${id}"><img src="${I}arrow-u-down-right-20.svg" alt="">Вернуть</button>`
-        : `<button class="sv-iconbtn sv-dup__del" data-act="dup-drop" data-id="${id}" aria-label="Удалить"${locked ? ' disabled title="Одну копию нужно оставить"' : ''}><img src="${I}trash-24.svg" alt=""></button>`}
+        : `<button class="sv-iconbtn sv-dup__del" data-act="dup-drop" data-id="${id}" aria-label="Удалить"${locked ? ` disabled title="${kept ? 'Обе копии оставлены' : 'Одну копию нужно оставить'}"` : ''}><img src="${I}trash-24.svg" alt=""></button>`}
     </div>`;
   }
   function renderDupModal() {
     // Вординг один для любого числа дублей (решение Антона 31.10)
     $('dupT').textContent = 'Дубли услуг в корзине';
     $('dupLead').textContent = 'Одни и те же услуги добавлены в корзину дважды. Удали лишние, если они добавлены по ошибке.';
-    $('dupList').innerHTML = dupState.dups.map(d => `<section class="sv-dup__item"><h3 class="sv-dup__name">${esc(d.name)}</h3>
-      ${dupRow(d.p, d.c)}${dupRow(d.c, d.p)}</section>`).join('');
+    $('dupList').innerHTML = dupState.dups.map(d => {
+      const kept = !!dupState.keep[d.id], dropped = groupDropped(d);
+      const act = kept ? `<span class="sv-dup__kept">Оставлены обе</span><button class="fr-btn fr-btn--pseudo fr-btn--s" data-act="dup-unkeep" data-id="${esc(d.id)}">Отменить</button>`
+        : dropped ? '' : `<button class="fr-btn fr-btn--pseudo fr-btn--s" data-act="dup-keep" data-id="${esc(d.id)}">Оставить обе</button>`;
+      return `<section class="sv-dup__item${kept ? ' is-kept' : ''}"><div class="sv-dup__head"><h3 class="sv-dup__name">${esc(d.name)}</h3>${act}</div>
+      ${dupRow(d.p, d.c, kept)}${dupRow(d.c, d.p, kept)}</section>`;
+    }).join('');
+    const done = dupState.dups.filter(d => dupState.keep[d.id] || groupDropped(d)).length;
+    $('dupSum').textContent = `Разобрано ${done} из ${dupState.dups.length}`;
   }
   function resolveDups() {
     const drops = Object.keys(dupState.drop);
+    dupState.dups.forEach(d => { if (dupState.keep[d.id]) dupOk.add(d.id); else dupOk.delete(d.id); });
     $('dupModal').hidden = true; dupState = null;
-    if (!drops.length) return;
+    if (!drops.length) { renderCart(); return; }
     drops.forEach(id => { const [k, sid] = id.split('|'); if (added[k]) { delete added[k].sel[sid]; if (!lineCount(added[k].sel)) delete added[k]; } });
     withLoading(renderCart);
   }
@@ -674,7 +688,7 @@
   function startScenario(key) {
     scen = key;
     items = (SCENARIOS[key].items || []).map(i => Object.assign({}, i));
-    added = {}; menuFor = null;
+    added = {}; menuFor = null; dupOk = new Set();
     closePanel(); drawer(false); $('confirm').hidden = true; $('footHint').hidden = true;
     $('onb').hidden = false; $('snack').hidden = true; $('dupModal').hidden = true; dupState = null;
     const t = TASK_TEXT[key];
@@ -731,6 +745,9 @@
       case 'dup-cancel': $('dupModal').hidden = true; dupState = null; break;
       case 'dup-drop': dupState.drop[id] = true; renderDupModal(); break;
       case 'dup-undo': delete dupState.drop[id]; renderDupModal(); break;
+      case 'dup-keep': dupState.keep[id] = true; renderDupModal(); break;
+      case 'dup-unkeep': delete dupState.keep[id]; renderDupModal(); break;
+      case 'dup-open': openDupModal(); break;
       case 'dup-apply': resolveDups(); break;
       case 'cfg-close': closePanel(); break;
       case 'apply': applyCfg(); break;

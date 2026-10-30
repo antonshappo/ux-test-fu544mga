@@ -516,3 +516,14 @@ body.is-frozen .ut-task { display: none; }
    неактивная — Disabled с фоном, под прозрачностью 40 % */
 .sv-dup__del { background: transparent; }
 .sv-dup__del:disabled { background: var(--control-minor); opacity: .4; }
+
+/* 19. Дубли, доработка 31.10:
+   плитка товара с дублем — обводка 2 px accent-dark (accent-primary занят фокусом и почти не виден на белом);
+   в модалке — «Оставить обе» на группу, итог «Разобрано N из M» над футером (виден при любом скролле) */
+.sv-tile.is-dup, .sv-tile.is-dup:hover { box-shadow: inset 0 0 0 2px var(--accent-dark); }
+.sv-dup__head { display: flex; align-items: center; gap: 12px; min-height: 32px; margin-bottom: 4px; }
+.sv-dup__head .sv-dup__name { flex: 1 1 0; margin: 0; }
+.sv-dup__head .fr-btn { flex: none; }
+.sv-dup__kept { flex: none; font-size: 13px; line-height: 16px; letter-spacing: .2px; color: var(--text-secondary); }
+.sv-dup__total { margin: 0; padding: 16px 40px 0; font-size: 15px; line-height: 20px; letter-spacing: .2px; color: var(--text-secondary); }
+.fr-infobar--vertical .fr-infobar__actions .fr-infobar__btn { white-space: nowrap; }
