@@ -348,8 +348,9 @@
   function cfgCard(key) {
     const a = added[key], cfg = CONFIGS[a.cfg], n = lineCount(a.sel);
     const label = services(a.cfg).map(s => s.label).filter(Boolean)[0];
+    const dupNames = dupsOf(added).filter(d => d.c.key === key).map(d => d.name);   // вариант Б (31.10): строки-дубли выделены
     const rows = services(a.cfg).filter(s => a.sel[s.id]).map((s, i) =>
-      `<div class="sv-cc__row"><span class="sv-cc__name"><span class="sv-cc__num">${i + 1}.</span><span>${esc(s.cartName || s.name)}</span></span>${priceHtml(unit(s, a.sel[s.id]) * a.sel[s.id], 'fr-price--s is-default')}</div>`).join('');   // 2268:268893: 15/20 Regular; нумерация — 2881:115803
+      `<div class="sv-cc__row${dupNames.includes(s.name) ? ' is-dup' : ''}"><span class="sv-cc__name"><span class="sv-cc__num">${i + 1}.</span><span>${esc(s.cartName || s.name)}</span></span>${priceHtml(unit(s, a.sel[s.id]) * a.sel[s.id], 'fr-price--s is-default')}</div>`).join('');   // 2268:268893: 15/20 Regular; нумерация — 2881:115803
     return `
       <article class="kz-item sv-cc">
         <div class="sv-cc__top">
@@ -633,7 +634,7 @@
       <div class="sv-dup__src"><p class="sv-dup__kind">${isProd ? 'Услуги мастера' : 'Состав услуг'}</p>
         <p class="sv-dup__where">${esc(isProd ? it.name : CONFIGS[a.cfg].title)}</p></div>
       <div class="sv-dup__sum"><span class="sv-dup__qty">${q} шт. × ${money(unit(s, q))} ₽</span>${priceHtml(unit(s, q) * q, 'fr-price--m is-accent')}</div>
-      ${gone ? `<button class="fr-btn fr-btn--pseudo fr-btn--m sv-dup__undo" data-act="dup-undo" data-id="${id}">Вернуть</button>`
+      ${gone ? `<button class="fr-btn fr-btn--pseudo fr-btn--m sv-dup__undo" data-act="dup-undo" data-id="${id}"><img src="${I}arrow-u-down-right-20.svg" alt="">Вернуть</button>`
         : `<button class="sv-iconbtn sv-dup__del" data-act="dup-drop" data-id="${id}" aria-label="Удалить"${locked ? ' disabled title="Одну копию нужно оставить"' : ''}><img src="${I}trash-24.svg" alt=""></button>`}
     </div>`;
   }

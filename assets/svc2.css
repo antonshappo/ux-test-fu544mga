@@ -503,3 +503,12 @@ body.is-frozen .ut-task { display: none; }
 .sv-dup__row.is-gone .sv-dup__src, .sv-dup__row.is-gone .sv-dup__sum { text-decoration: line-through; }
 .sv-dup__undo { flex: none; }
 .ut-task[hidden] { display: none; }
+
+/* 18. Вариант Б (31.10): строка-дубль в «Составе услуг» — фон accent-light, как у плашки «Эти услуги уже есть в корзине» */
+/* У всех строк одинаковые отступы (как в Figma 31.10), чтобы подсветка не сдвигала текст и высоту */
+.sv-cc__row { margin: 0 -8px; padding: 2px 8px; border-radius: 4px; }
+.sv-cc__row.is-dup { background: var(--accent-light); }
+/* Кнопки модалки по Figma (правка Антона 31.10): «Вернуть» — pseudo M с иконкой 20 слева;
+   неактивная корзина — Secondary M Disabled под прозрачностью 40 % (как в Figma), это уже задано в п. 17 */
+.sv-dup__undo { gap: 8px; }
+.sv-dup__undo img { width: 20px; height: 20px; }
