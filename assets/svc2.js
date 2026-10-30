@@ -597,56 +597,59 @@
   /* Дубли C11 — три варианта для сравнения, параметр &dup=:
      card  — жёлтая плашка в карточке отдельной позиции (по умолчанию, 3137:632748);
      snack — плашка + снекбар в момент появления дубля (3452:269074);
-     modal — при «Применить» модалка «какую оставить»; «Оставить обе» → плашка в карточке */
-  let pendingApply = null, snackTimer = null;
+     modal — после «Применить» дровер закрывается, в корзине модалка со всеми дублями: строка на каждую копию,
+             у каждой «Удалить»; удалить обе копии нельзя. «Отмена» — оставить как есть, тогда в карточке плашка */
+  let dupState = null, snackTimer = null;   // dupState: { dups, drop: { 'key|sid': true } }
   function applyCfg() {
     const next = {}; Object.keys(added).forEach(k => { next[k] = { cfg: added[k].cfg, sel: Object.assign({}, added[k].sel) }; });
-    const touched = buf.cfgs.map(c => buf.item || cfgKey(c));
     buf.cfgs.forEach(c => {
       const sel = {}; Object.keys(buf.sel[c]).forEach(k => { if (buf.sel[c][k] > 0) sel[k] = buf.sel[c][k]; });
       const key = buf.item || cfgKey(c);
       if (lineCount(sel)) next[key] = { cfg: c, sel }; else delete next[key];
     });
     const before = dupsOf(added).map(d => d.id);
-    const fresh = dupsOf(next).filter(d => !before.includes(d.id));
-    if (DUP === 'modal' && fresh.length) { pendingApply = { next, dups: fresh, touched }; openDupModal(); return; }
-    commitApply(next, DUP === 'snack' && fresh.length > 0);
-  }
-  function commitApply(next, snack) {
-    added = next; pendingApply = null; $('dupModal').hidden = true;
-    closePanel(); withLoading(() => { renderCart(); if (snack) showSnack(); });
+    const fresh = dupsOf(next).some(d => !before.includes(d.id));
+    added = next;
+    closePanel();
+    withLoading(() => {
+      renderCart();
+      if (fresh && DUP === 'snack') showSnack();
+      if (fresh && DUP === 'modal') openDupModal();
+    });
   }
   function showSnack() {
     $('snack').hidden = false; clearTimeout(snackTimer);
     snackTimer = setTimeout(() => { $('snack').hidden = true; }, 6000);
   }
-  // Модалка: по паре на дубль, радио «где оставить»; по умолчанию — копия, которая уже была в корзине
-  function openDupModal() {
-    const it = k => items.find(i => i.id === k);
-    const where = (r, isNew) => r.key.startsWith('cfg:')
-      ? `В наборе «${esc(CONFIGS[added[r.key] ? added[r.key].cfg : r.key.slice(4)].title)}»`
-      : `К товару «${esc(it(r.key).name)}»`;
-    const opt = (d, i, side, r) => {
-      const isNew = pendingApply.touched.includes(r.key);
-      const def = !isNew;
-      return `<label class="fr-radio sv-dup__opt"><input type="radio" class="fr-radio__input-inner" name="dup${i}" value="${side}"${def ? ' checked' : ''}><span class="fr-radio-icon fr-l"></span>
-        <span class="fr-radio__label-text"><span class="sv-dup__where">${where(r)}</span><span class="sv-dup__note">${isNew ? 'добавляешь сейчас' : 'уже в корзине'}</span></span></label>`;
-    };
-    const n = pendingApply.dups.length;
-    $('dupT').textContent = n > 1 ? 'Услуги уже есть в корзине' : 'Услуга уже есть в корзине';
-    $('dupLead').textContent = n > 1 ? 'Выбери, где оставить каждую. Повторы удалятся.' : 'Выбери, где её оставить. Повтор удалится.';
-    $('dupList').innerHTML = pendingApply.dups.map((d, i) => `<fieldset class="sv-dup__item"><legend class="sv-dup__name"><span>${esc(d.name)}</span>${priceHtml(d.price, 'fr-price--s is-default')}</legend>
-      ${opt(d, i, 'p', d.p)}${opt(d, i, 'c', d.c)}</fieldset>`).join('');
-    $('dupModal').hidden = false;
+  // Модалка показывает ВСЕ дубли корзины, не только новые: в корзине важна полная картина
+  function openDupModal() { dupState = { dups: dupsOf(added), drop: {} }; renderDupModal(); $('dupModal').hidden = false; }
+  function dupRow(r, other) {
+    const a = added[r.key], s = services(a.cfg).find(x => x.id === r.sid), q = a.sel[r.sid], id = r.key + '|' + r.sid;
+    const isProd = !r.key.startsWith('cfg:'), it = isProd && items.find(i => i.id === r.key);
+    const gone = dupState.drop[id], locked = !gone && dupState.drop[other.key + '|' + other.sid];
+    const media = isProd ? `<img class="sv-dup__ph" src="assets/products/${it.photo}.png" alt="">`
+      : `<span class="sv-dup__ic"><img src="${I}kitchen-design-32.svg" alt=""></span>`;
+    return `<div class="sv-dup__row${gone ? ' is-gone' : ''}">${media}
+      <div class="sv-dup__src"><p class="sv-dup__kind">${isProd ? 'Услуга к товару' : 'Услуга из каталога'}</p>
+        <p class="sv-dup__where">${esc(isProd ? it.name : CONFIGS[a.cfg].title)}</p></div>
+      <div class="sv-dup__sum"><span class="sv-dup__qty">${q} шт. × ${money(unit(s, q))} ₽</span>${priceHtml(unit(s, q) * q, 'fr-price--m is-accent')}</div>
+      ${gone ? `<button class="fr-btn fr-btn--pseudo fr-btn--m sv-dup__undo" data-act="dup-undo" data-id="${id}">Вернуть</button>`
+        : `<button class="sv-iconbtn sv-dup__del" data-act="dup-drop" data-id="${id}" aria-label="Удалить"${locked ? ' disabled title="Одну копию нужно оставить"' : ''}><img src="${I}trash-24.svg" alt=""></button>`}
+    </div>`;
+  }
+  function renderDupModal() {
+    const n = dupState.dups.length;
+    $('dupT').textContent = n > 1 ? 'В корзине дубли услуг' : 'В корзине дубль услуги';
+    $('dupLead').textContent = 'Одна и та же услуга добавлена к товару и из каталога. Удали лишнюю, если она добавлена по ошибке.';
+    $('dupList').innerHTML = dupState.dups.map(d => `<section class="sv-dup__item"><h3 class="sv-dup__name">${esc(d.name)}</h3>
+      ${dupRow(d.p, d.c)}${dupRow(d.c, d.p)}</section>`).join('');
   }
   function resolveDups() {
-    const next = pendingApply.next;
-    pendingApply.dups.forEach((d, i) => {
-      const keep = document.querySelector(`input[name="dup${i}"]:checked`).value;
-      const drop = keep === 'p' ? d.c : d.p;
-      if (next[drop.key]) { delete next[drop.key].sel[drop.sid]; if (!lineCount(next[drop.key].sel)) delete next[drop.key]; }
-    });
-    commitApply(next, false);
+    const drops = Object.keys(dupState.drop);
+    $('dupModal').hidden = true; dupState = null;
+    if (!drops.length) return;
+    drops.forEach(id => { const [k, sid] = id.split('|'); if (added[k]) { delete added[k].sel[sid]; if (!lineCount(added[k].sel)) delete added[k]; } });
+    withLoading(renderCart);
   }
   function askDelete(key) {
     pendingDel = key; menuFor = null;
@@ -672,7 +675,7 @@
     items = (SCENARIOS[key].items || []).map(i => Object.assign({}, i));
     added = {}; menuFor = null;
     closePanel(); drawer(false); $('confirm').hidden = true; $('footHint').hidden = true;
-    $('onb').hidden = false; $('snack').hidden = true; $('dupModal').hidden = true; pendingApply = null;
+    $('onb').hidden = false; $('snack').hidden = true; $('dupModal').hidden = true; dupState = null;
     const t = TASK_TEXT[key];
     $('taskK').textContent = 'Задание ' + t.n + ' из 3'; $('taskT').textContent = t.title; $('taskX').innerHTML = taskHtml(t);
     taskCard(true);   // при старте задание раскрыто и висит до «Понятно» (клики по корзине и Esc его не сворачивают)
@@ -724,9 +727,10 @@
       case 'checkout': checkout(); break;
       case 'onb-close': $('onb').hidden = true; break;
       case 'snack-close': $('snack').hidden = true; clearTimeout(snackTimer); break;
-      case 'dup-cancel': $('dupModal').hidden = true; pendingApply = null; break;
-      case 'dup-keep': commitApply(pendingApply.next, false); break;
-      case 'dup-resolve': resolveDups(); break;
+      case 'dup-cancel': $('dupModal').hidden = true; dupState = null; break;
+      case 'dup-drop': dupState.drop[id] = true; renderDupModal(); break;
+      case 'dup-undo': delete dupState.drop[id]; renderDupModal(); break;
+      case 'dup-apply': resolveDups(); break;
       case 'cfg-close': closePanel(); break;
       case 'apply': applyCfg(); break;
       case 'more': open.has(id) ? open.delete(id) : open.add(id); renderCfg(); break;
@@ -748,7 +752,7 @@
   info.addEventListener('click', e => { e.stopPropagation(); $('footHint').hidden = !$('footHint').hidden; });
   document.addEventListener('keydown', e => {
     if (e.key !== 'Escape') return;
-    if (!$('dupModal').hidden) { $('dupModal').hidden = true; pendingApply = null; }
+    if (!$('dupModal').hidden) { $('dupModal').hidden = true; dupState = null; }
     else if (!$('confirm').hidden) { $('confirm').hidden = true; pendingDel = null; }
     else if (!$('drawer').hidden) drawer(false);
     else if (!$('cfg').hidden) closePanel();

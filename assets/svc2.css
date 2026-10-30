@@ -478,13 +478,28 @@ body.is-frozen .ut-task { display: none; }
 @media (max-width: 1764px) { .sv-snack { left: calc(32px + 488px + 16px + 32px); } }
 @media (max-width: 1280px) { .sv-snack { left: 64px; } }
 
-/* 17. Дубль, вариант «модалка»: пара «где оставить» на каждую повторяющуюся услугу */
+/* 17. Дубль, вариант «модалка» (в корзине): группа на услугу, строка на копию — фото товара или иконка набора,
+   источник, «N шт. × цена» + сумма, «Удалить». Удалённая строка бледнеет, вместо корзины — «Вернуть» */
 .sv-dup__lead { color: var(--text-secondary); }
 .sv-dup__list { display: flex; flex-direction: column; gap: 16px; margin-top: 16px !important; }
-.sv-dup__item { margin: 0; padding: 16px; border: 0; border-radius: 8px; background: var(--background-secondary); display: flex; flex-direction: column; gap: 4px; }
-.sv-dup__name { float: left; width: 100%; padding: 0; margin-bottom: 4px; display: flex; justify-content: space-between; gap: 16px; font-weight: 600; font-size: 17px; line-height: 24px; }
-.sv-dup__name .fr-price { flex: none; }
-.sv-dup__opt { clear: both; margin-left: -8px; font-size: 15px; line-height: 20px; }
-.sv-dup__opt .fr-radio__label-text { display: flex; flex-direction: column; gap: 2px; padding-top: 2px; }
-.sv-dup__note { font-size: 13px; line-height: 16px; color: var(--text-minor); }
+.sv-dup__item { padding: 16px; border-radius: 8px; background: var(--background-secondary); display: flex; flex-direction: column; gap: 8px; }
+.sv-dup__name { margin: 0 0 4px; font-family: var(--f-base); text-transform: none; font-weight: 600; font-size: 17px; line-height: 24px; letter-spacing: .2px; }
+.sv-dup__row { display: flex; align-items: center; gap: 16px; padding: 12px; border-radius: 8px; background: var(--background-primary); transition: opacity .15s; }
+.sv-dup__ph { flex: none; width: 48px; height: 48px; border-radius: 4px; object-fit: cover; }
+.sv-dup__ic { flex: none; width: 48px; height: 48px; border-radius: 4px; background: var(--background-secondary); display: flex; align-items: center; justify-content: center; }
+.sv-dup__ic img { width: 32px; height: 32px; }
+.sv-dup__src { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.sv-dup__src p { margin: 0; }
+.sv-dup__kind { font-size: 13px; line-height: 16px; letter-spacing: .2px; color: var(--text-secondary); }
+.sv-dup__where { font-size: 15px; line-height: 20px; letter-spacing: .2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sv-dup__sum { flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+.sv-dup__qty { font-size: 13px; line-height: 16px; letter-spacing: .2px; color: var(--text-secondary); white-space: nowrap; }
+.sv-dup__del { width: 40px; height: 40px; border-radius: 100px; background: var(--control-minor); }
+.sv-dup__del img { width: 20px; height: 20px; }
+.sv-dup__del:hover:not(:disabled) { background: var(--control-hover-minor); }
+.sv-dup__del:disabled { opacity: .4; cursor: default; }
+.sv-dup__row.is-gone { background: transparent; }
+.sv-dup__row.is-gone > :not(.sv-dup__undo) { opacity: .4; }
+.sv-dup__row.is-gone .sv-dup__src, .sv-dup__row.is-gone .sv-dup__sum { text-decoration: line-through; }
+.sv-dup__undo { flex: none; }
 .ut-task[hidden] { display: none; }
