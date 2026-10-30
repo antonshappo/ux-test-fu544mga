@@ -638,9 +638,9 @@
     </div>`;
   }
   function renderDupModal() {
-    const n = dupState.dups.length;
-    $('dupT').textContent = n > 1 ? 'В корзине дубли услуг' : 'В корзине дубль услуги';
-    $('dupLead').textContent = 'Одна и та же услуга добавлена к товару и из каталога. Удали лишнюю, если она добавлена по ошибке.';
+    // Вординг один для любого числа дублей (решение Антона 31.10)
+    $('dupT').textContent = 'Дубли услуг в корзине';
+    $('dupLead').textContent = 'Эти услуги добавлены и к товару, и из каталога. Удали лишние, если они добавлены по ошибке.';
     $('dupList').innerHTML = dupState.dups.map(d => `<section class="sv-dup__item"><h3 class="sv-dup__name">${esc(d.name)}</h3>
       ${dupRow(d.p, d.c)}${dupRow(d.c, d.p)}</section>`).join('');
   }
