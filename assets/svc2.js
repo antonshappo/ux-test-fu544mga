@@ -637,10 +637,10 @@
     const media = isProd ? `<img class="sv-dup__ph" src="assets/products/${it.photo}.png" alt="">`
       : `<span class="sv-dup__ic"><img src="${I}kitchen-design-32.svg" alt=""></span>`;
     return `<div class="sv-dup__row${gone ? ' is-gone' : ''}">${media}
-      <div class="sv-dup__src"><p class="sv-dup__kind">${isProd ? 'Услуги мастера' : 'Состав услуг'}</p>
+      <div class="sv-dup__src"><p class="sv-dup__kind">${isProd ? 'Услуги мастера' : esc(CONFIGS[a.cfg].category)}</p>
         <p class="sv-dup__where">${esc(isProd ? it.name : CONFIGS[a.cfg].title)}</p></div>
       <div class="sv-dup__sum"><span class="sv-dup__qty">${q} шт. × ${money(unit(s, q))} ₽</span>${priceHtml(unit(s, q) * q, 'fr-price--m is-accent')}</div>
-      ${gone ? `<button class="fr-btn fr-btn--pseudo fr-btn--m sv-dup__undo" data-act="dup-undo" data-id="${id}"><img src="${I}arrow-u-down-right-20.svg" alt="">Вернуть</button>`
+      ${gone ? `<button class="fr-btn fr-btn--pseudo fr-btn--m sv-dup__undo" data-act="dup-undo" data-id="${id}">Вернуть</button>`
         : `<button class="sv-iconbtn sv-dup__del" data-act="dup-drop" data-id="${id}" aria-label="Удалить"${locked ? ` disabled title="${kept ? 'Обе копии оставлены' : 'Одну копию нужно оставить'}"` : ''}><img src="${I}trash-24.svg" alt=""></button>`}
     </div>`;
   }
@@ -650,8 +650,8 @@
     $('dupLead').textContent = 'Одни и те же услуги добавлены в корзину дважды. Удали лишние, если они добавлены по ошибке.';
     $('dupList').innerHTML = dupState.dups.map(d => {
       const kept = !!dupState.keep[d.id], dropped = groupDropped(d);
-      const act = kept ? `<span class="sv-dup__kept">Оставлены обе</span><button class="fr-btn fr-btn--pseudo fr-btn--s" data-act="dup-unkeep" data-id="${esc(d.id)}">Отменить</button>`
-        : dropped ? '' : `<button class="fr-btn fr-btn--pseudo fr-btn--s" data-act="dup-keep" data-id="${esc(d.id)}">Оставить обе</button>`;
+      const act = kept ? `<span class="sv-dup__kept">Оставлены обе</span><button class="fr-btn fr-btn--pseudo fr-btn--m" data-act="dup-unkeep" data-id="${esc(d.id)}">Отменить</button>`
+        : dropped ? '' : `<button class="fr-btn fr-btn--pseudo fr-btn--m" data-act="dup-keep" data-id="${esc(d.id)}">Оставить обе</button>`;
       return `<section class="sv-dup__item${kept ? ' is-kept' : ''}"><div class="sv-dup__head"><h3 class="sv-dup__name">${esc(d.name)}</h3>${act}</div>
       ${dupRow(d.p, d.c, kept)}${dupRow(d.c, d.p, kept)}</section>`;
     }).join('');
